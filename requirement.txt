@@ -2,3 +2,4 @@ steamlit
 pandas
 matplotlib
 openpyxl
+seaborn

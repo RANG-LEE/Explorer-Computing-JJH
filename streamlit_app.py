@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
 def load_data():
-    df = pd.read_csv("./Ex_ch_sourcefiles/data/cars.csv") #github에서 불러올 때는 ./data/cars.csv"
+    df = pd.read_csv("./data/cars.csv") #github에서 불러올 때는 ./data/cars.csv"
     return df
 
 # --- 1페이지: 자기소개 페이지 함수 ---
@@ -269,3 +269,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

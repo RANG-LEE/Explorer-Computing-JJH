@@ -511,11 +511,11 @@ def page_company_info():
 # =========================================================
 
 def page_scholar_analysis():
-    """ 5. 연구 트렌드 분석 페이지 (차단 시 예시 데이터 작동 기능 추가) """
+    """ 5. 연구 트렌드 분석 페이지 (Try -> Fail -> Fallback 구조) """
     st.title("🎓 연구 트렌드 심층 분석")
     st.markdown("""
-    구글 스칼라(Google Scholar)에서 **다중 페이지 크롤링**을 통해 더 풍부한 데이터를 수집합니다.
-    (수집된 데이터를 바탕으로 연도별 트렌드와 핵심 키워드를 시각화합니다.)
+    구글 스칼라(Google Scholar)에서 **다중 페이지 크롤링**을 시도하여 데이터를 수집합니다.
+    (실시간 크롤링이 차단될 경우, 확보된 예시 데이터를 통해 분석을 진행합니다.)
     """)
 
     # 1. 키워드 입력
@@ -540,157 +540,147 @@ def page_scholar_analysis():
 
     if run_search and query:
         st.divider()
+        
+        # [단계 1] 크롤링 시도 (Real Attempt)
+        st.write("### 📡 데이터 수집 시작...")
         progress_bar = st.progress(0)
         status_text = st.empty()
         
         # 데이터 저장소
         all_titles = []
         all_years = []
+        crawling_success = False # 성공 여부 플래그
 
-        # =================================================
-        # 1. 크롤링 시도 (Real Data)
-        # =================================================
         try:
-            driver = get_driver()
+            driver = get_driver() # 드라이버 호출 시도
             
             if driver is None:
-                st.error("❌ 드라이버 로드 실패. 예시 데이터를 사용합니다.")
-            else:
-                # 페이지 반복 크롤링
-                for i in range(pages_to_crawl):
-                    start_index = i * 10
-                    status_text.info(f"⏳ '{query}' 관련 데이터를 수집 중입니다... ({i+1}/{pages_to_crawl} 페이지)")
-                    
-                    url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
-                    driver.get(url)
-                    
-                    # 봇 탐지 회피를 위한 대기
-                    time.sleep(random.uniform(2, 4))
-                    driver.implicitly_wait(5)
+                status_text.error("❌ 브라우저 드라이버를 실행할 수 없습니다.")
+                raise Exception("Driver Not Found")
 
-                    html = driver.page_source
-                    soup = BeautifulSoup(html, "html.parser")
-                    
-                    # 논문 결과 박스 찾기
-                    results = soup.find_all("div", class_="gs_r gs_or gs_scl")
-                    
-                    # 결과가 하나도 없으면 (봇 탐지된 경우) 루프 중단
-                    if not results:
-                        break
-
-                    for row in results:
-                        title_tag = row.find("h3", class_="gs_rt")
-                        if title_tag:
-                            clean_title = title_tag.text.replace("[PDF]", "").replace("[HTML]", "").replace("[BOOK]", "").replace("[B]", "").strip()
-                            all_titles.append(clean_title)
-                            
-                            meta_tag = row.find("div", class_="gs_a")
-                            year_val = None 
-                            if meta_tag:
-                                years_found = re.findall(r'(19\d{2}|20\d{2})', meta_tag.get_text())
-                                if years_found:
-                                    try:
-                                        year_val = int(years_found[-1])
-                                    except:
-                                        year_val = None
-                            all_years.append(year_val)
-                    
-                    progress_bar.progress((i + 1) / pages_to_crawl)
+            # 페이지 반복 크롤링
+            for i in range(pages_to_crawl):
+                start_index = i * 10
                 
-                driver.quit()
+                # 리얼한 진행 상황 표시
+                status_text.markdown(f"""
+                <div style="background-color:#e6f3ff; padding:10px; border-radius:5px;">
+                    <b>🔄 Google Scholar 접속 시도 중...</b><br>
+                    - 검색어: {query}<br>
+                    - 현재 페이지: {i+1} / {pages_to_crawl}<br>
+                    - 상태: 데이터 요청 중 (Requesting...)
+                </div>
+                """, unsafe_allow_html=True)
+                
+                url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
+                driver.get(url)
+                
+                # 랜덤 딜레이 (사람인 척 연기)
+                wait_time = random.uniform(2, 4)
+                time.sleep(wait_time) 
+                
+                html = driver.page_source
+                soup = BeautifulSoup(html, "html.parser")
+                
+                # 결과 박스 찾기
+                results = soup.find_all("div", class_="gs_r gs_or gs_scl")
+                
+                # [중요] 결과가 없으면(봇 탐지) 즉시 에러 발생시키기
+                if not results:
+                    status_text.warning(f"⚠️ {i+1}페이지에서 구글 보안 문자(CAPTCHA)가 감지되었습니다.")
+                    break # 루프 탈출 -> 실패 처리로 넘어감
 
+                # 데이터 파싱
+                for row in results:
+                    title_tag = row.find("h3", class_="gs_rt")
+                    if title_tag:
+                        clean_title = title_tag.text.replace("[PDF]", "").replace("[HTML]", "").replace("[BOOK]", "").replace("[B]", "").strip()
+                        all_titles.append(clean_title)
+                        
+                        meta_tag = row.find("div", class_="gs_a")
+                        year_val = None 
+                        if meta_tag:
+                            years_found = re.findall(r'(19\d{2}|20\d{2})', meta_tag.get_text())
+                            if years_found:
+                                try: year_val = int(years_found[-1])
+                                except: year_val = None
+                        all_years.append(year_val)
+                
+                # 진행률 업데이트
+                progress_bar.progress((i + 1) / pages_to_crawl)
+            
+            driver.quit()
+
+            # 하나라도 수집되었으면 성공으로 간주
+            if len(all_titles) > 0:
+                crawling_success = True
+            
         except Exception as e:
-            st.warning(f"크롤링 중 오류가 발생했습니다: {e}")
+            st.error(f"🚫 크롤링 프로세스 중단: {e}")
+            crawling_success = False
 
-        # =================================================
-        # 2. 결과 확인 및 예시 데이터(Fallback) 생성
-        # =================================================
-        if not all_titles:
-            st.warning("⚠️ Google Scholar가 접속을 차단했습니다 (Bot Detection).")
-            st.info(f"💡 원활한 포트폴리오 시연을 위해 '{query}' 관련 **예시 데이터(Mock Data)**로 분석 결과를 보여줍니다.")
-            
-            # [예시 데이터 생성 로직]
-            dummy_titles = [
-                f"Recent advances in {query} technology",
-                f"A comprehensive review of {query} and health",
-                f"Impact of {query} on global food security",
-                f"Sustainable production methods for {query}",
-                f"Consumer acceptance of {query} products",
-                f"Nutritional analysis of {query}",
-                f"Future trends in {query} industry",
-                f"Safety assessment of {query}",
-                f"Application of AI in {query} processing",
-                f"Economic feasibility of {query} market",
-                f"Innovative approaches to {query}",
-                f"Global regulation policies on {query}"
-            ]
-            # 사용자가 요청한 양만큼 데이터 뻥튀기
-            import random
-            all_titles = [random.choice(dummy_titles) + f" ({i})" for i in range(pages_to_crawl * 10)]
-            
-            # 연도 데이터 랜덤 생성 (최근 5년 위주)
-            years_pool = [2021, 2022, 2023, 2024, 2025]
-            all_years = [random.choice(years_pool) for _ in range(len(all_titles))]
-            
-            status_text.success("✅ 예시 데이터 생성 완료!")
-
+        # [단계 2] 결과에 따른 분기 처리
+        st.divider()
+        
+        if crawling_success:
+            # 성공 시
+            status_text.success(f"✅ 수집 성공! 총 {len(all_titles)}건의 데이터를 분석합니다.")
         else:
-            valid_count = len([y for y in all_years if y is not None])
-            status_text.success(f"✅ 분석 완료! 실제 데이터 {len(all_titles)}건을 수집했습니다.")
+            # 실패 시 (여기가 사용자분이 원하시던 부분!)
+            status_text.error("🚫 데이터 수집 실패: Google Scholar의 보안 정책에 의해 접속이 차단되었습니다.")
+            with st.spinner("🔄 예시 데이터(Mock Data)를 생성하여 분석을 계속합니다..."):
+                time.sleep(2) # 사용자가 "아 실패했구나, 복구하는구나"를 인지할 시간 부여
+                
+                # 예시 데이터 생성
+                dummy_titles = [
+                    f"Recent advances in {query} technology",
+                    f"A comprehensive review of {query} and health",
+                    f"Impact of {query} on global food security",
+                    f"Sustainable production methods for {query}",
+                    f"Consumer acceptance of {query} products",
+                    f"Nutritional analysis of {query}",
+                    f"Safety assessment of {query}",
+                    f"Application of AI in {query} processing"
+                ]
+                # 데이터 뻥튀기
+                all_titles = [random.choice(dummy_titles) + f" ({i})" for i in range(30)]
+                all_years = [random.choice(range(2020, 2026)) for _ in range(30)]
+                
+                st.warning("⚠️ **Note:** 위 결과는 실제 크롤링 실패로 인한 **시뮬레이션 데이터**입니다.")
 
-        # =================================================
-        # 3. 데이터 시각화 (공통 로직)
-        # =================================================
-        
-        # 3-1. 연도별 트렌드
-        st.subheader(f"📊 Research Trends by Year ({query})")
-        valid_years = [y for y in all_years if y is not None]
-        
-        if valid_years:
-            year_counts = Counter(valid_years)
-            df_trend = pd.DataFrame(list(year_counts.items()), columns=['Year', 'Count'])
-            df_trend = df_trend.sort_values('Year')
+        # [단계 3] 시각화 (성공이든 실패든 데이터가 있으면 그리기)
+        if all_titles:
+            # 3-1. 연도별 트렌드
+            st.subheader(f"📊 Research Trends by Year ({query})")
+            valid_years = [y for y in all_years if y is not None]
             
-            fig = px.bar(
-                df_trend, 
-                x='Year', y='Count', text='Count',
-                title=f"Annual Publication Count for '{query}'",
-                labels={'Count': 'Number of Papers', 'Year': 'Year'},
-                template='plotly_white',
-                color='Count', color_continuous_scale='Blues'
-            )
-            fig.update_traces(textposition='outside')
-            fig.update_layout(xaxis=dict(type='category'))
-            st.plotly_chart(fig, use_container_width=True)
+            if valid_years:
+                year_counts = Counter(valid_years)
+                df_trend = pd.DataFrame(list(year_counts.items()), columns=['Year', 'Count'])
+                df_trend = df_trend.sort_values('Year')
+                
+                fig = px.bar(
+                    df_trend, x='Year', y='Count', text='Count',
+                    title=f"Annual Publication Count for '{query}'",
+                    template='plotly_white',
+                    color='Count', color_continuous_scale='Blues'
+                )
+                st.plotly_chart(fig, use_container_width=True)
 
-        # 3-2. 워드 클라우드
-        st.subheader(f"☁️ Key Topics Word Cloud")
-        all_text = " ".join(all_titles)
-        # 불용어 설정
-        stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based", "effect", "effects", "application", "applications", "recent", "comprehensive"}
-        
-        wc = WordCloud(
-            font_path=font_path,
-            width=800, height=400,
-            background_color="white",
-            colormap="viridis",
-            stopwords=stopwords
-        ).generate(all_text)
-        
-        fig_wc, ax = plt.subplots(figsize=(10, 5))
-        ax.imshow(wc, interpolation='bilinear')
-        ax.axis("off")
-        st.pyplot(fig_wc)
-        
-        # 3-3. 데이터 리스트
-        with st.expander("📜 Data List (Papers)"):
-            df_papers = pd.DataFrame({
-                "Title": all_titles,
-                "Year": all_years 
-            })
-            st.dataframe(df_papers.sort_values(by="Year", ascending=False, na_position='last'))
+            # 3-2. 워드 클라우드
+            st.subheader(f"☁️ Key Topics Word Cloud")
+            all_text = " ".join(all_titles)
+            stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based"}
             
-
+            wc = WordCloud(
+                font_path=font_path, width=800, height=400,
+                background_color="white", colormap="viridis", stopwords=stopwords
+            ).generate(all_text)
+            
+            fig_wc, ax = plt.subplots(figsize=(10, 5))
+            ax.imshow(wc, interpolation='bilinear')
+            ax.axis("off")
+            st.pyplot(fig_wc)
 
 # =========================================================
 # 6. 결론 및 제언 (Conclusion)
@@ -789,6 +779,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

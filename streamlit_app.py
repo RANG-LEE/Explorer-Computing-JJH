@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib import rc, font_manager
 import platform
+import chromedriver_autoinstaller
 
 # ==========================================
 # [설정] 페이지 및 폰트 설정
@@ -725,4 +726,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

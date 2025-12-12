@@ -1,14 +1,10 @@
 streamlit
 pandas
-matplotlib
-openpyxl
-seaborn
-plotly
-plotly-express
-scikit-learn
 numpy
+plotly
 pydeck
 wordcloud
+matplotlib
 beautifulsoup4
 selenium
 chromedriver-autoinstaller

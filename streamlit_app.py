@@ -1,272 +1,613 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np
 import plotly.express as px
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
+import pydeck as pdk
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import os  # [핵심] 파일 경로 확인을 위해 반드시 필요합니다!
+from matplotlib import rc, font_manager
+import platform
 
-def load_data():
-    df = pd.read_csv("./data/cars.csv") #github에서 불러올 때는 ./data/cars.csv"
-    return df
+# ==========================================
+# [설정] 페이지 및 폰트 설정
+# ==========================================
+st.set_page_config(
+    page_title="융합 인재 포트폴리오",
+    page_icon="🎓",
+    layout="wide"
+)
 
-# --- 1페이지: 자기소개 페이지 함수 ---
+# 한글 폰트 설정 (OS별 자동 대응)
+system_name = platform.system()
+font_path = None
+
+if system_name == 'Windows':
+    # 윈도우 폰트 설정
+    font_path = "C:/Windows/Fonts/malgun.ttf"
+    try:
+        if os.path.exists(font_path):
+            font_name = font_manager.FontProperties(fname=font_path).get_name()
+            rc('font', family=font_name)
+    except:
+        pass
+elif system_name == 'Darwin': 
+    # Mac 폰트 설정
+    rc('font', family='AppleGothic')
+    font_path = '/System/Library/Fonts/Supplemental/AppleGothic.ttf'
+else:
+    # 리눅스/클라우드 환경 (한글 폰트가 없을 경우 기본값)
+    pass
+
+# plt 마이너스 기호 깨짐 방지
+plt.rcParams['axes.unicode_minus'] = False
+
+# =========================================================
+# 0. 공통 데이터 관리 함수 (Data Loader)
+# =========================================================
+@st.cache_data
+def get_company_data():
+    """기업 순위, 위치, 상세 정보를 반환하는 함수"""
+    # 1. 지도 및 차트용 데이터
+    data_map = {
+        "순위": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "기업명": ["농심", "오리온", "CJ제일제당", "삼양식품", "풀무원", 
+                "빙그레", "매일유업", "하이트진로", "롯데칠성음료", "대상"],
+        "총점": [177, 163, 159, 152, 152, 149, 142, 140, 132, 126],
+        "주소": [
+            "서울 동작구 여의대방로 112", "서울 용산구 백범로 90다길 13", "서울 중구 동호로 330", 
+            "서울 종로구 종로33길 31", "충북 음성군 대소면 삼양로 730-27", "서울 종로구 새문안로 76",
+            "서울 종로구 종로1길 50", "서울 강서구 공항대로 49", "서울 강남구 테헤란로 521", "서울 종로구 창경궁로 120"
+        ],
+        "lat": [37.51008, 37.53584, 37.46575, 37.57694, 36.61402, 
+                37.56975, 37.56789, 37.56934, 37.47320, 37.57644],
+        "lon": [126.96212, 126.97442, 126.97150, 126.99550, 127.08162, 
+                126.98507, 126.97555, 126.85240, 127.06268, 127.00220]
+    }
+    df_map = pd.DataFrame(data_map)
+
+    # 2. 기업 상세 정보 리스트
+    company_details = [
+        {
+            "순위": 1, "기업명": "농심", 
+            "소개": "1968년 설립, 라면·스낵·음료의 국내 1위 제조기업.",
+            "주력제품": "신라면, 안성탕면, 짜파게티, 너구리, 새우깡",
+            "비전": "글로벌 라면 시장 확대, 스마트팜 기술 도입",
+            "홈페이지": "https://www.nongshim.com", "유튜브": "https://www.youtube.com/@nongshim"
+        },
+        {
+            "순위": 2, "기업명": "오리온", 
+            "소개": "1974년 초코파이 출시. 국내 제과업계의 대표기업.",
+            "주력제품": "초코파이, 포카칩, 오징어땅콩, 닥터유",
+            "비전": "글로벌 시장 심화, 건강기능식품 확대",
+            "홈페이지": "https://www.orionworld.com", "유튜브": "https://www.youtube.com/@ORIONworld"
+        },
+        {
+            "순위": 3, "기업명": "CJ제일제당", 
+            "소개": "국내 최대 식품회사. 식품·제약·물류·바이오 등 사업 다각화.",
+            "주력제품": "백설, 다시다, 햇반, 비비고",
+            "비전": "글로벌 식품기업 도약, K-푸드 세계화",
+            "홈페이지": "https://www.cj.net", "유튜브": "https://www.youtube.com/@CJCheilJedangOfficial"
+        },
+        {
+            "순위": 4, "기업명": "삼양식품", 
+            "소개": "불닭볶음면의 글로벌 성공으로 급성장한 라면 및 식품 기업.",
+            "주력제품": "삼양라면, 불닭볶음면",
+            "비전": "글로벌 종합식품 기업 도약",
+            "홈페이지": "https://www.samyangfoods.com", "유튜브": "https://www.youtube.com/@samyangfoods"
+        },
+        {
+            "순위": 5, "기업명": "풀무원", 
+            "소개": "바른 먹거리 원칙을 지키는 로하스(LOHAS) 선도 기업.",
+            "주력제품": "두부, 콩나물, 얄피만두, 지구식단",
+            "비전": "식물성 지향 식품 확대, 지속가능경영",
+            "홈페이지": "https://www.pulmuone.co.kr", "유튜브": "https://www.youtube.com/@pulmuone.official"
+        },
+        {
+            "순위": 6, "기업명": "빙그레", 
+            "소개": "바나나맛우유, 요플레 등 유가공 및 아이스크림 전문 기업.",
+            "주력제품": "바나나맛우유, 요플레, 투게더, 메로나",
+            "비전": "글로벌 비즈니스 확대, 프리미엄 제품 강화",
+            "홈페이지": "https://www.bing.co.kr", "유튜브": "https://www.youtube.com/@official.binggrae"
+        },
+        {
+            "순위": 7, "기업명": "매일유업", 
+            "소개": "우유, 분유, 치즈 등 유제품 전문 기업. 성인 영양식 셀렉스 보유.",
+            "주력제품": "매일우유, 상하목장, 앱솔루트, 셀렉스",
+            "비전": "생애주기별 맞춤형 영양 설계, 건강기능식품 강화",
+            "홈페이지": "https://www.maeil.com", "유튜브": "https://www.youtube.com/@maeili2mo"
+        },
+        {
+            "순위": 8, "기업명": "하이트진로", 
+            "소개": "대한민국 대표 주류 기업. 소주와 맥주 시장의 강자.",
+            "주력제품": "참이슬, 진로, 테라, 켈리",
+            "비전": "글로벌 주류 기업 도약, ESG 경영 강화",
+            "홈페이지": "https://www.hitejinro.com", "유튜브": "https://www.youtube.com/watch?v=CjYD_J_2tt0"
+        },
+        {
+            "순위": 9, "기업명": "롯데칠성음료", 
+            "소개": "음료 및 주류 전문 기업. 칠성사이다와 처음처럼 보유.",
+            "주력제품": "칠성사이다, 펩시, 처음처럼, 새로",
+            "비전": "Z세대 타겟 마케팅 강화, 헬스케어 포트폴리오 확대",
+            "홈페이지": "https://company.lottechilsung.co.kr", "유튜브": "https://www.youtube.com/@Lotte7star"
+        },
+        {
+            "순위": 10, "기업명": "대상", 
+            "소개": "청정원, 종가집 브랜드를 보유한 종합 식품 기업.",
+            "주력제품": "청정원, 미원, 종가집 김치",
+            "비전": "글로벌 한식 대표 브랜드 육성",
+            "홈페이지": "https://www.daesang.com", "유튜브": "https://www.youtube.com/@DAESANG"
+        }
+    ]
+
+    return df_map, company_details
+
+# =========================================================
+# 1. 포트폴리오 소개 (Intro)
+# =========================================================
+
 def page_intro():
-    st.title("나의 소개 페이지") #대제목
+    st.title("🙋‍♂️ 융합 인재 포트폴리오")
+    st.caption("식품생명공학 x 경제 x 데이터 사이언스")
 
-    st.header("자기소개") # 중제목
-    st.write({"이름": "정지호", "나이": "02년생", "전공": "식품생명공학"}) #딕셔너리
-    st.write("안녕하세요! 저는 **식품생명공학** 전공 21학번 정지호입니다. 저는 현재 4학년으로 재학 중입니다.\
-            본 학기에는 연계전공 수업으로 *경제*를 공부하고 있으며, 교양으로 *'컴퓨팅 탐색'* 파이썬 수업도 공부하고 있습니다.\
-            현재 가장 큰 관심사는 **졸업 후 진로에 대한 고민**입니다. 아직 컴퓨팅을 탐색하듯 진로 탐색 중이지만, 이를 위해서 현재 다양한 경로로 고민하고 있습니다.") #본문
+    tab1, tab2, tab3 = st.tabs(["🙋‍♂️ 프로필 & 관심사", "📚 수강 및 학습 현황", "🎯 프로젝트 목표"])
 
-    st.subheader("이번 학기 수강 과목")
-    st.write(pd.DataFrame({"A": ['미시경제학', '거시경제학', '컴퓨팅 핵심', '컴퓨팅 탐색']})) # 데이터프레임
+    # --- Tab 1: 프로필 ---
+    with tab1:
+        st.header("Who am I?")
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.markdown("<h1 style='text-align: center;'>👨‍🔬</h1>", unsafe_allow_html=True)
+        with col2:
+            st.markdown("""
+            - **이름:** 정지호 (02년생)
+            - **전공:** 식품생명공학 (21학번, 4학년)
+            - **관심 분야:** 식품 R&D, 데이터 분석, 경제 동향
+            """)
 
-    st.subheader("좋아하는 것")
-    st.write("제가 가장 좋아하는 것은 **디저트**입니다. 잘 만들어진 케이크와 음료 한 잔은 저에게 큰 행복을 주곤 합니다.\
-            본가에 지낼 때는 가끔씩 마들렌, 휘낭시에, 간단한 구움과자들을 만들어 먹곤 했습니다. 건강에 좋은 음식은 아니지만, 조만간 먹는 디저트들은 제 스트레스 해소에 큰 도움이 됩니다.")
-    st.write("대리만족 삼아 찾아보는 *빵딘*이라는 이름의 유튜버 링크는 다음과 같습니다. [빵딘 유튜브 링크](https://www.youtube.com/@빵딘)")
+        st.divider()
+        st.subheader("📢 자기소개")
+        st.write("""
+        안녕하세요! 저는 **식품생명공학**을 전공하고 있는 4학년 정지호입니다.
+        본 학기에는 전공 지식을 넓히기 위해 **경제** 관련 연계 전공 수업과 **'컴퓨팅 탐색'** 등 IT 수업을 함께 수강하고 있습니다.
+        
+        현재 가장 큰 고민은 **졸업 후 진로**입니다. 단순히 식품을 연구하는 것을 넘어, 
+        데이터와 경제적 관점을 결합하여 시장이 원하는 인재가 되기 위해 치열하게 고민하고 있습니다.
+        """)
 
-    st.subheader("앞으로의 목표")
-    st.write("앞으로의 목표는 **다양한 경험**을 쌓는 것입니다. 대학 생활 동안 여러 활동에 참여하며 다양한 사람들을 만나고, 새로운 지식을 습득하는 것이 저의 목표입니다.\
-            이를 통해 폭넓은 시야를 갖추고, 졸업 후에 할 수 있는 제가 그나마 더 원하는 길을 찾고 싶습니다.")
+        st.subheader("💖 좋아하는 것")
+        with st.expander("🍰 저의 달콤한 취미 보러가기 (Click!)"):
+            st.write("""
+            제가 가장 좋아하는 것은 **디저트**입니다. 잘 만들어진 케이크와 음료 한 잔은 큰 행복을 줍니다.
+            본가에서는 마들렌, 휘낭시에 같은 구움과자를 직접 만들어 먹으며 스트레스를 해소하곤 합니다.
+            """)
+            st.info("👇 대리만족을 위해 자주 보는 채널")
+            st.link_button("유튜버 '빵딘' 보러가기", "https://www.youtube.com/@빵딘")
 
-    st.code("print('Hello, my name is jiho.')", language="python")
-    st.latex(r"E = mc^2")
+    # --- Tab 2: 수강 현황 ---
+    with tab2:
+        st.header("Academic Roadmap")
+        col1, col2, col3 = st.columns(3)
+        col1.metric("현재 학년", "4학년")
+        col2.metric("이번 학기 수강", "4과목", "융합 학습")
+        col3.metric("총 학점", "12학점", "-6 (집중 학기)", delta_color="inverse")
 
-# --- 2페이지: 수업 시간표 페이지 함수 ---
-def page_timetable():
-    st.title("📚 나의 수업 시간표") #대제목
+        st.divider()
+        st.subheader("📅 이번 학기 시간표")
+        data = {
+            "교시": ["1교시", "2교시"],
+            "월": ["컴퓨팅 핵심", ""],
+            "화": ["거시경제이론", ""],
+            "수": ["컴퓨팅 핵심", "미시경제이론"],
+            "목": ["", ""],
+            "금": ["컴퓨팅 탐색", ""]
+        }
+        st.table(pd.DataFrame(data))
 
-    # 샘플 데이터
-    data = {"요일": ["월", "화", "수", "목", "금"],"1교시": ["컴퓨팅 핵심", "거시경제이론", "컴퓨팅 핵심", "", "컴퓨팅 탐색"], "2교시": ["", "", "미시경제이론", "", ""]}
-    df = pd.DataFrame(data)
+        st.subheader("🔍 수업 상세 정보")
+        st.caption("JSON 트리 구조를 통해 데이터 구조화 능력을 보여줍니다.")
+        json_data = {
+            "컴퓨팅 탐색": {"교수": "변해선", "강의실": "26동 104호", "유형": "교양"},
+            "컴퓨팅 핵심": {"교수": "김현주", "강의실": "26동 104호", "유형": "교양"},
+            "미시경제이론": {"교수": "Gueron Yves", "강의실": "16동 110호", "유형": "연계전공"},
+            "거시경제이론": {"교수": "최재원", "강의실": "223동 107호", "유형": "연계전공"}
+        }
+        st.json(json_data)
 
-    # st.table(): 정적인 테이블을 표시. 간단한 데이터 프레임이나 배열을 깔끔하게 표시할 때 유용.
-    st.write("### 정적 시간표 (st.table)")
-    st.table(df)
+    # --- Tab 3: 목표 ---
+    with tab3:
+        st.header("Why this Project?")
+        st.success("이 프로젝트는 막연한 취업 시장을 데이터를 통해 명확하게 분석하기 위해 시작되었습니다.")
+        
+        st.write("""
+        **앞으로의 목표:**
+        대학 생활 동안 다양한 경험을 쌓고 새로운 지식을 습득하여, 졸업 후 제가 진정으로 원하는 길을 찾고 싶습니다.
+        이번 프로젝트를 통해 **식품 산업의 트렌드**와 **연구 동향**을 직접 수집하고 분석하여 그 해답을 찾아보려 합니다.
+        """)
+        
+        st.subheader("🔧 사용된 기술 스택")
+        st.code("""
+import streamlit as st        # 웹 대시보드 구현
+import pandas as pd           # 데이터 정제 및 분석
+from bs4 import BeautifulSoup # 웹 데이터 수집 (크롤링)
+import pydeck as pdk          # 지도 시각화
+        """, language="python")
 
+        st.subheader("📈 분석 방법론 (예시)")
+        st.write("데이터 간의 상관관계를 분석하기 위해 다음과 같은 통계적 접근을 시도할 예정입니다.")
+        st.latex(r"Correlation(X, Y) = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i - \bar{x})^2 \sum(y_i - \bar{y})^2}}")
 
-    # st.json(): JSON 데이터 구조를 트리 형태로 표시. 펼치기, 접기가 가능
-    json_data = {"컴탐": {"교수" : "변해선", "강의실":"26동 104호"}, "컴핵": {"교수" : "김현주", "강의실":"26동 104호"}, "미시경제이론": {"교수":"Gueron Yves", "강의실":"16동 110호"}, "거시경제이론": {"교수":"최재원", "강의실":"223동 107호"}}
-    st.write("### 수업 정보 (st.json)")
-    st.json(json_data)
+# =========================================================
+# 2. 국내 식품 트렌드 분석 (Trend) - [수정됨: 실제 food_trends.csv 연동]
+# =========================================================
+def page_keyword_analysis():
+    st.title("📈 푸드 트렌드 & 키워드 분석")
+    st.markdown("구글 트렌드 데이터를 활용하여 **실제 소비자 관심도** 변화를 분석합니다.")
 
+    # [데이터 로드] food_trends.csv 파일 읽기
+    csv_file = 'food_trends.csv'
+    
+    # 디버깅: 현재 경로 및 파일 확인
+    current_dir = os.getcwd()
+    st.sidebar.info(f"📂 현재 작업 폴더: {current_dir}")
 
-    #지표(숫자+증감률) 표시
-    st.write("### 이번 학기 요약 (st.metric)")
-    st.metric(label="수강 과목 수", value="4")
-    st.metric(label="총 학점", value="12", delta="-6", delta_color="inverse") # 6학점이 줄어든 것을 빨간색으로 표시
+    # 파일 존재 여부 확인 (os 모듈 사용)
+    if not os.path.exists(csv_file):
+        st.error(f"⚠️ '{csv_file}' 파일을 찾을 수 없습니다.")
+        st.warning("프로젝트 폴더에 'food_trends.csv' 파일이 있는지 꼭 확인해주세요.")
+        st.code(f"현재 폴더 파일 목록: {os.listdir(current_dir)}")
+        return
 
-def cars_home():
-    st.title("🚗 자동차 연비 분석 대시보드")
+    try:
+        # 1. 데이터 읽기
+        df = pd.read_csv(csv_file)
+        
+        # 2. 날짜 컬럼 변환 (Date)
+        # 만약 'Date' 컬럼이 있으면 사용, 없으면 첫 번째 컬럼 사용
+        if 'Date' in df.columns:
+            df['Date'] = pd.to_datetime(df['Date'])
+            df.set_index('Date', inplace=True)
+        else:
+            df.rename(columns={df.columns[0]: 'Date'}, inplace=True)
+            df['Date'] = pd.to_datetime(df['Date'])
+            df.set_index('Date', inplace=True)
 
-    st.write("""
-    이 대시보드는 자동차 성능 데이터를 기반으로  
-    **대륙별 평균 연비, 마력(hp)과 연비(mpg) 관계, 차량 무게와 연비 관계, 연도별 평균 연비 변화**등을 시각화합니다.
-    """)
+        # 3. 데이터 전처리
+        for col in df.columns:
+            if df[col].dtype == 'object':
+                df[col] = df[col].astype(str).str.replace('<1', '0')
+                df[col] = df[col].astype(str).str.replace(',', '')
+                df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+            else:
+                df[col] = df[col].fillna(0)
+        
+    except Exception as e:
+        st.error(f"데이터 로드 중 오류 발생: {e}")
+        return
 
-    st.markdown("---")
+    # 사이드바 설정
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("🔍 키워드 선택")
+    
+    keywords = df.columns.tolist()
+    default_selection = keywords[:3] if len(keywords) > 0 else []
+    
+    selected_keywords = st.sidebar.multiselect(
+        "분석할 키워드를 선택하세요",
+        keywords,
+        default=default_selection
+    )
 
-    st.subheader("📊 주요 기능")
+    if not selected_keywords:
+        st.warning("분석할 키워드를 1개 이상 선택해주세요.")
+        return
+
+    # [시각화 1] 시계열 그래프
+    st.subheader("🗓️ 주간 관심도 변화 (Time Series)")
+    if not df.empty:
+        st.caption(f"분석 기간: {df.index.min().date()} ~ {df.index.max().date()}")
+    
+    fig = px.line(
+        df,
+        y=selected_keywords,
+        labels={"value": "검색 지수", "Date": "날짜", "variable": "키워드"},
+        template="plotly_white"
+    )
+    fig.update_layout(hovermode="x unified")
+    st.plotly_chart(fig, use_container_width=True)
+
+    # [시각화 2] 데이터 요약 (Metric)
+    st.divider()
+    st.subheader("📊 최근 트렌드 요약 (Last 4 Weeks)")
+    
+    cols = st.columns(len(selected_keywords))
+    for i, key in enumerate(selected_keywords):
+        if len(df) > 8:
+            recent = df[key].iloc[-4:].mean()
+            past = df[key].iloc[-8:-4].mean()
+            diff = recent - past
+        else:
+            recent = df[key].mean()
+            diff = 0
+        
+        with cols[i % 4]:
+            st.metric(
+                label=key,
+                value=f"{recent:.1f}",
+                delta=f"{diff:.1f}",
+                help="최근 4주 평균 검색량입니다."
+            )
+
+    # [시각화 3] 상관관계 히트맵
+    st.divider()
+    st.subheader("🔗 키워드 간 상관관계 (Correlation)")
+    if len(selected_keywords) >= 2:
+        corr = df[selected_keywords].corr()
+        fig_corr = px.imshow(corr, text_auto=".2f", color_continuous_scale="RdBu_r")
+        st.plotly_chart(fig_corr, use_container_width=True)
+    else:
+        st.info("상관관계 분석을 위해 2개 이상의 키워드를 선택하세요.")
+
+# =========================================================
+# 3. 식품 기업 거점 지도 (Map)
+# =========================================================
+
+def page_map_visualization():
+    """ 3. 기업 순위 및 위치 시각화 페이지 """
+    df_map, _ = get_company_data()
+
+    st.title("🗺️ 식품 기업 10대 거점 지도")
+    st.info("K-Brand Index 상위 10개 기업의 위치와 브랜드 평판 순위를 시각화했습니다.")
+
+    # --- 1. 기업 순위 시각화 ---
+    st.subheader("📊 K-Brand Index 식품 부문 TOP 10")
     st.markdown("""
-    1. **탐색적 자료분석 (EDA)**  
-       - 제조 대륙별 평균 연비 비교, 마력과 차량 무게 대비 연비 분포, 연도별 연비 변화 등을 시각화합니다.  
-       - 그래프를 통해 데이터를 직관적으로 확인할 수 있습니다.  
-
-    2. **연비 예측**  
-       - 차량의 제원(`hp`, `weightlbs`, `cubicinches`, `cylinders`)을 입력하면  
-         머신러닝 모델이 예상 연비를 예측합니다.  
-
-    3. **실시간 인터랙티브 시각화**  
-       - 슬라이더, 드롭다운 등 Streamlit 위젯을 활용하여  
-         조건을 바꾸면 그래프가 **즉시 업데이트**됩니다.
+    - **출처:** 아시아브랜드연구소 (2025.11.01 ~ 11.30)
+    - **지표:** 빅데이터 시스템 온라인 인덱스 수치 합산
     """)
 
+    fig = px.bar(
+        df_map, 
+        x="총점", 
+        y="기업명", 
+        orientation='h', 
+        text="총점", 
+        color="총점", 
+        color_continuous_scale="Bluered", 
+        title="기업별 브랜드 평판 총점 비교"
+    )
+    fig.update_layout(yaxis={'categoryorder':'total ascending'}) 
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # --- 2. 지도 시각화 (PyDeck) ---
+    st.subheader("📍 본사 위치 시각화")
+    st.caption("지도의 점을 클릭하거나 마우스를 올리면 기업명과 주소가 표시됩니다.")
+
+    layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=df_map,
+        get_position='[lon, lat]',
+        get_radius=2000,
+        get_fill_color='[255, 0, 0, 180]',
+        pickable=True,
+        stroked=True,
+        filled=True
+    )
+
+    view_state = pdk.ViewState(
+        latitude=36.5,
+        longitude=127.5, 
+        zoom=6,
+        pitch=0
+    )
+
+    tooltip = {
+        "html": "<b>{순위}위 {기업명}</b><br>총점: {총점}점<br>주소: {주소}",
+        "style": {"backgroundColor": "steelblue", "color": "white"}
+    }
+
+    st.pydeck_chart(pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        tooltip=tooltip
+    ))
+
+# =========================================================
+# 4. 식품 기업 상세 정보 (Info)
+# =========================================================
+
+def page_company_info():
+    """ 4. 기업별 상세 정보 페이지 """
+    _, company_details = get_company_data()
+
+    st.title("🏢 10대 식품 기업 상세 정보")
+    st.info("각 기업의 주요 비전, 주력 제품 및 공식 채널 링크를 정리했습니다.")
+    
     st.markdown("---")
 
-    st.subheader("💡 활용 포인트")
-    st.info("""
-    - 데이터를 시각화하며 **연비에 영향을 주는 변수**를 탐색할 수 있습니다.  
-    - 사용자가 직접 조건을 조정하면서 **예상 연비 모델의 반응**을 실시간으로 확인할 수 있습니다.  
-    - Streamlit을 활용해 **웹 기반 데이터 분석 대시보드** 제작을 체험할 수 있습니다.
+    # 2열 그리드 배치
+    for i in range(0, len(company_details), 2):
+        cols = st.columns(2)
+        # 왼쪽 컬럼
+        with cols[0]:
+            c1 = company_details[i]
+            with st.expander(f"**{c1['순위']}위. {c1['기업명']}**", expanded=True):
+                st.markdown(f"**💡 소개:** {c1['소개']}")
+                st.markdown(f"**🛒 제품:** {c1['주력제품']}")
+                st.markdown(f"**🚀 비전:** {c1['비전']}")
+                st.markdown("---")
+                if c1.get("홈페이지"):
+                    st.link_button("🏠 홈페이지", c1["홈페이지"], use_container_width=True)
+                if c1.get("유튜브"):
+                    st.link_button("📺 유튜브 채널", c1["유튜브"], use_container_width=True)
+        
+        # 오른쪽 컬럼
+        if i + 1 < len(company_details):
+            with cols[1]:
+                c2 = company_details[i+1]
+                with st.expander(f"**{c2['순위']}위. {c2['기업명']}**", expanded=True):
+                    st.markdown(f"**💡 소개:** {c2['소개']}")
+                    st.markdown(f"**🛒 제품:** {c2['주력제품']}")
+                    st.markdown(f"**🚀 비전:** {c2['비전']}")
+                    st.markdown("---")
+                    if c2.get("홈페이지"):
+                        st.link_button("🏠 홈페이지", c2["홈페이지"], use_container_width=True)
+                    if c2.get("유튜브"):
+                        st.link_button("📺 유튜브 채널", c2["유튜브"], use_container_width=True)
+
+# =========================================================
+# 5. 연구 트렌드 분석 (Research) - [수정됨: 코드 분리]
+# =========================================================
+
+def page_scholar_analysis():
+    st.title("🎓 연구 트렌드 분석")
+    st.markdown("""
+    **분석 개요:**
+    별도의 Python 봇(`crawler.py`)을 통해 수집한 **Google Scholar 논문 데이터**를 시각화합니다.
+    """)
+    
+    # crawler.py가 생성할 파일명
+    csv_file = "scholar_data.csv"
+    
+    if not os.path.exists(csv_file):
+        st.warning("⚠️ 분석된 데이터 파일이 없습니다.")
+        st.info("먼저 `crawler.py`를 실행하여 데이터를 수집해주세요.")
+        st.code("python crawler.py", language="bash")
+        return
+
+    try:
+        # 데이터 로드
+        df = pd.read_csv(csv_file)
+        st.success(f"✅ 총 {len(df)}건의 논문 데이터를 불러왔습니다.")
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.subheader("📊 연도별 논문 발행 수")
+            if 'Year' in df.columns:
+                year_counts = df['Year'].value_counts().sort_index()
+                fig = px.bar(x=year_counts.index, y=year_counts.values, labels={'x':'Year', 'y':'Count'})
+                fig.update_layout(xaxis=dict(type='category'))
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.warning("연도(Year) 데이터가 없습니다.")
+            
+        with col2:
+            st.subheader("☁️ 워드 클라우드")
+            if 'Title' in df.columns:
+                text = " ".join(df['Title'].astype(str))
+                # 워드클라우드용 폰트 설정 (Mac/Windows 대응)
+                wc = WordCloud(font_path=font_path, width=400, height=400, background_color='white').generate(text)
+                fig_wc, ax = plt.subplots()
+                ax.imshow(wc, interpolation='bilinear')
+                ax.axis('off')
+                st.pyplot(fig_wc)
+        
+        with st.expander("데이터 원본 보기"):
+            st.dataframe(df)
+            
+    except Exception as e:
+        st.error(f"데이터 로드 중 에러 발생: {e}")
+
+# =========================================================
+# 6. 결론 및 제언 (Conclusion)
+# =========================================================
+
+def page_conclusion():
+    st.title("📝 결론 및 제언 (Conclusion & Suggestion)")
+    st.markdown("""
+    본 포트폴리오 프로젝트를 통해 식품 산업의 현재 트렌드를 데이터를 통해 정량적으로 분석하고, 
+    미래 식품 산업에서의 데이터 기반 의사결정 가능성을 구체적으로 탐색했습니다.
     """)
 
-    st.markdown("---")
+    # 1. 요약 및 분석 결과
+    st.subheader("1. 분석 요약 (Summary of Analysis)")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.info("**📈 트렌드(Trend) 분석 결론**")
+        st.markdown("""
+        - **건강 지향성 심화**: '저속노화', '제로슈거', '단백질' 키워드의 검색량이 꾸준히 상위권을 유지하며, 소비자들이 단순한 맛을 넘어 **'기능성'과 '건강'**을 식품 선택의 최우선 가치로 두고 있음을 확인했습니다.
+        - **SNS 바이럴의 영향력**: '두바이초콜릿', '요아정'과 같은 키워드의 급등락 패턴은 현대 식품 시장에서 **SNS 숏폼 콘텐츠와 시각적 요소**가 트렌드 형성에 결정적인 역할을 함을 시사합니다.
+        """)
+    with col2:
+        st.success("**🎓 연구(Research) 동향 결론**")
+        st.markdown("""
+        - **융합 기술의 부상**: 학술 검색 결과, **Microbiome(마이크로바이옴)**과 **Alternative Meat(대체육)** 분야의 연구 논문 수가 최근 3년간 꾸준히 증가 추세입니다.
+        - **미래 방향성**: 이는 식품 공학이 단순 가공 기술을 넘어 **바이오/생명공학 기술**과 융합되고 있으며, 개인 맞춤형 영양(Personalized Nutrition) 시대로 나아가고 있음을 보여줍니다.
+        """)
 
-    st.caption("📁 데이터 출처: Kaggle - Auto MPG Dataset")
+    st.divider()
 
-def cars_EDA(df):
-    st.title("🔍 자동차 연비 분석 (EDA)")
+    # 2. 기대 효과 및 활용 방안
+    st.subheader("2. 기대 효과 및 활용 방안 (Expected Effects & Utilization)")
+    
+    with st.expander("💡 융합적 관점에서의 기대 효과 (Click)", expanded=True):
+        st.markdown("""
+        **1) 식품공학 x 경제학의 시너지: '데이터 기반 제품 기획'**
+        * 기존의 직관에 의존한 기획에서 벗어나, 검색량 데이터와 경제 지표(물가 상승률 등)를 결합하여 **'성공 확률이 높은' 제품군**을 선별할 수 있습니다.
+        * 예: 불황기에는 '가성비' 키워드와 연관된 '대용량/PB상품' 기획, 호황기에는 '가심비' 중심의 '프리미엄 디저트' 기획 등 유연한 전략 수립이 가능합니다.
 
-    st.write("""
-    이 탭에서는 자동차 성능 데이터를 활용하여  
-    **연비(mpg)와 주요 변수들 간의 관계, 대륙별 특성, 연도별 변화** 등을 탐색합니다.
-    """)
+        **2) R&D 파이프라인 최적화**
+        * 구글 스칼라의 연구 트렌드 분석을 통해 **학계에서 주목받는 기술**을 조기에 포착하고, 이를 기업의 선행 연구 주제로 빠르게 도입할 수 있습니다.
+        * 이는 경쟁사보다 한발 앞선 기술 선점과 특허 확보로 이어질 수 있습니다.
+        """)
 
-    # 데이터 미리보기
-    st.subheader("📄 데이터 미리보기")
-    st.dataframe(df.head())
+    with st.expander("🚀 실무 및 학업 활용 전략 (Strategy)"):
+        st.markdown("""
+        - **마케팅 전략 수립**: 시즈널 키워드(예: 여름철 '요아정', 겨울철 '호빵') 분석을 통한 프로모션 시기 및 타겟 최적화.
+        - **글로벌 진출 전략**: K-Food 관심도가 높은 국가의 키워드 데이터를 분석하여 현지화 제품 개발(예: 미국 시장 내 '비건 만두' 수요 분석).
+        - **위기 관리 시스템**: 식품 안전 관련 키워드(HACCP, 식중독, 이물질)의 검색량 급증을 실시간 모니터링하여 선제적인 품질 관리 시스템 구축.
+        """)
 
-    st.markdown("---")
+    st.divider()
 
-    st.subheader("🌏 대륙별 평균 연비")
-    continent_mpg = df.groupby("continent")["mpg"].mean().reset_index()
-    fig1 = px.bar(
-        continent_mpg,
-        x="continent",
-        y="mpg",
-        color="mpg",
-        title="대륙별 평균 연비",
-        color_continuous_scale="Greens"
+    # 3. 과제 후기 (User Review)
+    st.subheader("3. 과제 후기 및 자기 성찰 (Self-Reflection)")
+    st.write("이 프로젝트를 진행하며 느낀 점, 기술적 어려움 극복 과정, 그리고 앞으로의 다짐을 자유롭게 작성합니다.")
+    
+    review = st.text_area(
+        "👇 여기에 과제 후기를 작성하세요 (작성 후 Ctrl+Enter를 누르면 저장됩니다)",
+        height=150,
+        placeholder="예시: 처음에는 파이썬 코드가 낯설었지만, 직접 데이터를 크롤링하고 시각화해보니 데이터의 힘을 실감할 수 있었습니다. 특히 경제학 수업에서 배운 수요 예측 이론을 실제 검색량 데이터에 적용해보고 싶은 욕심이 생겼습니다. Selenium 크롤링 과정에서 봇 탐지 문제를 해결하며 문제 해결 능력도 기를 수 있었습니다."
     )
-    # fig1.show() # vs code에서 확인용
+    
+    if review:
+        st.success("✅ 후기가 성공적으로 저장되었습니다! (이 내용은 발표 시 활용 가능합니다)")
+        st.write(f"**작성된 내용:** {review}")
 
-    st.plotly_chart(fig1, use_container_width=True) 
-    # use_container_width :Streamlit 페이지의 가로 폭(컨테이너 너비)에 자동으로 맞춰지게 할지 여부를 설정하는 옵션
-
-    st.markdown("---")
-
-    st.info("""
-    💡 **분석 포인트**
-    - 대륙별로 차량 특성이 다르며, 미국 차량은 비교적 연비가 낮고 일본 차량은 연비가 높은 편입니다.  
-    """)
-
-    # 마력(hp)과 연비(mpg) 관계
-
-    st.subheader("⚡ 마력(hp)과 연비(mpg) 관계")
-    fig2 = px.scatter(
-        df,
-        x="hp",
-        y="mpg",
-        color="continent",
-        size="weightlbs",
-        hover_name="continent",
-        title="마력 대비 연비 산점도"
-    )
-    #fig2.show() # vs code에서 확인용
-    st.plotly_chart(fig2, use_container_width=True)
-
-    st.markdown("---")
-
-    st.info("""
-    💡 **분석 포인트**
-    - 마력이 높을수록 연비가 낮아지는 경향이 있습니다.""")
-
-    # 차량 무게와 연비 관계
-    st.subheader("⚖️ 차량 무게(weightlbs)와 연비 관계")
-    fig3 = px.scatter(
-        df,
-        x="weightlbs",
-        y="mpg",
-        color="continent",
-        size="hp",
-        hover_name="continent",
-        title="차량 무게 대비 연비 산점도"
-    )
-    #fig3.show()
-    st.plotly_chart(fig3, use_container_width=True)
-
-    st.markdown("---")
-
-    st.info("""
-    💡 **분석 포인트**
-    - 차량 무게가 무거울수록 연비가 낮아지는 경향이 있습니다.""") 
-
-    # 연도별 평균 연비 변화
-    st.subheader("📆 연도별 평균 연비 변화")
-    year_mpg = df.groupby("year")["mpg"].mean().reset_index()
-    fig4 = px.line(
-        year_mpg,
-        x="year",
-        y="mpg",
-        title="연도별 평균 연비 추이",
-        markers=True
-    )
-    #fig4.show()
-    st.plotly_chart(fig4, use_container_width=True)
-
-    st.markdown("---")
-
-    st.info("""
-    💡 **분석 포인트**
-    - 연도별 평균 연비가 점차 개선되는 추세를 확인할 수 있습니다.""")
-
-def cars_predict(df):
-    #머신러닝 모델을 활용하여 자동차의 연비를 예측하는 기능을 구현한다. 
-
-    st.header("🤖 자동차 연비 예측")
-    st.write("선형회귀(Linear Regression) 모델을 활용하여 자동차의 연비(mpg)를 예측합니다.")
-
-    # 입력 변수(X)와 목표 변수(y) 설정
-    X = df[["cylinders", "cubicinches", "hp", "weightlbs", "time-to-60"]]
-    y = df["mpg"]
-
-    # 학습 데이터와 테스트 데이터 분리
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # 모델 학습
-    model = LinearRegression()
-    model.fit(X_train, y_train)
-
-    # 예측 성능 표시
-    y_pred = model.predict(X_test)
-    score = r2_score(y_test, y_pred)
-    st.write(f"📊 모델 성능 (R²): **{score:.3f}**")
-
-    # 사용자 입력
-    st.subheader("🚗 자동차 정보 입력")
-    cylinders = st.slider("실린더 수 (cylinders)", 3, 12, 6)
-    cubicinches = st.slider("배기량 (cubicinches)", 60, 500, 200)
-    hp = st.slider("마력 (horsepower)", 50, 400, 150)
-    weightlbs = st.slider("무게 (weightlbs)", 1500, 6000, 3000)
-    time_to_60 = st.slider("시속 60마일 도달 시간 (초)", 4.0, 20.0, 10.0)
-
-    # 입력값으로 예측 수행
-    input_data = pd.DataFrame({
-        "cylinders": [cylinders],
-        "cubicinches": [cubicinches],
-        "hp": [hp],
-        "weightlbs": [weightlbs],
-        "time-to-60": [time_to_60]
-    })
-
-    mpg_pred = model.predict(input_data)[0]
-    st.success(f"예상 연비: **{mpg_pred:.2f} mpg** 🚘")
+# =========================================================
+# 메인 실행 블록
+# =========================================================
 
 def main():
-    st.set_page_config(page_title="자동차 연비 대시보드", layout="wide")
-
-    # --- 사이드바 메뉴 ---
+    st.sidebar.title("🗂️ Portfolio Menu")
+    
     menu = st.sidebar.radio(
-        "대시보드 메뉴",
-        ["홈", "자기소개", "나의 시간표", "탐색적 자료분석(EDA)", "연비 예측"]
+        "이동할 페이지를 선택하세요",
+        [
+            "1. Intro: 융합 인재 포트폴리오", 
+            "2. Trend: 키워드 검색 수 분석", 
+            "3. Map: 식품 기업 순위 및 지도", 
+            "4. Info: 10대 기업 상세 정보", 
+            "5. Research: 연구 트렌드 분석", 
+            "6. Conclusion: 결론 및 제언" 
+        ]
     )
 
-    df = load_data()  # main()함수에 추가
-
-
-    # --- 홈 화면 ---
-    if menu == "홈":
-        cars_home()
-    # --- 자기소개 화면 ---
-    elif menu == "자기소개":
+    if menu.startswith("1."):
         page_intro()
-
-    # --- 나의 시간표 화면 ---
-    elif menu == "나의 시간표":
-        page_timetable()
-
-    # --- 탐색적 자료분석 화면 ---
-    elif menu == "탐색적 자료분석(EDA)":
-        cars_EDA(df)
-
-    # --- 연비 예측 화면 ---
-    elif menu == "연비 예측":
-        cars_predict(df) 
-
+    elif menu.startswith("2."):
+        page_keyword_analysis()
+    elif menu.startswith("3."):
+        page_map_visualization()
+    elif menu.startswith("4."):
+        page_company_info()
+    elif menu.startswith("5."):
+        page_scholar_analysis()
+    elif menu.startswith("6."):
+        page_conclusion()
 
 if __name__ == "__main__":
     main()
-

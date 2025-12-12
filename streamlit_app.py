@@ -9,6 +9,35 @@ import os
 from matplotlib import rc, font_manager
 import platform
 import chromedriver_autoinstaller
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import shutil
+
+# ... (기존 import 문들 아래에 작성) ...
+
+@st.cache_resource
+def get_driver():
+    options = Options()
+    options.add_argument("--headless")  # 화면 없이 실행 (서버 필수)
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    
+    # packages.txt로 설치한 크롬 드라이버 사용
+    # 주의: chromedriver_autoinstaller 대신 시스템 경로를 사용하는 것이 클라우드에서 더 안정적입니다.
+    try:
+        driver = webdriver.Chrome(options=options)
+    except Exception as e:
+        # 만약 경로 문제 발생 시 autoinstaller 시도 (로컬/서버 겸용 안전장치)
+        import chromedriver_autoinstaller
+        chromedriver_autoinstaller.install()
+        driver = webdriver.Chrome(options=options)
+        
+    return driver
+
+# 사용 시:
+driver = get_driver()
+
 
 # ==========================================
 # [설정] 페이지 및 폰트 설정
@@ -726,5 +755,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 

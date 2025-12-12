@@ -24,21 +24,27 @@ def get_driver():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     
-    # [중요] Streamlit Cloud 환경(리눅스) 경로 강제 지정
-    # packages.txt로 설치된 chromium은 보통 이 경로에 있습니다.
-    if os.path.exists("/usr/bin/chromium") and os.path.exists("/usr/bin/chromedriver"):
-        options.binary_location = "/usr/bin/chromium"
-        service = Service("/usr/bin/chromedriver")
+    # 1. Streamlit Cloud (리눅스 서버) 환경인지 확인
+    # packages.txt로 설치했다면 이 경로에 무조건 있습니다.
+    CHROMIUM_PATH = "/usr/bin/chromium"
+    DRIVER_PATH = "/usr/bin/chromedriver"
+    
+    if os.path.exists(CHROMIUM_PATH) and os.path.exists(DRIVER_PATH):
+        # 서버 환경: 이미 설치된 크롬을 강제로 사용 (다운로드 X)
+        options.binary_location = CHROMIUM_PATH
+        service = Service(DRIVER_PATH)
         driver = webdriver.Chrome(service=service, options=options)
         return driver
-        
-    # [로컬 환경] 내 컴퓨터(윈도우/맥)에서는 자동 설치 사용
+    
+    # 2. 로컬(내 컴퓨터) 환경일 경우에만 autoinstaller 사용
+    # 서버에서는 이 부분이 실행되지 않아야 'Permission denied'가 안 뜹니다.
     try:
+        import chromedriver_autoinstaller
         chromedriver_autoinstaller.install()
         driver = webdriver.Chrome(options=options)
         return driver
     except Exception as e:
-        st.error(f"드라이버 실행 오류: {e}")
+        st.error(f"드라이버 설정 중 오류 발생: {str(e)}")
         return None
 
 
@@ -758,6 +764,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

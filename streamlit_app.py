@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly
 import plotly.express as px
 import pydeck as pdk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-import os  # [핵심] 파일 경로 확인을 위해 반드시 필요합니다!
+import os
 from matplotlib import rc, font_manager
 import platform
 
@@ -24,7 +23,6 @@ system_name = platform.system()
 font_path = None
 
 if system_name == 'Windows':
-    # 윈도우 폰트 설정
     font_path = "C:/Windows/Fonts/malgun.ttf"
     try:
         if os.path.exists(font_path):
@@ -33,19 +31,36 @@ if system_name == 'Windows':
     except:
         pass
 elif system_name == 'Darwin': 
-    # Mac 폰트 설정
     rc('font', family='AppleGothic')
     font_path = '/System/Library/Fonts/Supplemental/AppleGothic.ttf'
 else:
-    # 리눅스/클라우드 환경 (한글 폰트가 없을 경우 기본값)
+    # 리눅스/클라우드 환경 (한글 폰트가 없을 경우 기본값 사용)
     pass
 
-# plt 마이너스 기호 깨짐 방지
 plt.rcParams['axes.unicode_minus'] = False
 
 # =========================================================
 # 0. 공통 데이터 관리 함수 (Data Loader)
 # =========================================================
+
+# [수정] 데이터 로딩 함수 (캐싱 적용)
+@st.cache_data
+def load_data(file_path):
+    """
+    CSV 파일을 로드하는 함수입니다.
+    Streamlit의 캐시 기능을 사용하여 속도를 최적화합니다.
+    """
+    if not os.path.exists(file_path):
+        return None
+    
+    try:
+        # utf-8로 먼저 시도하고 실패하면 euc-kr로 시도
+        df = pd.read_csv(file_path, encoding='utf-8')
+    except UnicodeDecodeError:
+        df = pd.read_csv(file_path, encoding='euc-kr')
+        
+    return df
+
 @st.cache_data
 def get_company_data():
     """기업 순위, 위치, 상세 정보를 반환하는 함수"""
@@ -153,7 +168,6 @@ def page_intro():
 
     tab1, tab2, tab3 = st.tabs(["🙋‍♂️ 프로필 & 관심사", "📚 수강 및 학습 현황", "🎯 프로젝트 목표"])
 
-    # --- Tab 1: 프로필 ---
     with tab1:
         st.header("Who am I?")
         col1, col2 = st.columns([1, 2])
@@ -185,7 +199,6 @@ def page_intro():
             st.info("👇 대리만족을 위해 자주 보는 채널")
             st.link_button("유튜버 '빵딘' 보러가기", "https://www.youtube.com/@빵딘")
 
-    # --- Tab 2: 수강 현황 ---
     with tab2:
         st.header("Academic Roadmap")
         col1, col2, col3 = st.columns(3)
@@ -215,7 +228,6 @@ def page_intro():
         }
         st.json(json_data)
 
-    # --- Tab 3: 목표 ---
     with tab3:
         st.header("Why this Project?")
         st.success("이 프로젝트는 막연한 취업 시장을 데이터를 통해 명확하게 분석하기 위해 시작되었습니다.")
@@ -239,32 +251,26 @@ import pydeck as pdk          # 지도 시각화
         st.latex(r"Correlation(X, Y) = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i - \bar{x})^2 \sum(y_i - \bar{y})^2}}")
 
 # =========================================================
-# 2. 국내 식품 트렌드 분석 (Trend) - [수정됨: 실제 food_trends.csv 연동]
+# 2. 국내 식품 트렌드 분석 (Trend)
 # =========================================================
 def page_keyword_analysis():
     st.title("📈 푸드 트렌드 & 키워드 분석")
     st.markdown("구글 트렌드 데이터를 활용하여 **실제 소비자 관심도** 변화를 분석합니다.")
 
-    # [데이터 로드] food_trends.csv 파일 읽기
-    csv_file = 'food_trends.csv'
+    # [수정] 파일 경로 설정 (GitHub 배포 시 경로 문제 해결을 위해 상대 경로 사용 권장)
+    csv_file = './food_trends.csv'
     
-    # 디버깅: 현재 경로 및 파일 확인
-    current_dir = os.getcwd()
-    st.sidebar.info(f"📂 현재 작업 폴더: {current_dir}")
+    # 캐싱된 함수를 통해 데이터 로드
+    df = load_data(csv_file)
 
-    # 파일 존재 여부 확인 (os 모듈 사용)
-    if not os.path.exists(csv_file):
+    if df is None:
         st.error(f"⚠️ '{csv_file}' 파일을 찾을 수 없습니다.")
-        st.warning("프로젝트 폴더에 'food_trends.csv' 파일이 있는지 꼭 확인해주세요.")
-        st.code(f"현재 폴더 파일 목록: {os.listdir(current_dir)}")
+        st.warning(f"현재 폴더 위치: {os.getcwd()}")
+        st.info("Tip: GitHub에 올릴 때 'food_trends.csv' 파일이 app.py와 같은 폴더에 있는지 확인하세요.")
         return
 
     try:
-        # 1. 데이터 읽기
-        df = pd.read_csv(csv_file)
-        
-        # 2. 날짜 컬럼 변환 (Date)
-        # 만약 'Date' 컬럼이 있으면 사용, 없으면 첫 번째 컬럼 사용
+        # 1. 날짜 컬럼 변환
         if 'Date' in df.columns:
             df['Date'] = pd.to_datetime(df['Date'])
             df.set_index('Date', inplace=True)
@@ -273,7 +279,7 @@ def page_keyword_analysis():
             df['Date'] = pd.to_datetime(df['Date'])
             df.set_index('Date', inplace=True)
 
-        # 3. 데이터 전처리
+        # 2. 데이터 전처리
         for col in df.columns:
             if df[col].dtype == 'object':
                 df[col] = df[col].astype(str).str.replace('<1', '0')
@@ -283,7 +289,7 @@ def page_keyword_analysis():
                 df[col] = df[col].fillna(0)
         
     except Exception as e:
-        st.error(f"데이터 로드 중 오류 발생: {e}")
+        st.error(f"데이터 전처리 중 오류 발생: {e}")
         return
 
     # 사이드바 설정
@@ -428,10 +434,8 @@ def page_company_info():
     
     st.markdown("---")
 
-    # 2열 그리드 배치
     for i in range(0, len(company_details), 2):
         cols = st.columns(2)
-        # 왼쪽 컬럼
         with cols[0]:
             c1 = company_details[i]
             with st.expander(f"**{c1['순위']}위. {c1['기업명']}**", expanded=True):
@@ -444,7 +448,6 @@ def page_company_info():
                 if c1.get("유튜브"):
                     st.link_button("📺 유튜브 채널", c1["유튜브"], use_container_width=True)
         
-        # 오른쪽 컬럼
         if i + 1 < len(company_details):
             with cols[1]:
                 c2 = company_details[i+1]
@@ -459,7 +462,7 @@ def page_company_info():
                         st.link_button("📺 유튜브 채널", c2["유튜브"], use_container_width=True)
 
 # =========================================================
-# 5. 연구 트렌드 분석 (Research) - [수정됨: 코드 분리]
+# 5. 연구 트렌드 분석 (Research)
 # =========================================================
 
 def page_scholar_analysis():
@@ -469,20 +472,19 @@ def page_scholar_analysis():
     별도의 Python 봇(`crawler.py`)을 통해 수집한 **Google Scholar 논문 데이터**를 시각화합니다.
     """)
     
-    # crawler.py가 생성할 파일명
-    csv_file = "scholar_data.csv"
+    # [수정] 파일 경로 (루트 디렉토리 기준)
+    csv_file = "./scholar_data.csv"
     
-    if not os.path.exists(csv_file):
+    # 캐싱된 로더 사용
+    df = load_data(csv_file)
+    
+    if df is None:
         st.warning("⚠️ 분석된 데이터 파일이 없습니다.")
-        st.info("먼저 `crawler.py`를 실행하여 데이터를 수집해주세요.")
-        st.code("python crawler.py", language="bash")
+        st.info("먼저 `crawler.py`를 실행하여 데이터를 수집하거나, GitHub에 csv 파일을 함께 올렸는지 확인해주세요.")
         return
 
     try:
-        # 데이터 로드
-        df = pd.read_csv(csv_file)
         st.success(f"✅ 총 {len(df)}건의 논문 데이터를 불러왔습니다.")
-        
         col1, col2 = st.columns([2, 1])
         
         with col1:
@@ -499,7 +501,7 @@ def page_scholar_analysis():
             st.subheader("☁️ 워드 클라우드")
             if 'Title' in df.columns:
                 text = " ".join(df['Title'].astype(str))
-                # 워드클라우드용 폰트 설정 (Mac/Windows 대응)
+                # 워드클라우드용 폰트 설정
                 wc = WordCloud(font_path=font_path, width=400, height=400, background_color='white').generate(text)
                 fig_wc, ax = plt.subplots()
                 ax.imshow(wc, interpolation='bilinear')
@@ -510,7 +512,7 @@ def page_scholar_analysis():
             st.dataframe(df)
             
     except Exception as e:
-        st.error(f"데이터 로드 중 에러 발생: {e}")
+        st.error(f"데이터 처리 중 에러 발생: {e}")
 
 # =========================================================
 # 6. 결론 및 제언 (Conclusion)
@@ -523,7 +525,6 @@ def page_conclusion():
     미래 식품 산업에서의 데이터 기반 의사결정 가능성을 구체적으로 탐색했습니다.
     """)
 
-    # 1. 요약 및 분석 결과
     st.subheader("1. 분석 요약 (Summary of Analysis)")
     col1, col2 = st.columns(2)
     with col1:
@@ -541,7 +542,6 @@ def page_conclusion():
 
     st.divider()
 
-    # 2. 기대 효과 및 활용 방안
     st.subheader("2. 기대 효과 및 활용 방안 (Expected Effects & Utilization)")
     
     with st.expander("💡 융합적 관점에서의 기대 효과 (Click)", expanded=True):
@@ -564,7 +564,6 @@ def page_conclusion():
 
     st.divider()
 
-    # 3. 과제 후기 (User Review)
     st.subheader("3. 과제 후기 및 자기 성찰 (Self-Reflection)")
     st.write("이 프로젝트를 진행하며 느낀 점, 기술적 어려움 극복 과정, 그리고 앞으로의 다짐을 자유롭게 작성합니다.")
     
@@ -612,4 +611,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

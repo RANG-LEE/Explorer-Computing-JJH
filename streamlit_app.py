@@ -9,34 +9,37 @@ import os
 from matplotlib import rc, font_manager
 import platform
 import chromedriver_autoinstaller
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import shutil
-
-# ... (기존 import 문들 아래에 작성) ...
+from selenium.webdriver.chrome.service import Service
+import os
+import chromedriver_autoinstaller
 
 @st.cache_resource
 def get_driver():
     options = Options()
-    options.add_argument("--headless")  # 화면 없이 실행 (서버 필수)
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     
-    # packages.txt로 설치한 크롬 드라이버 사용
-    # 주의: chromedriver_autoinstaller 대신 시스템 경로를 사용하는 것이 클라우드에서 더 안정적입니다.
+    # [중요] Streamlit Cloud 환경(리눅스) 경로 강제 지정
+    # packages.txt로 설치된 chromium은 보통 이 경로에 있습니다.
+    if os.path.exists("/usr/bin/chromium") and os.path.exists("/usr/bin/chromedriver"):
+        options.binary_location = "/usr/bin/chromium"
+        service = Service("/usr/bin/chromedriver")
+        driver = webdriver.Chrome(service=service, options=options)
+        return driver
+        
+    # [로컬 환경] 내 컴퓨터(윈도우/맥)에서는 자동 설치 사용
     try:
-        driver = webdriver.Chrome(options=options)
-    except Exception as e:
-        # 만약 경로 문제 발생 시 autoinstaller 시도 (로컬/서버 겸용 안전장치)
-        import chromedriver_autoinstaller
         chromedriver_autoinstaller.install()
         driver = webdriver.Chrome(options=options)
-        
-    return driver
-
-# 사용 시:
-driver = get_driver()
+        return driver
+    except Exception as e:
+        st.error(f"드라이버 실행 오류: {e}")
+        return None
 
 
 # ==========================================
@@ -755,6 +758,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -466,53 +466,167 @@ def page_company_info():
 # =========================================================
 
 def page_scholar_analysis():
-    st.title("🎓 연구 트렌드 분석")
+    """ 5. 연구 트렌드 분석 페이지 (Google Scholar Crawling - Year Extraction Fix) """
+    st.title("🎓 연구 트렌드 심층 분석")
     st.markdown("""
-    **분석 개요:**
-    별도의 Python 봇(`crawler.py`)을 통해 수집한 **Google Scholar 논문 데이터**를 시각화합니다.
+    구글 스칼라(Google Scholar)에서 **다중 페이지 크롤링**을 통해 더 풍부한 데이터를 수집합니다.
+    (수집된 데이터를 바탕으로 연도별 트렌드와 핵심 키워드를 시각화합니다.)
     """)
-    
-    # [수정] 파일 경로 (루트 디렉토리 기준)
-    csv_file = "./scholar_data.csv"
-    
-    # 캐싱된 로더 사용
-    df = load_data(csv_file)
-    
-    if df is None:
-        st.warning("⚠️ 분석된 데이터 파일이 없습니다.")
-        st.info("먼저 `crawler.py`를 실행하여 데이터를 수집하거나, GitHub에 csv 파일을 함께 올렸는지 확인해주세요.")
-        return
 
-    try:
-        st.success(f"✅ 총 {len(df)}건의 논문 데이터를 불러왔습니다.")
-        col1, col2 = st.columns([2, 1])
+    # 1. 키워드 입력
+    st.subheader("🔍 Search Keywords")
+    
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.markdown("**Recommended Keywords**")
+        keywords = [
+            "Food Chemistry", "Food Microbiology", "Food Engineering", 
+            "Functional Food", "Fermentation Technology", "Food Safety", 
+            "Food Nutrition", "Biotechnology", "Microbiome", "Alternative Meat"
+        ]
+        selected_keyword = st.selectbox("Select a keyword", keywords)
+    
+    with col2:
+        query = st.text_input("Or type your own keyword", value=selected_keyword)
+
+    pages_to_crawl = st.slider("크롤링할 페이지 수 (페이지당 10개)", 1, 5, 3)
+
+    run_search = st.button("🚀 Start Analysis (Data Collection)")
+
+    if run_search and query:
+        st.divider()
+        progress_bar = st.progress(0)
+        status_text = st.empty()
         
-        with col1:
-            st.subheader("📊 연도별 논문 발행 수")
-            if 'Year' in df.columns:
-                year_counts = df['Year'].value_counts().sort_index()
-                fig = px.bar(x=year_counts.index, y=year_counts.values, labels={'x':'Year', 'y':'Count'})
-                fig.update_layout(xaxis=dict(type='category'))
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.warning("연도(Year) 데이터가 없습니다.")
+        # 데이터 저장소
+        all_titles = []
+        all_years = []
+
+        try:
+            chromedriver_autoinstaller.install()
             
-        with col2:
-            st.subheader("☁️ 워드 클라우드")
-            if 'Title' in df.columns:
-                text = " ".join(df['Title'].astype(str))
-                # 워드클라우드용 폰트 설정
-                wc = WordCloud(font_path=font_path, width=400, height=400, background_color='white').generate(text)
-                fig_wc, ax = plt.subplots()
+            options = Options()
+            # 봇 탐지 회피 옵션
+            options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36")
+            options.add_argument("--headless") 
+            options.add_argument("--disable-gpu")
+            
+            driver = webdriver.Chrome(options=options)
+            
+            # 페이지 반복 크롤링
+            for i in range(pages_to_crawl):
+                start_index = i * 10
+                status_text.info(f"⏳ '{query}' 관련 데이터를 수집 중입니다... ({i+1}/{pages_to_crawl} 페이지)")
+                
+                url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
+                driver.get(url)
+                
+                time.sleep(2 + random.random()) # random delay
+                driver.implicitly_wait(5)
+
+                html = driver.page_source
+                soup = BeautifulSoup(html, "html.parser")
+                
+                results = soup.find_all("div", class_="gs_r gs_or gs_scl")
+                
+                for row in results:
+                    title_tag = row.find("h3", class_="gs_rt")
+                    
+                    # 제목이 있는 경우에만 연도 찾기를 시도 (데이터 짝 맞추기 위함)
+                    if title_tag:
+                        # 1. 제목 추출
+                        clean_title = title_tag.text.replace("[PDF]", "").replace("[HTML]", "").replace("[BOOK]", "").replace("[B]", "").strip()
+                        all_titles.append(clean_title)
+                        
+                        # 2. 연도 추출 (제목에 대응하는 연도를 찾거나, 없으면 None 저장)
+                        meta_tag = row.find("div", class_="gs_a")
+                        year_val = None # 기본값
+                        
+                        if meta_tag:
+                            # 19xx 또는 20xx 형태의 4자리 숫자를 모두 찾음
+                            years_found = re.findall(r'(19\d{2}|20\d{2})', meta_tag.get_text())
+                            if years_found:
+                                # 여러 숫자가 나올 경우 보통 맨 뒤에 나오는 것이 출판 연도일 확률이 높음
+                                try:
+                                    year_val = int(years_found[-1])
+                                except:
+                                    year_val = None
+                        
+                        # 연도를 찾았든 못 찾았든 리스트에 추가 (제목과 길이 맞추기)
+                        all_years.append(year_val)
+                
+                progress_bar.progress((i + 1) / pages_to_crawl)
+            
+            driver.quit()
+
+            if all_titles:
+                # None이 아닌 실제 연도 데이터만 필터링하여 카운트
+                valid_years = [y for y in all_years if y is not None]
+                
+                status_text.success(f"✅ 분석 완료! 총 {len(all_titles)}건 중 {len(valid_years)}건의 연도 정보를 확보했습니다.")
+                
+                # 1. 연도별 트렌드 차트
+                st.subheader(f"📊 Research Trends by Year ({query})")
+                
+                if valid_years:
+                    year_counts = Counter(valid_years)
+                    df_trend = pd.DataFrame(list(year_counts.items()), columns=['Year', 'Count'])
+                    df_trend = df_trend.sort_values('Year')
+                    
+                    # 최근 데이터 위주로 보여주기 위해 정렬
+                    fig = px.bar(
+                        df_trend, 
+                        x='Year', 
+                        y='Count',
+                        text='Count',
+                        title=f"Annual Publication Count for '{query}'",
+                        labels={'Count': 'Number of Papers', 'Year': 'Year'},
+                        template='plotly_white',
+                        color='Count',
+                        color_continuous_scale='Blues'
+                    )
+                    fig.update_traces(textposition='outside')
+                    fig.update_layout(xaxis=dict(type='category')) # X축을 카테고리로 설정하여 정수만 표시
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("⚠️ 연도 정보를 추출하지 못했습니다. (구글 스칼라 페이지 구조가 변경되었거나 정보가 없습니다.)")
+
+                # 2. 워드 클라우드
+                st.subheader(f"☁️ Key Topics Word Cloud")
+                
+                all_text = " ".join(all_titles)
+                stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based", "effect", "effects", "application", "applications"}
+                
+                wc = WordCloud(
+                    font_path=font_path,
+                    width=800,
+                    height=400,
+                    background_color="white",
+                    colormap="viridis",
+                    stopwords=stopwords
+                ).generate(all_text)
+                
+                fig_wc, ax = plt.subplots(figsize=(10, 5))
                 ax.imshow(wc, interpolation='bilinear')
-                ax.axis('off')
+                ax.axis("off")
                 st.pyplot(fig_wc)
-        
-        with st.expander("데이터 원본 보기"):
-            st.dataframe(df)
+                
+                # 3. 논문 목록 (데이터프레임 생성 시 길이 불일치 오류 방지)
+                with st.expander("📜 View Collected Papers List"):
+                    df_papers = pd.DataFrame({
+                        "Title": all_titles,
+                        "Year": all_years 
+                    })
+                    # 연도가 없는(None) 행은 맨 아래로 보내거나 표시
+                    st.dataframe(df_papers.sort_values(by="Year", ascending=False, na_position='last'))
             
-    except Exception as e:
-        st.error(f"데이터 처리 중 에러 발생: {e}")
+            else:
+                status_text.error("데이터를 수집하지 못했습니다. (Google Scholar 봇 탐지 가능성)")
+                st.info("잠시 후 다시 시도하거나, 크롤링 페이지 수를 줄여보세요.")
+
+        except Exception as e:
+            st.error(f"Error occurred: {e}")
+            
 
 # =========================================================
 # 6. 결론 및 제언 (Conclusion)
@@ -611,3 +725,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

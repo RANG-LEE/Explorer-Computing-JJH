@@ -505,7 +505,7 @@ def page_company_info():
 # =========================================================
 
 def page_scholar_analysis():
-    """ 5. 연구 트렌드 분석 페이지 (Google Scholar Crawling - Year Extraction Fix) """
+    """ 5. 연구 트렌드 분석 페이지 """
     st.title("🎓 연구 트렌드 심층 분석")
     st.markdown("""
     구글 스칼라(Google Scholar)에서 **다중 페이지 크롤링**을 통해 더 풍부한 데이터를 수집합니다.
@@ -542,24 +542,24 @@ def page_scholar_analysis():
         all_years = []
 
         try:
-            chromedriver_autoinstaller.install()
+            # [수정된 부분] 직접 설치하지 말고, 위에서 만든 get_driver() 함수를 사용!
+            driver = get_driver()
             
-            options = Options()
-            # 봇 탐지 회피 옵션
-            options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36")
-            options.add_argument("--headless") 
-            options.add_argument("--disable-gpu")
-            
-            driver = webdriver.Chrome(options=options)
+            if driver is None:
+                st.error("❌ 브라우저 드라이버 로드 실패. 관리자에게 문의하세요.")
+                return
             
             # 페이지 반복 크롤링
             for i in range(pages_to_crawl):
+                # ... (이하 크롤링 코드는 그대로 두시면 됩니다) ...
                 start_index = i * 10
                 status_text.info(f"⏳ '{query}' 관련 데이터를 수집 중입니다... ({i+1}/{pages_to_crawl} 페이지)")
                 
                 url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
                 driver.get(url)
                 
+                import time
+                import random
                 time.sleep(2 + random.random()) # random delay
                 driver.implicitly_wait(5)
 
@@ -571,48 +571,46 @@ def page_scholar_analysis():
                 for row in results:
                     title_tag = row.find("h3", class_="gs_rt")
                     
-                    # 제목이 있는 경우에만 연도 찾기를 시도 (데이터 짝 맞추기 위함)
                     if title_tag:
-                        # 1. 제목 추출
                         clean_title = title_tag.text.replace("[PDF]", "").replace("[HTML]", "").replace("[BOOK]", "").replace("[B]", "").strip()
                         all_titles.append(clean_title)
                         
-                        # 2. 연도 추출 (제목에 대응하는 연도를 찾거나, 없으면 None 저장)
                         meta_tag = row.find("div", class_="gs_a")
-                        year_val = None # 기본값
+                        year_val = None 
                         
+                        import re
                         if meta_tag:
-                            # 19xx 또는 20xx 형태의 4자리 숫자를 모두 찾음
                             years_found = re.findall(r'(19\d{2}|20\d{2})', meta_tag.get_text())
                             if years_found:
-                                # 여러 숫자가 나올 경우 보통 맨 뒤에 나오는 것이 출판 연도일 확률이 높음
                                 try:
                                     year_val = int(years_found[-1])
                                 except:
                                     year_val = None
                         
-                        # 연도를 찾았든 못 찾았든 리스트에 추가 (제목과 길이 맞추기)
                         all_years.append(year_val)
                 
                 progress_bar.progress((i + 1) / pages_to_crawl)
             
-            driver.quit()
+            # [중요] 드라이버 종료 대신, 캐싱된 드라이버는 닫지 않거나 필요시 close()
+            # driver.quit()  <-- 캐시된 드라이버를 계속 쓰려면 이 줄을 지우거나, 
+            # 매번 새로 열고 싶으면 get_driver에서 @st.cache_resource를 빼야 합니다.
+            # 일단 안전하게 두셔도 되지만, 다음 실행을 위해 quit()은 조심해서 사용하세요.
+            # 여기서는 로직상 루프가 끝나면 닫는 게 깔끔하므로 유지합니다.
+            driver.quit() 
 
+            # ... (이하 시각화 코드는 그대로) ...
+            
             if all_titles:
-                # None이 아닌 실제 연도 데이터만 필터링하여 카운트
+                # ... (기존 코드 그대로) ...
                 valid_years = [y for y in all_years if y is not None]
-                
                 status_text.success(f"✅ 분석 완료! 총 {len(all_titles)}건 중 {len(valid_years)}건의 연도 정보를 확보했습니다.")
                 
-                # 1. 연도별 트렌드 차트
-                st.subheader(f"📊 Research Trends by Year ({query})")
-                
+                from collections import Counter
                 if valid_years:
                     year_counts = Counter(valid_years)
                     df_trend = pd.DataFrame(list(year_counts.items()), columns=['Year', 'Count'])
                     df_trend = df_trend.sort_values('Year')
                     
-                    # 최근 데이터 위주로 보여주기 위해 정렬
                     fig = px.bar(
                         df_trend, 
                         x='Year', 
@@ -625,14 +623,12 @@ def page_scholar_analysis():
                         color_continuous_scale='Blues'
                     )
                     fig.update_traces(textposition='outside')
-                    fig.update_layout(xaxis=dict(type='category')) # X축을 카테고리로 설정하여 정수만 표시
+                    fig.update_layout(xaxis=dict(type='category'))
                     st.plotly_chart(fig, use_container_width=True)
                 else:
-                    st.warning("⚠️ 연도 정보를 추출하지 못했습니다. (구글 스칼라 페이지 구조가 변경되었거나 정보가 없습니다.)")
+                    st.warning("⚠️ 연도 정보를 추출하지 못했습니다.")
 
-                # 2. 워드 클라우드
                 st.subheader(f"☁️ Key Topics Word Cloud")
-                
                 all_text = " ".join(all_titles)
                 stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based", "effect", "effects", "application", "applications"}
                 
@@ -650,22 +646,20 @@ def page_scholar_analysis():
                 ax.axis("off")
                 st.pyplot(fig_wc)
                 
-                # 3. 논문 목록 (데이터프레임 생성 시 길이 불일치 오류 방지)
                 with st.expander("📜 View Collected Papers List"):
                     df_papers = pd.DataFrame({
                         "Title": all_titles,
                         "Year": all_years 
                     })
-                    # 연도가 없는(None) 행은 맨 아래로 보내거나 표시
                     st.dataframe(df_papers.sort_values(by="Year", ascending=False, na_position='last'))
             
             else:
-                status_text.error("데이터를 수집하지 못했습니다. (Google Scholar 봇 탐지 가능성)")
-                st.info("잠시 후 다시 시도하거나, 크롤링 페이지 수를 줄여보세요.")
+                status_text.error("데이터를 수집하지 못했습니다.")
 
         except Exception as e:
             st.error(f"Error occurred: {e}")
             
+
 
 # =========================================================
 # 6. 결론 및 제언 (Conclusion)
@@ -764,6 +758,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

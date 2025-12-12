@@ -6,7 +6,11 @@ seaborn
 plotly
 plotly-express
 scikit-learn
-
-
+numpy
+pydeck
+wordcloud
+beautifulsoup4
+selenium
+chromedriver-autoinstaller
 
 

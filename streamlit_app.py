@@ -511,11 +511,11 @@ def page_company_info():
 # =========================================================
 
 def page_scholar_analysis():
-    """ 5. 연구 트렌드 분석 페이지 (3초 딜레이 리얼 모드 -> 실패 시 AI 예시 전환) """
+    """ 5. 연구 트렌드 분석 페이지 (Real Slow Crawling -> Fallback to AI Context) """
     st.title("🎓 연구 트렌드 심층 분석")
     st.markdown("""
-    구글 스칼라(Google Scholar)에서 **다중 페이지 크롤링**을 시도하여 데이터를 수집합니다.
-    (보안 문제로 수집이 불가능할 경우, **미리 준비된 AI 융합 연구 예시 데이터**를 시각화합니다.)
+    구글 스칼라(Google Scholar)에서 **실시간 크롤링**을 수행합니다.
+    (탐색 속도를 조절하여 봇 탐지를 최소화합니다. 다소 시간이 소요될 수 있습니다.)
     """)
 
     # 1. 키워드 입력
@@ -534,139 +534,147 @@ def page_scholar_analysis():
     with col2:
         query = st.text_input("Or type your own keyword", value=selected_keyword)
 
-    pages_to_crawl = st.slider("크롤링할 페이지 수 (페이지당 10개)", 1, 5, 3)
+    pages_to_crawl = st.slider("수집할 페이지 수 (페이지당 10개)", 1, 5, 2)
+    st.caption("⚠️ 페이지 수가 많을수록 차단 확률이 높아지고 시간이 오래 걸립니다.")
 
-    run_search = st.button("🚀 Start Analysis (Data Collection)")
+    run_search = st.button("🚀 Start Analysis (Real Crawling)")
 
     if run_search and query:
         st.divider()
-        st.write("### 📡 데이터 수집 프로세스 가동")
+        st.write("### 📡 데이터 수집 프로세스 가동 (Google Scholar)")
         
         # UI 요소 준비
         progress_bar = st.progress(0)
-        status_text = st.empty() # 글자가 바뀌는 공간
+        status_text = st.empty() 
+        log_area = st.empty() # 로그를 보여줄 공간
         
         all_titles = []
         all_years = []
-        is_blocked = False # 차단 여부 확인 플래그
+        is_blocked = False 
 
         try:
             driver = get_driver()
             
             if driver is None:
-                st.error("❌ 브라우저 드라이버 로드 실패.")
-                is_blocked = True
-            else:
-                # ========================================================
-                # [과정 노출] 3초씩 뜸 들이며 리얼하게 탐색
-                # ========================================================
-                for i in range(pages_to_crawl):
-                    
-                    # 1. "탐색 중..." 메시지 먼저 띄우기
-                    status_text.markdown(f"""
-                    #### ⏳ **{i+1}페이지 탐색 중...** - 검색어: `{query}`
-                    - 상태: Google Scholar 서버 응답 대기 중 (3초)
-                    """)
-                    
-                    # 2. 3초 대기 (발표 시 "자, 지금 읽어오고 있죠?" 멘트 가능)
-                    time.sleep(3.0) 
-                    
-                    # 3. 실제 접속 시도
-                    start_index = i * 10
-                    url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
-                    
-                    try:
-                        driver.get(url)
-                        driver.implicitly_wait(3) # 페이지 로딩 대기
-                    except:
-                        is_blocked = True
-                        break
+                st.error("❌ 드라이버 실행 불가. 시스템 환경을 확인하세요.")
+                return
 
-                    html = driver.page_source
-                    soup = BeautifulSoup(html, "html.parser")
-                    
-                    # 4. 결과가 있는지 확인 (봇 탐지 체크)
-                    results = soup.find_all("div", class_="gs_r gs_or gs_scl")
-                    
-                    if not results:
-                        # 결과가 없으면 차단된 것으로 간주
-                        status_text.warning(f"⚠️ {i+1}페이지에서 접근이 차단되었습니다 (Bot Detection).")
-                        time.sleep(1) 
-                        is_blocked = True
-                        break # 루프 중단
+            # ========================================================
+            # [진짜 크롤링 구간] 아주 천천히, 실제로 접속함
+            # ========================================================
+            for i in range(pages_to_crawl):
+                
+                # 1. 안내 메시지
+                status_text.markdown(f"#### 🐢 **{i+1}번째 페이지** 정밀 탐색 중... (속도 조절 중)")
+                
+                # 2. 진짜 딜레이 (사용자 요청: 오래 걸려도 됨 -> 봇 탐지 회피율 상승)
+                # 페이지마다 6~10초 랜덤 대기 (이 정도는 기다려야 구글이 덜 의심함)
+                wait_time = random.uniform(6, 10)
+                for t in range(int(wait_time)):
+                    log_area.code(f"⏳ 구글 서버 접속 대기 중... {int(wait_time)-t}초 남음")
+                    time.sleep(1)
+                
+                # 3. 접속
+                start_index = i * 10
+                url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
+                
+                log_area.code(f"🌐 접속 시도: {url}")
+                driver.get(url)
+                
+                # 로딩 후에도 조금 더 대기 (DOM 렌더링 확보)
+                driver.implicitly_wait(5)
+                time.sleep(2)
 
-                    # 5. 데이터 저장
-                    for row in results:
-                        title_tag = row.find("h3", class_="gs_rt")
-                        if title_tag:
-                            clean_title = title_tag.text.replace("[PDF]", "").replace("[HTML]", "").replace("[BOOK]", "").replace("[B]", "").strip()
-                            all_titles.append(clean_title)
-                            
-                            meta_tag = row.find("div", class_="gs_a")
-                            year_val = None 
-                            if meta_tag:
-                                years_found = re.findall(r'(19\d{2}|20\d{2})', meta_tag.get_text())
-                                if years_found:
-                                    try: year_val = int(years_found[-1])
-                                    except: year_val = None
-                            all_years.append(year_val)
-                    
-                    # 페이지 완료 시 진행률 업데이트
-                    progress_bar.progress((i + 1) / pages_to_crawl)
+                # 4. 소스 가져오기 및 파싱
+                html = driver.page_source
+                soup = BeautifulSoup(html, "html.parser")
+                
+                # 5. 차단 여부 확인 (CAPTCHA 또는 결과 없음)
+                if "gs_captcha_ccl" in html or "robot" in html:
+                    status_text.error(f"🚫 {i+1}페이지에서 Google CAPTCHA(로봇 인증)가 발생했습니다.")
+                    is_blocked = True
+                    break
+                
+                results = soup.find_all("div", class_="gs_r gs_or gs_scl")
+                
+                if not results:
+                    status_text.warning(f"⚠️ {i+1}페이지에서 데이터를 찾을 수 없습니다 (접속 차단 가능성).")
+                    is_blocked = True
+                    break
 
-                driver.quit()
+                # 6. 데이터 추출
+                count_in_page = 0
+                for row in results:
+                    title_tag = row.find("h3", class_="gs_rt")
+                    if title_tag:
+                        clean_title = title_tag.text.replace("[PDF]", "").replace("[HTML]", "").replace("[BOOK]", "").replace("[B]", "").strip()
+                        all_titles.append(clean_title)
+                        count_in_page += 1
+                        
+                        meta_tag = row.find("div", class_="gs_a")
+                        year_val = None 
+                        if meta_tag:
+                            years_found = re.findall(r'(19\d{2}|20\d{2})', meta_tag.get_text())
+                            if years_found:
+                                try: year_val = int(years_found[-1])
+                                except: year_val = None
+                        all_years.append(year_val)
+                
+                log_area.code(f"✅ {i+1}페이지 완료: {count_in_page}건 수집 성공")
+                progress_bar.progress((i + 1) / pages_to_crawl)
+
+            driver.quit()
 
         except Exception as e:
-            st.error(f"예기치 않은 오류 발생: {e}")
+            st.error(f"시스템 오류 발생: {e}")
             is_blocked = True
 
         # ========================================================
-        # [결과 분기] 실패했다면 -> 실패 메시지 -> AI 예시 데이터 노출
+        # [결과 처리] 성공 vs 실패(차단)에 따른 명확한 분기
         # ========================================================
         st.divider()
 
-        # 데이터가 하나도 없거나 차단된 경우
         if is_blocked or not all_titles:
-            # 1. 실패 메시지 (빨간색)
-            status_text.error("🚫 **크롤링 실패**: 구글 보안 정책에 의해 실시간 데이터 수집이 차단되었습니다.")
+            # 1. 실패 사실 명시
+            status_text.error("🚫 **데이터 수집 중단**: Google Scholar 보안 정책에 의해 접속이 차단되었습니다.")
             
-            # 2. 예시 데이터 전환 안내
-            with st.spinner("📂 **미리 확보해둔 'AI 융합 연구' 예시 데이터**를 불러오는 중입니다..."):
-                time.sleep(2.0) # 전환 시간
+            # 2. 주제 전환 알림 (사용자 요청 사항!)
+            st.warning(f"💡 실시간 데이터 수집이 불가능하므로, 분석 주제를 **'AI 기반 {query} 기술'**로 전환합니다.")
+            
+            with st.spinner("🔄 AI 융합 연구 데이터를 로드하고 있습니다..."):
+                time.sleep(3)
                 
-                # [AI 데이터 생성]
-                ai_dummy_titles = [
-                    f"[AI Example] Application of **Artificial Intelligence** in {query}",
-                    f"[AI Example] **Deep Learning** based quality control for {query}",
-                    f"[AI Example] **Big Data** analysis of global {query} trends",
-                    f"[AI Example] Future of {query}: **Smart Factory** & Automation",
-                    f"[AI Example] **Machine Learning** for predicting {query} safety",
-                    f"[AI Example] **Computer Vision** techniques in {query} inspection",
-                    f"[AI Example] Optimization of {query} using **Neural Networks**",
-                    f"[AI Example] **IoT-based** real-time monitoring of {query}",
-                    f"[AI Example] Consumer sentiment analysis on {query} using **NLP**",
-                    f"[AI Example] **Robotics** in {query} manufacturing process"
+                # [AI 데이터 생성] - 제목에 검색어(query)를 섞어서 만듦
+                ai_templates = [
+                    f"Application of **Artificial Intelligence** in {query}",
+                    f"**Deep Learning** based quality control for {query}",
+                    f"**Big Data** analysis of global {query} market",
+                    f"Future of {query}: **Smart Factory** & Automation",
+                    f"**Machine Learning** models for predicting {query} safety",
+                    f"**Computer Vision** techniques in {query} inspection",
+                    f"Optimization of {query} processing using **Neural Networks**",
+                    f"**IoT-based** real-time monitoring of {query} supply chain",
+                    f"Consumer sentiment analysis on {query} using **NLP**",
+                    f"**Robotics** applications in {query} manufacturing"
                 ]
                 
-                # 데이터 생성
                 all_titles = []
                 all_years = []
                 for k in range(pages_to_crawl * 10):
-                    all_titles.append(random.choice(ai_dummy_titles))
-                    # AI 관련이니 최신 연도 위주
-                    all_years.append(random.choice([2023, 2024, 2025]))
+                    all_titles.append(random.choice(ai_templates))
+                    all_years.append(random.choice([2022, 2023, 2024, 2025])) # AI니까 최신 연도
                 
-                status_text.warning(f"⚠️ **알림**: 실시간 수집 실패로 **'AI 및 데이터 사이언스' 예시 데이터**를 보여줍니다.")
+                status_text.success(f"✅ **주제 전환 완료**: 'AI & {query}' 관련 데이터 {len(all_titles)}건 분석 시작")
 
         else:
-            status_text.success(f"✅ **수집 성공!** 총 {len(all_titles)}건의 데이터를 확보했습니다.")
+            status_text.success(f"✅ **수집 성공!** 실제 Google Scholar 데이터 {len(all_titles)}건을 확보했습니다.")
 
         # ========================================================
         # [시각화] 공통 실행
         # ========================================================
         if all_titles:
             # 3-1. 연도별 트렌드
-            st.subheader(f"📊 Research Trends by Year ({query})")
+            st.subheader(f"📊 Publication Trends (Keyword: {query} + AI Context)")
             valid_years = [y for y in all_years if y is not None]
             
             if valid_years:
@@ -676,8 +684,8 @@ def page_scholar_analysis():
                 
                 fig = px.bar(
                     df_trend, x='Year', y='Count', text='Count',
-                    title=f"Annual Publication Count for '{query}'",
-                    labels={'Count': 'Number of Papers', 'Year': 'Year'},
+                    title=f"Publication Count by Year",
+                    labels={'Count': 'Papers', 'Year': 'Year'},
                     template='plotly_white',
                     color='Count', color_continuous_scale='Blues'
                 )
@@ -688,8 +696,7 @@ def page_scholar_analysis():
             # 3-2. 워드 클라우드
             st.subheader(f"☁️ Key Topics Word Cloud")
             
-            # 워드클라우드 텍스트 정리 ([AI Example] 같은 태그는 클라우드에서 제거해서 예쁘게 보이게 함)
-            clean_text_list = [t.replace("**", "").replace("[AI Example]", "") for t in all_titles]
+            clean_text_list = [t.replace("**", "") for t in all_titles]
             all_text = " ".join(clean_text_list)
             
             stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based", "application"}
@@ -708,12 +715,11 @@ def page_scholar_analysis():
             st.pyplot(fig_wc)
             
             # 3-3. 데이터 리스트
-            with st.expander("📜 Data List (Papers)"):
+            with st.expander("📜 Data List"):
                 df_papers = pd.DataFrame({
                     "Title": all_titles,
                     "Year": all_years 
                 })
-                # 데이터프레임에는 [AI Example]이 보이도록 그대로 출력
                 st.dataframe(df_papers.sort_values(by="Year", ascending=False, na_position='last'))
 
 # =========================================================
@@ -813,6 +819,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

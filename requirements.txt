@@ -9,5 +9,5 @@ beautifulsoup4
 selenium
 
 chromedriver-autoinstaller
-chromium
-chromium-driver
+
+

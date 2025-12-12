@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import plotly
 import plotly.express as px
 import pydeck as pdk
 from wordcloud import WordCloud
@@ -611,3 +612,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

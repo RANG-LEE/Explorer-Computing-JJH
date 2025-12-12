@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+plotly
+pydeck
+wordcloud
+matplotlib
+beautifulsoup4
+selenium
+chromedriver-autoinstaller

@@ -511,11 +511,11 @@ def page_company_info():
 # =========================================================
 
 def page_scholar_analysis():
-    """ 5. 연구 트렌드 분석 페이지 (과정 노출 -> 실패 시 AI 데이터 전환) """
+    """ 5. 연구 트렌드 분석 페이지 (3초 딜레이 리얼 모드 -> 실패 시 AI 예시 전환) """
     st.title("🎓 연구 트렌드 심층 분석")
     st.markdown("""
     구글 스칼라(Google Scholar)에서 **다중 페이지 크롤링**을 시도하여 데이터를 수집합니다.
-    (보안 정책상 실시간 수집이 제한될 경우, **AI 기반 예측 데이터**를 통해 분석을 진행합니다.)
+    (보안 문제로 수집이 불가능할 경우, **미리 준비된 AI 융합 연구 예시 데이터**를 시각화합니다.)
     """)
 
     # 1. 키워드 입력
@@ -540,7 +540,7 @@ def page_scholar_analysis():
 
     if run_search and query:
         st.divider()
-        st.write("### 📡 데이터 수집 프로세스 시작")
+        st.write("### 📡 데이터 수집 프로세스 가동")
         
         # UI 요소 준비
         progress_bar = st.progress(0)
@@ -554,36 +554,34 @@ def page_scholar_analysis():
             driver = get_driver()
             
             if driver is None:
-                st.error("❌ 브라우저 드라이버 로드 실패. 대체 프로세스를 가동합니다.")
+                st.error("❌ 브라우저 드라이버 로드 실패.")
                 is_blocked = True
             else:
                 # ========================================================
-                # [과정 노출] 사용자가 원하는 '페이지 넘어가는 과정' 보여주기
+                # [과정 노출] 3초씩 뜸 들이며 리얼하게 탐색
                 # ========================================================
                 for i in range(pages_to_crawl):
                     
-                    # 1. 화면에 "현재 O페이지 수집 중..." 표시
+                    # 1. "탐색 중..." 메시지 먼저 띄우기
                     status_text.markdown(f"""
-                    #### 🔄 **{i+1}번째 페이지**를 검색하고 있습니다...
-                    - 검색어: `{query}`
-                    - 진행률: {int((i / pages_to_crawl) * 100)}%
-                    - 상태: Google Scholar 접속 중...
+                    #### ⏳ **{i+1}페이지 탐색 중...** - 검색어: `{query}`
+                    - 상태: Google Scholar 서버 응답 대기 중 (3초)
                     """)
-                    progress_bar.progress((i) / pages_to_crawl)
                     
-                    # 2. 실제 접속 시도
+                    # 2. 3초 대기 (발표 시 "자, 지금 읽어오고 있죠?" 멘트 가능)
+                    time.sleep(3.0) 
+                    
+                    # 3. 실제 접속 시도
                     start_index = i * 10
                     url = f"https://scholar.google.co.kr/scholar?start={start_index}&q={query}&hl=en&as_sdt=0,5"
                     
                     try:
                         driver.get(url)
+                        driver.implicitly_wait(3) # 페이지 로딩 대기
                     except:
                         is_blocked = True
                         break
 
-                    # 3. "사람인 척" 기다리는 시간 (리얼함 연출)
-                    time.sleep(random.uniform(1.5, 3.0)) 
-                    
                     html = driver.page_source
                     soup = BeautifulSoup(html, "html.parser")
                     
@@ -592,7 +590,7 @@ def page_scholar_analysis():
                     
                     if not results:
                         # 결과가 없으면 차단된 것으로 간주
-                        status_text.warning(f"⚠️ {i+1}페이지에서 Google CAPTCHA(보안 문자)가 감지되었습니다.")
+                        status_text.warning(f"⚠️ {i+1}페이지에서 접근이 차단되었습니다 (Bot Detection).")
                         time.sleep(1) 
                         is_blocked = True
                         break # 루프 중단
@@ -623,45 +621,42 @@ def page_scholar_analysis():
             is_blocked = True
 
         # ========================================================
-        # [결과 분기] 실패했다면 -> 실패 메시지 -> AI 데이터로 전환
+        # [결과 분기] 실패했다면 -> 실패 메시지 -> AI 예시 데이터 노출
         # ========================================================
         st.divider()
 
         # 데이터가 하나도 없거나 차단된 경우
         if is_blocked or not all_titles:
-            # 1. 실패 메시지
-            status_text.error("🚫 **데이터 수집 실패**: 구글 보안 정책에 의해 접속이 차단되었습니다.")
+            # 1. 실패 메시지 (빨간색)
+            status_text.error("🚫 **크롤링 실패**: 구글 보안 정책에 의해 실시간 데이터 수집이 차단되었습니다.")
             
-            # 2. AI 데이터로 전환 (여기가 바뀐 부분!)
-            with st.spinner("🔄 **AI 융합 연구 데이터(Mock Data)**로 전환하여 분석을 재개합니다..."):
-                time.sleep(2.5) # 극적인 전환을 위한 대기
+            # 2. 예시 데이터 전환 안내
+            with st.spinner("📂 **미리 확보해둔 'AI 융합 연구' 예시 데이터**를 불러오는 중입니다..."):
+                time.sleep(2.0) # 전환 시간
                 
-                # [수정됨] AI & 4차 산업혁명 관련 제목으로 변경
+                # [AI 데이터 생성]
                 ai_dummy_titles = [
-                    f"Application of **Artificial Intelligence** in {query} processing",
-                    f"**Machine Learning** approaches for analyzing {query} quality",
-                    f"**Deep Learning** models for predicting {query} safety trends",
-                    f"Big Data and **AI**: The future of {query} industry",
-                    f"Automated quality control of {query} using **Computer Vision**",
-                    f"Optimization of {query} production using **Neural Networks**",
-                    f"**IoT** and **Blockchain** integration in {query} supply chain",
-                    f"Recent advances in **AI-driven** {query} research",
-                    f"Smart manufacturing systems for {query}",
-                    f"Data-driven analysis of consumer preference for {query}"
+                    f"[AI Example] Application of **Artificial Intelligence** in {query}",
+                    f"[AI Example] **Deep Learning** based quality control for {query}",
+                    f"[AI Example] **Big Data** analysis of global {query} trends",
+                    f"[AI Example] Future of {query}: **Smart Factory** & Automation",
+                    f"[AI Example] **Machine Learning** for predicting {query} safety",
+                    f"[AI Example] **Computer Vision** techniques in {query} inspection",
+                    f"[AI Example] Optimization of {query} using **Neural Networks**",
+                    f"[AI Example] **IoT-based** real-time monitoring of {query}",
+                    f"[AI Example] Consumer sentiment analysis on {query} using **NLP**",
+                    f"[AI Example] **Robotics** in {query} manufacturing process"
                 ]
                 
-                # 데이터 뻥튀기
+                # 데이터 생성
                 all_titles = []
                 all_years = []
                 for k in range(pages_to_crawl * 10):
-                    # 랜덤으로 하나 뽑아서 리스트에 추가
-                    title = random.choice(ai_dummy_titles)
-                    # 번호만 살짝 붙여서 중복 피하는 척
-                    all_titles.append(title)
-                    # 연도도 최신 위주로 (AI니까 최신이 많겠죠?)
-                    all_years.append(random.choice([2022, 2023, 2024, 2025]))
+                    all_titles.append(random.choice(ai_dummy_titles))
+                    # AI 관련이니 최신 연도 위주
+                    all_years.append(random.choice([2023, 2024, 2025]))
                 
-                status_text.success(f"✅ **복구 완료!** 'AI 및 데이터 사이언스' 관련 연구 {len(all_titles)}건으로 분석합니다.")
+                status_text.warning(f"⚠️ **알림**: 실시간 수집 실패로 **'AI 및 데이터 사이언스' 예시 데이터**를 보여줍니다.")
 
         else:
             status_text.success(f"✅ **수집 성공!** 총 {len(all_titles)}건의 데이터를 확보했습니다.")
@@ -693,11 +688,11 @@ def page_scholar_analysis():
             # 3-2. 워드 클라우드
             st.subheader(f"☁️ Key Topics Word Cloud")
             
-            # 워드클라우드용 텍스트 (마크다운 ** 문자는 제거)
-            clean_text_list = [t.replace("**", "") for t in all_titles]
+            # 워드클라우드 텍스트 정리 ([AI Example] 같은 태그는 클라우드에서 제거해서 예쁘게 보이게 함)
+            clean_text_list = [t.replace("**", "").replace("[AI Example]", "") for t in all_titles]
             all_text = " ".join(clean_text_list)
             
-            stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based", "application", "approaches"}
+            stopwords = {"of", "and", "the", "in", "a", "for", "on", "with", "to", "at", "by", "an", "analysis", "study", "review", "using", "based", "application"}
             
             wc = WordCloud(
                 font_path=font_path,
@@ -714,12 +709,11 @@ def page_scholar_analysis():
             
             # 3-3. 데이터 리스트
             with st.expander("📜 Data List (Papers)"):
-                # 리스트에서도 마크다운 문법이 보이도록 원본(all_titles) 사용
                 df_papers = pd.DataFrame({
                     "Title": all_titles,
                     "Year": all_years 
                 })
-                # 데이터프레임 표시 (마크다운 적용은 안 되지만 텍스트로 보임)
+                # 데이터프레임에는 [AI Example]이 보이도록 그대로 출력
                 st.dataframe(df_papers.sort_values(by="Year", ascending=False, na_position='last'))
 
 # =========================================================
@@ -819,6 +813,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

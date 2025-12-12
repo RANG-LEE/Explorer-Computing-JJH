@@ -8,13 +8,19 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib import rc, font_manager
 import platform
-import chromedriver_autoinstaller
 
+# [추가된 부분] 크롤링 및 데이터 처리에 필수적인 라이브러리들
+from bs4 import BeautifulSoup 
+import time
+import random
+import re
+from collections import Counter
+
+# 셀레니움 관련
+import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-import os
-import chromedriver_autoinstaller
 
 @st.cache_resource
 def get_driver():
@@ -758,6 +764,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -730,39 +730,39 @@ def page_company_info():
     st.write("각 기업 행성의 주요 임무(비전)와 통신 채널을 분석한 데이터 카드입니다.")
     st.markdown("---")
 
-    # [디자인 수정] Expander(목록 제목)의 글씨 색상을 '밝은 회색'으로 강제 변경하는 CSS 주입
+    # [디자인 수정] Expander 제목과 아이콘 색상을 '진한 회색(Blue Grey)' 톤으로 변경
     st.markdown("""
     <style>
-        /* Expander 제목 텍스트 스타일 변경 */
+        /* Expander 제목 텍스트: 너무 밝지 않은 은회색 */
         div[data-testid="stExpander"] details summary p {
-            color: #EEEEEE !important; /* 밝은 회색 */
+            color: #B0BEC5 !important; /* Blue Grey 200 */
             font-size: 18px !important;
             font-weight: 700 !important;
         }
-        /* Expander 화살표 아이콘 색상 변경 */
+        /* Expander 화살표 아이콘 */
         div[data-testid="stExpander"] details summary svg {
-            fill: #EEEEEE !important;
-            color: #EEEEEE !important;
+            fill: #B0BEC5 !important;
+            color: #B0BEC5 !important;
         }
-        /* Expander 테두리 및 배경 미세 조정 (선택사항) */
+        /* Expander 테두리 */
         div[data-testid="stExpander"] {
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(176, 190, 197, 0.3);
         }
     </style>
     """, unsafe_allow_html=True)
 
-    # 버튼 스타일 정의 (밝은 회색 배경 + 검은 글씨)
+    # [버튼 수정] 배경을 조금 더 진한 회색(#BDBDBD)으로 변경하여 흰색 글씨와 대비를 줄임
     btn_style = """
         display: block;
         width: 100%;
-        background-color: #E0E0E0; 
+        background-color: #BDBDBD; 
         color: #000000 !important; 
         text-align: center;
         padding: 10px 0;
         border-radius: 8px;
         text-decoration: none;
         font-weight: bold;
-        border: 1px solid #BDBDBD;
+        border: 1px solid #757575;
         font-size: 15px;
         transition: 0.3s;
     """
@@ -773,7 +773,7 @@ def page_company_info():
             if i + j < len(company_details):
                 c = company_details[i+j]
                 with cols[j]:
-                    # Expander 제목은 위 CSS에 의해 밝은 회색으로 보입니다.
+                    # Expander 제목은 위 CSS에 의해 진한 회색(#B0BEC5)으로 보입니다.
                     with st.expander(f"Rank {c['순위']} | {c['기업명']} System", expanded=True):
                         
                         # [가시성 강화] 내부 텍스트 스타일링 (네온 블루 & 스카이 블루)
@@ -796,12 +796,13 @@ def page_company_info():
                         
                         st.markdown("<div style='margin: 10px 0; border-top: 1px solid rgba(41, 182, 246, 0.3);'></div>", unsafe_allow_html=True)
                         
-                        # [커스텀 버튼] 밝은 회색 버튼
+                        # [커스텀 버튼] 조금 더 진한 회색 배경의 버튼
                         b1, b2 = st.columns(2)
                         with b1: 
                             st.markdown(f'<a href="{c["홈페이지"]}" target="_blank" style="{btn_style}">🏠 홈페이지</a>', unsafe_allow_html=True)
                         with b2: 
                             st.markdown(f'<a href="{c["유튜브"]}" target="_blank" style="{btn_style}">📺 유튜브</a>', unsafe_allow_html=True)
+                            
 # =========================================================
 # 5. 심우주 탐사: 학술 연구 트렌드 (Research)
 # =========================================================
@@ -943,6 +944,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

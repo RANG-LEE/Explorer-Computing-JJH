@@ -730,6 +730,27 @@ def page_company_info():
     st.write("각 기업 행성의 주요 임무(비전)와 통신 채널을 분석한 데이터 카드입니다.")
     st.markdown("---")
 
+    # [디자인 수정] Expander(목록 제목)의 글씨 색상을 '밝은 회색'으로 강제 변경하는 CSS 주입
+    st.markdown("""
+    <style>
+        /* Expander 제목 텍스트 스타일 변경 */
+        div[data-testid="stExpander"] details summary p {
+            color: #EEEEEE !important; /* 밝은 회색 */
+            font-size: 18px !important;
+            font-weight: 700 !important;
+        }
+        /* Expander 화살표 아이콘 색상 변경 */
+        div[data-testid="stExpander"] details summary svg {
+            fill: #EEEEEE !important;
+            color: #EEEEEE !important;
+        }
+        /* Expander 테두리 및 배경 미세 조정 (선택사항) */
+        div[data-testid="stExpander"] {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
     # 버튼 스타일 정의 (밝은 회색 배경 + 검은 글씨)
     btn_style = """
         display: block;
@@ -752,8 +773,10 @@ def page_company_info():
             if i + j < len(company_details):
                 c = company_details[i+j]
                 with cols[j]:
-                    with st.expander(f"**[Rank {c['순위']}] {c['기업명']} 시스템**", expanded=True):
-                        # [가시성 강화] 텍스트 스타일링 (네온 블루 & 스카이 블루)
+                    # Expander 제목은 위 CSS에 의해 밝은 회색으로 보입니다.
+                    with st.expander(f"Rank {c['순위']} | {c['기업명']} System", expanded=True):
+                        
+                        # [가시성 강화] 내부 텍스트 스타일링 (네온 블루 & 스카이 블루)
                         st.markdown(f"""
                         <div style='line-height: 1.8; margin-bottom: 15px;'>
                             <div style='margin-bottom: 5px;'>
@@ -773,13 +796,12 @@ def page_company_info():
                         
                         st.markdown("<div style='margin: 10px 0; border-top: 1px solid rgba(41, 182, 246, 0.3);'></div>", unsafe_allow_html=True)
                         
-                        # [수정] 잘 보이는 커스텀 버튼으로 교체
+                        # [커스텀 버튼] 밝은 회색 버튼
                         b1, b2 = st.columns(2)
                         with b1: 
                             st.markdown(f'<a href="{c["홈페이지"]}" target="_blank" style="{btn_style}">🏠 홈페이지</a>', unsafe_allow_html=True)
                         with b2: 
                             st.markdown(f'<a href="{c["유튜브"]}" target="_blank" style="{btn_style}">📺 유튜브</a>', unsafe_allow_html=True)
-
 # =========================================================
 # 5. 심우주 탐사: 학술 연구 트렌드 (Research)
 # =========================================================
@@ -921,6 +943,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

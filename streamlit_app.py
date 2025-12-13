@@ -168,16 +168,96 @@ def get_company_data():
     }
     df_map = pd.DataFrame(data_map)
     company_details = [
-        {"순위": 1, "기업명": "농심", "소개": "라면·스낵·음료의 국내 1위 제조기업.", "주력제품": "신라면, 새우깡", "비전": "Global Nongshim", "홈페이지": "https://www.nongshim.com", "유튜브": "https://www.youtube.com/@nongshim"},
-        {"순위": 2, "기업명": "오리온", "소개": "초코파이 출시. 제과업계 대표.", "주력제품": "초코파이, 포카칩", "비전": "Global Sweet", "홈페이지": "https://www.orionworld.com", "유튜브": "https://www.youtube.com/@ORIONworld"},
-        {"순위": 3, "기업명": "CJ제일제당", "소개": "국내 최대 식품/바이오 기업.", "주력제품": "비비고, 햇반", "비전": "World Best Food", "홈페이지": "https://www.cj.net", "유튜브": "https://www.youtube.com/@CJCheilJedangOfficial"},
-        {"순위": 4, "기업명": "삼양식품", "소개": "불닭볶음면의 글로벌 성공.", "주력제품": "불닭볶음면", "비전": "Global Top 100", "홈페이지": "https://www.samyangfoods.com", "유튜브": "https://www.youtube.com/@samyangfoods"},
-        {"순위": 5, "기업명": "풀무원", "소개": "바른 먹거리 LOHAS 선도.", "주력제품": "두부, 지구식단", "비전": "Global LOHAS", "홈페이지": "https://www.pulmuone.co.kr", "유튜브": "https://www.youtube.com/@pulmuone.official"},
-        {"순위": 6, "기업명": "빙그레", "소개": "유가공 및 아이스크림 전문.", "주력제품": "바나나맛우유", "비전": "Great Binggrae", "홈페이지": "https://www.bing.co.kr", "유튜브": "https://www.youtube.com/@official.binggrae"},
-        {"순위": 7, "기업명": "매일유업", "소개": "우유, 분유, 성인영양식.", "주력제품": "매일우유, 셀렉스", "비전": "More than Food", "홈페이지": "https://www.maeil.com", "유튜브": "https://www.youtube.com/@maeili2mo"},
-        {"순위": 8, "기업명": "하이트진로", "소개": "대한민국 대표 주류 기업.", "주력제품": "참이슬, 테라", "비전": "Global Liquor", "홈페이지": "https://www.hitejinro.com", "유튜브": "https://www.youtube.com/watch?v=CjYD_J_2tt0"},
-        {"순위": 9, "기업명": "롯데칠성", "소개": "음료 및 주류 전문 기업.", "주력제품": "칠성사이다, 처음처럼", "비전": "Healthy Pleasure", "홈페이지": "https://company.lottechilsung.co.kr", "유튜브": "https://www.youtube.com/@Lotte7star"},
-        {"순위": 10, "기업명": "대상", "소개": "청정원, 종가집 보유.", "주력제품": "청정원, 종가집", "비전": "Global K-Food", "홈페이지": "https://www.daesang.com", "유튜브": "https://www.youtube.com/@DAESANG"}
+        {
+            "순위": 1, 
+            "기업명": "농심", 
+            "소개": "1965년 설립, '한국의 맛'을 세계로 전하는 국내 부동의 1위 식품 기업. 라면 시장 점유율 50% 이상을 차지하며, 최근 미국 제2공장 가동과 함께 북미 시장에서 폭발적인 성장을 기록 중입니다.", 
+            "주력제품": "신라면(블랙/레드), 짜파게티, 너구리, 새우깡, 먹태깡, 백산수", 
+            "비전": "Life with Good Health", 
+            "홈페이지": "https://www.nongshim.com", 
+            "유튜브": "https://www.youtube.com/@nongshim"
+        },
+        {
+            "순위": 2, 
+            "기업명": "오리온", 
+            "소개": "제과를 넘어 닥터유(건강), 바이오로 확장 중인 글로벌 식품 헬스케어 기업. 중국, 베트남, 러시아 법인의 고성장으로 해외 매출 비중이 국내를 넘어선 진정한 글로벌 기업입니다.", 
+            "주력제품": "초코파이 情, 포카칩, 꼬북칩, 닥터유(단백질바), 마켓오", 
+            "비전": "Global Food & Healthcare Company", 
+            "홈페이지": "https://www.orionworld.com", 
+            "유튜브": "https://www.youtube.com/@ORIONworld"
+        },
+        {
+            "순위": 3, 
+            "기업명": "CJ제일제당", 
+            "소개": "국내 식품 산업을 이끄는 최대 규모의 기업이자 글로벌 바이오 강자. '비비고' 브랜드로 K-Food의 세계화를 주도하고 있으며, 그린 바이오(사료용 아미노산) 분야 세계 1위 경쟁력을 보유했습니다.", 
+            "주력제품": "비비고(만두/김치), 햇반, 고메, 백설, 다시다, 바이오(라이신)", 
+            "비전": "World Best Food & Bio Company", 
+            "홈페이지": "https://www.cj.net", 
+            "유튜브": "https://www.youtube.com/@CJCheilJedangOfficial"
+        },
+        {
+            "순위": 4, 
+            "기업명": "삼양식품", 
+            "소개": "1963년 국내 최초의 라면을 출시한 원조 기업. '불닭볶음면'이 유튜브를 통해 글로벌 챌린지 열풍을 일으키며, 해외 매출 비중이 70%에 달하는 '수출 역군'으로 재탄생했습니다.", 
+            "주력제품": "불닭볶음면 시리즈, 삼양라면, 맵탱, 쿠티크", 
+            "비전": "Global Comprehensive Food & Solution Company)", 
+            "홈페이지": "https://www.samyangfoods.com", 
+            "유튜브": "https://www.youtube.com/@samyangfoods"
+        },
+        {
+            "순위": 5, 
+            "기업명": "풀무원", 
+            "소개": "국내 최초로 포장 두부와 콩나물을 출시하며 '바른 먹거리' 개념을 정립한 ESG 경영 선도 기업. 최근 식물성 지향 식품(지구식단)과 미국 두부 시장 1위를 기반으로 글로벌 확장을 가속화하고 있습니다.", 
+            "주력제품": "국산콩 두부, 식물성 지구식단, 얇은피 만두, 아임리얼", 
+            "비전": "Global No.1 LOHAS Company", 
+            "홈페이지": "https://www.pulmuone.co.kr", 
+            "유튜브": "https://www.youtube.com/@pulmuone.official"
+        },
+        {
+            "순위": 6, 
+            "기업명": "빙그레", 
+            "소개": "가공유 1위 '바나나맛우유'와 아이스크림 명가. 해태아이스크림 인수로 빙과 시장 점유율을 획기적으로 높였으며, '메로나'는 미국 코스트코 등 해외 시장에서 K-아이스크림의 대명사가 되었습니다.", 
+            "주력제품": "바나나맛우유, 요플레, 투게더, 메로나, 붕어싸만코, 슈퍼콘", 
+            "비전": "Creator of Bright Smiles", 
+            "홈페이지": "https://www.bing.co.kr", 
+            "유튜브": "https://www.youtube.com/@official.binggrae"
+        },
+        {
+            "순위": 7, 
+            "기업명": "매일유업", 
+            "소개": "낙농업 기반의 종합 식품 기업. 저출산 위기를 극복하기 위해 성인 영양식 '셀렉스'와 식물성 음료 '어메이징 오트'로 사업 포트폴리오를 성공적으로 다각화했습니다.", 
+            "주력제품": "매일우유, 상하목장, 앱솔루트(분유), 셀렉스(단백질), 어메이징 오트", 
+            "비전": "More than Food, Beyond Korea", 
+            "홈페이지": "https://www.maeil.com", 
+            "유튜브": "https://www.youtube.com/@maeili2mo"
+        },
+        {
+            "순위": 8, 
+            "기업명": "하이트진로", 
+            "소개": "1924년 설립된 대한민국 주류 역사의 산증인. 국민 소주 '참이슬'과 청정 라거 '테라', 그리고 '켈리'의 연타석 홈런으로 소주-맥주 시장을 동시에 석권하고 있습니다.", 
+            "주력제품": "참이슬, 진로(이즈백), 테라, 켈리, 일품진로", 
+            "비전": "Global Public Brewer", 
+            "홈페이지": "https://www.hitejinro.com", 
+            "유튜브": "https://www.youtube.com/watch?v=CjYD_J_2tt0"
+        },
+        {
+            "순위": 9, 
+            "기업명": "롯데칠성", 
+            "소개": "음료와 주류를 아우르는 종합 음료 기업. '칠성사이다'의 헤리티지에 '제로 슈거' 트렌드를 완벽히 결합(펩시 제로, 새로 소주)하며 제2의 전성기를 맞이했습니다.", 
+            "주력제품": "칠성사이다(제로), 펩시(제로), 처음처럼, 새로, 밀키스", 
+            "비전": "Healthy Reverence", 
+            "홈페이지": "https://company.lottechilsung.co.kr", 
+            "유튜브": "https://www.youtube.com/@Lotte7star"
+        },
+        {
+            "순위": 10, 
+            "기업명": "대상", 
+            "소개": "국내 최초의 발효 조미료 '미원'으로 시작한 종합 식품 기업. 김치 브랜드 '종가(Jongga)'를 앞세워 글로벌 김치 시장을 장악하고 있으며, 소재(전분당, 라이신) 사업에서도 강력한 입지를 보유 중입니다.", 
+            "주력제품": "청정원, 미원, 종가(김치), O'Food(글로벌), 안주야", 
+            "비전": "Creating a healthy future for people and nature)", 
+            "홈페이지": "https://www.daesang.com", 
+            "유튜브": "https://www.youtube.com/@DAESANG"
+        }
     ]
     return df_map, company_details
 
@@ -944,6 +1024,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

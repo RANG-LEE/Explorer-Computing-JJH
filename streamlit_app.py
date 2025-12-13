@@ -23,11 +23,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
 # ==========================================
-# [설정] 페이지 및 테마 설정 (세련된 우주 정거장 테마)
+# [설정] 페이지 및 테마 설정 (Deep Space Theme)
 # ==========================================
 st.set_page_config(
     page_title="진로 탐색 포트폴리오",
-    page_icon="🛰️",
+    page_icon="🌌",
     layout="wide"
 )
 
@@ -47,87 +47,100 @@ else:
     pass
 plt.rcParams['axes.unicode_minus'] = False
 
-# [디자인] 커스텀 CSS (Sophisticated Space Grey Theme)
-def apply_sophisticated_theme():
+# [디자인] 커스텀 CSS (Real Deep Space & Star Animation)
+def apply_deep_space_theme():
     st.markdown("""
     <style>
-        /* 전체 배경색 (밝은 회색/실버 톤 - 우주 정거장 내부 느낌) */
+        /* 1. 전체 배경: 깊은 우주 그라데이션 + 별 애니메이션 준비 */
         .stApp {
-            background-color: #E8EAF6;
-            color: #1A237E;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            color: #E0E0FF;
         }
-        /* 메인 타이틀 (깊은 우주색) */
+        
+        /* 2. 텍스트 스타일: 네온 글로우 효과 */
         h1, h2, h3 {
-            color: #1A237E !important;
+            color: #FFFFFF !important;
             font-family: 'AppleGothic', 'Malgun Gothic', sans-serif;
-            font-weight: 700;
-            letter-spacing: -1px;
+            text-shadow: 0 0 10px #00D2FF, 0 0 20px #7B2CBF;
         }
-        /* 서브헤더 (신비로운 보라/블루) */
         h4, h5, h6 {
-            color: #3949AB !important;
+            color: #00D2FF !important;
+            text-shadow: 0 0 5px #00D2FF;
         }
-        /* 일반 텍스트 */
-        p, .stMarkdown, label {
-            color: #37474F; 
-            line-height: 1.6;
+        p, .stMarkdown, label, li {
+            color: #B0C4DE; 
+            line-height: 1.7;
         }
-        /* 버튼 스타일 (세련된 그라데이션) */
+
+        /* 3. 컨테이너 박스: 글래스모피즘 (반투명 유리 효과) */
+        div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            color: #E0E0FF;
+        }
+        
+        /* 4. 버튼 스타일: 홀로그램 버튼 */
         .stButton>button {
+            background: linear-gradient(90deg, #00D2FF 0%, #3A7BD5 100%);
             color: white;
-            background: linear-gradient(135deg, #3949AB 0%, #1A237E 100%);
-            border-radius: 8px;
+            border-radius: 30px;
             border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+            transition: all 0.3s ease;
         }
         .stButton>button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-            color: #E8EAF6;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
         }
-        /* 카드/박스 스타일 (흰색 베이스에 은은한 그림자) */
-        div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
-            background-color: #FFFFFF;
-            border: 1px solid #C5CAE9;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(26, 35, 126, 0.05);
-            color: #37474F;
-        }
-        /* 링크 버튼 */
-        a[href] {
-            text-decoration: none;
-            color: #E91E63;
-            font-weight: bold;
-        }
-        /* 탭 스타일 */
+
+        /* 5. 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
-            gap: 5px;
-            background-color: #FFFFFF;
-            border-radius: 12px;
-            padding: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 5px;
         }
         .stTabs [data-baseweb="tab"] {
-            height: 45px;
-            border-radius: 8px;
-            color: #5C6BC0;
+            color: #7B2CBF;
             font-weight: 600;
         }
         .stTabs [aria-selected="true"] {
-            background-color: #E8EAF6 !important;
-            color: #1A237E !important;
-            border: 1px solid #C5CAE9;
+            background-color: rgba(123, 44, 191, 0.2) !important;
+            color: #00D2FF !important;
+            border: 1px solid #00D2FF;
+            border-radius: 10px;
+        }
+
+        /* 6. 타이틀 페이지 전용 애니메이션 (Fade In) */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .title-animate {
+            animation: fadeIn 3s ease-in-out forwards;
+        }
+        .subtitle-animate {
+            animation: fadeIn 3s ease-in-out 1s forwards; /* 1초 뒤 시작 */
+            opacity: 0;
+        }
+        .name-animate {
+            animation: fadeIn 3s ease-in-out 2s forwards; /* 2초 뒤 시작 */
+            opacity: 0;
         }
     </style>
     """, unsafe_allow_html=True)
 
-apply_sophisticated_theme()
+apply_deep_space_theme()
 
-# [디자인] 차트 테마 색상 (신비로움: 딥블루, 퍼플, 마젠타)
-SPACE_PALETTE = ['#1A237E', '#3949AB', '#8E24AA', '#D81B60', '#00ACC1']
-CHART_THEME = "plotly_white" # 배경이 밝으므로 white 테마 사용
+# [디자인] 차트 테마 색상 (Deep Space Neon Palette)
+# Cyan, Purple, Magenta, Bright Blue, White
+SPACE_PALETTE = ['#00E5FF', '#D500F9', '#FF4081', '#2979FF', '#FFFFFF']
+CHART_THEME = "plotly_dark"
 
 # =========================================================
 # 0. 공통 데이터 관리 함수 (Data Loader)
@@ -140,7 +153,6 @@ def get_driver():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
-    
     try:
         import chromedriver_autoinstaller
         chromedriver_autoinstaller.install()
@@ -151,7 +163,6 @@ def get_driver():
 
 @st.cache_data
 def load_data(file_path):
-    # 파일 없으면 더미 데이터 생성 (Fail-safe)
     if not os.path.exists(file_path):
         dates = pd.date_range(start="2024-01-01", periods=52, freq="W")
         data = {
@@ -165,7 +176,6 @@ def load_data(file_path):
         df = pd.DataFrame(data)
         df.set_index("Date", inplace=True)
         return df
-
     try:
         df = pd.read_csv(file_path, encoding='utf-8')
     except UnicodeDecodeError:
@@ -190,8 +200,6 @@ def get_company_data():
                 126.98507, 126.97555, 126.85240, 127.06268, 127.00220]
     }
     df_map = pd.DataFrame(data_map)
-    
-    # 상세 정보 (유튜브 링크 포함)
     company_details = [
         {"순위": 1, "기업명": "농심", "소개": "라면·스낵·음료의 국내 1위 제조기업.", "주력제품": "신라면, 새우깡", "비전": "Global Nongshim", "홈페이지": "https://www.nongshim.com", "유튜브": "https://www.youtube.com/@nongshim"},
         {"순위": 2, "기업명": "오리온", "소개": "초코파이 출시. 제과업계 대표.", "주력제품": "초코파이, 포카칩", "비전": "Global Sweet", "홈페이지": "https://www.orionworld.com", "유튜브": "https://www.youtube.com/@ORIONworld"},
@@ -207,51 +215,101 @@ def get_company_data():
     return df_map, company_details
 
 # =========================================================
-# 1. 항해 시작: 탐색자 프로필 (Intro)
+# 0. 프롤로그: 제목 및 오프닝 페이지 (NEW!)
 # =========================================================
+def page_title_screen():
+    # 배경에 별 애니메이션을 위한 HTML/CSS 주입 (이 페이지에만 강력하게 적용)
+    st.markdown("""
+    <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: -1;'>
+        <div style='position: absolute; width: 1px; height: 1px; background: white; box-shadow: 10vw 10vh white, 20vw 20vh white, 30vw 5vh white, 50vw 80vh white, 80vw 10vh white; animation: twinkle 5s infinite;'></div>
+    </div>
+    """, unsafe_allow_html=True)
 
-def page_intro():
-    st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
+    # 화면 중앙 정렬을 위한 여백
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
     
-    # 3단 레이아웃
-    col1, col2, col3 = st.columns([1, 2, 1.5])
+    # 제목 섹션 (애니메이션 적용)
+    st.markdown("""
+    <div style='text-align: center;'>
+        <h1 class='title-animate' style='font-size: 80px; margin-bottom: 20px;'>🌌 진로 탐색 포트폴리오</h1>
+        <h3 class='subtitle-animate' style='font-size: 28px; color: #00D2FF; font-weight: 300;'>
+            2025-2 컴퓨팅 탐색 실생활에서 활용하기 기말과제
+        </h3>
+        <br>
+        <h2 class='name-animate' style='font-size: 36px; color: #FFFFFF;'>
+            Explorer. 정지호
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    
+    # 중앙 버튼
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
+        st.caption("Designed for Deep Space Exploration")
+
+# =========================================================
+# 1. 항해 시작: 탐색자 프로필 (Intro) - 디자인 강화
+# =========================================================
+def page_intro():
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+    
+    # 3단 레이아웃 (반응형)
+    col1, col2, col3 = st.columns([1.2, 2, 1.3])
     
     with col1:
-        # 프로필 이미지 영역
+        # [수정] 프로필 이미지: 우주복 입은 남학생 느낌 (고화질 이미지 사용)
         st.markdown(
             """
-            <div style='display: flex; justify-content: center; align-items: center; 
-            background-color: #FFFFFF; border-radius: 50%; width: 180px; height: 180px; 
-            border: 4px solid #1A237E; box-shadow: 0 10px 20px rgba(26, 35, 126, 0.2); margin: auto;'>
-                <span style='font-size: 80px;'>👨‍🚀</span>
+            <div style='display: flex; justify-content: center; align-items: center; margin: auto; position: relative;'>
+                <img src="https://images.unsplash.com/photo-1614728853913-1e22ba6e8a1e?q=80&w=2070&auto=format&fit=crop" 
+                     style='width: 220px; height: 220px; border-radius: 50%; object-fit: cover; 
+                            border: 4px solid #00D2FF; box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);'>
+                <div style='position: absolute; bottom: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; border: 1px solid #00D2FF;'>
+                    👨‍🚀 Commander
+                </div>
             </div>
             """, unsafe_allow_html=True
         )
 
     with col2:
-        st.markdown("### 탐색자: 정지호 (Jiho Jung)")
-        st.markdown("##### 🛰️ 식품 & 경제 융합 궤도 항해사")
+        st.markdown("<h2 style='margin-bottom: 5px;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin-top: 0;'>🛰️ 식품 & 경제 융합 궤도 항해사</h4>", unsafe_allow_html=True)
+        
         st.write("")
         st.markdown("""
-        **"식품 공학(Product)의 추진력에 경제학(Market)의 네비게이션을 더해,** **미지의 시장 궤도에 진입할 준비가 된 융합 인재입니다."**
-        """)
+        <div style='background: rgba(0, 210, 255, 0.1); padding: 15px; border-left: 5px solid #00D2FF; border-radius: 5px;'>
+            <p style='margin: 0; color: #E0E0FF; font-size: 16px;'>
+            <b>"식품 공학(Product)의 추진력에 경제학(Market)의 네비게이션을 더하다."</b><br>
+            미지의 시장 궤도에 진입할 준비가 된 융합 인재, 정지호입니다.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("""
+        <p style='margin-top: 15px;'>
         반갑습니다. 저는 식품 산업이라는 거대한 우주에서 데이터를 나침반 삼아 새로운 기회를 탐색하고 있습니다.
-        """)
+        단순 전공 지식을 넘어, <b>시장 전체를 조망하는 거시적 안목</b>을 갖추기 위해 끊임없이 항로를 개척 중입니다.
+        </p>
+        """, unsafe_allow_html=True)
 
     with col3:
-        st.info("⚡ **Core Booster Systems**")
-        # 뱃지 스타일
+        st.markdown("##### ⚡ Core Booster Systems")
+        # 네온 뱃지 스타일
         st.markdown("""
-        <span style='background-color:#E8EAF6; color:#1A237E; padding: 5px 12px; border-radius: 20px; border: 1px solid #1A237E; font-weight: bold;'>🧬 식품생명공학</span>
-        <span style='background-color:#F3E5F5; color:#8E24AA; padding: 5px 12px; border-radius: 20px; border: 1px solid #8E24AA; font-weight: bold;'>💰 금융경제</span>
-        <br><br>
-        <span style='background-color:#E3F2FD; color:#1565C0; padding: 5px 12px; border-radius: 20px; border: 1px solid #1565C0; font-weight: bold;'>📊 데이터 분석</span>
-        <span style='background-color:#E0F2F1; color:#00695C; padding: 5px 12px; border-radius: 20px; border: 1px solid #00695C; font-weight: bold;'>🛰️ R&D 탐색</span>
+        <div style='display: flex; flex-wrap: wrap; gap: 8px;'>
+            <span style='background: rgba(41, 121, 255, 0.2); color:#2979FF; padding: 6px 12px; border-radius: 15px; border: 1px solid #2979FF; font-weight: bold;'>🧬 식품생명공학</span>
+            <span style='background: rgba(213, 0, 249, 0.2); color:#D500F9; padding: 6px 12px; border-radius: 15px; border: 1px solid #D500F9; font-weight: bold;'>💰 금융경제</span>
+            <span style='background: rgba(0, 229, 255, 0.2); color:#00E5FF; padding: 6px 12px; border-radius: 15px; border: 1px solid #00E5FF; font-weight: bold;'>📊 데이터 분석</span>
+            <span style='background: rgba(0, 200, 83, 0.2); color:#00E676; padding: 6px 12px; border-radius: 15px; border: 1px solid #00E676; font-weight: bold;'>🛰️ R&D 탐색</span>
+        </div>
         """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
         st.caption("📍 Current Orbit: **Programming, Economics, Food Tech**")
 
-    # 탭 구성
+    # 탭 구성 (글래스모피즘 적용됨)
     st.markdown("<br>", unsafe_allow_html=True)
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
 
@@ -259,11 +317,28 @@ def page_intro():
         st.subheader("📚 융합 항해 커리큘럼")
         col_a1, col_a2 = st.columns(2)
         with col_a1:
-            st.markdown("**1. 주 추진체: 식품생명공학**\n- 제품(Product)의 구성 원리 이해\n- 식품화학, 미생물학 기초 설계 능력")
+            st.markdown("""
+            <div style='border: 1px solid #2979FF; padding: 15px; border-radius: 10px;'>
+                <h5 style='color: #2979FF !important;'>1. 주 추진체: 식품생명공학</h5>
+                <ul style='color: #B0C4DE;'>
+                    <li>제품(Product)의 구성 원리 이해</li>
+                    <li>식품화학, 미생물학 기초 설계 능력</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
         with col_a2:
-            st.markdown("**2. 보조 추진체: 금융경제**\n- 시장(Market)의 중력과 흐름 파악\n- 거시/미시 경제 데이터 해석 능력")
+            st.markdown("""
+            <div style='border: 1px solid #D500F9; padding: 15px; border-radius: 10px;'>
+                <h5 style='color: #D500F9 !important;'>2. 보조 추진체: 금융경제</h5>
+                <ul style='color: #B0C4DE;'>
+                    <li>시장(Market)의 중력과 흐름 파악</li>
+                    <li>거시/미시 경제 데이터 해석 능력</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
         
         st.divider()
+        st.markdown("#### 📅 현재 궤도 수정 내역")
         data = {
             "모듈 구분": ["IT/데이터 🛰️", "IT/데이터 🛰️", "경제 📈", "경제 📈"],
             "시스템명": ["컴퓨팅 탐색", "컴퓨팅 핵심", "미시경제이론", "거시경제이론"],
@@ -276,13 +351,15 @@ def page_intro():
         col_t1, col_t2 = st.columns([1, 2])
         with col_t1:
             st.markdown(
-                """<div style='background-color: #FFFFFF; border-radius: 12px; height: 200px; display: flex; justify-content: center; align-items: center; border: 2px solid #D81B60; box-shadow: 0 4px 8px rgba(0,0,0,0.1);'>
-                    <span style='font-size: 60px;'>🧁🪐</span>
+                """<div style='background: rgba(255, 64, 129, 0.1); border-radius: 15px; height: 200px; display: flex; justify-content: center; align-items: center; border: 2px solid #FF4081; box-shadow: 0 0 20px rgba(255, 64, 129, 0.3);'>
+                    <span style='font-size: 80px;'>🧁🪐</span>
                 </div>""", unsafe_allow_html=True)
         with col_t2:
-            st.write("""
-            **"Taste is the Gravity."** 아무리 뛰어난 기술도 '맛'이 없다면 궤도를 이탈합니다.
-            저는 주말마다 베이킹 실험실에서 재료의 배합이 만들어내는 맛의 소우주를 탐구하며, 
+            st.markdown("""
+            > **"Taste is the Gravity."**
+            
+            아무리 뛰어난 기술도 '맛'이 없다면 궤도를 이탈합니다.
+            저는 주말마다 베이킹 실험실에서 재료의 배합이 만들어내는 **맛의 소우주**를 탐구하며, 
             기술과 감성의 균형점을 찾고 있습니다.
             """)
             st.info("👇 영감의 신호원: 유튜브 채널 '빵딘'")
@@ -311,7 +388,6 @@ def page_keyword_analysis():
             df.set_index('Date', inplace=True)
         else:
             df.index = pd.to_datetime(df.index)
-        # 데이터 클리닝
         for col in df.columns:
             if df[col].dtype == 'object':
                 df[col] = pd.to_numeric(df[col].astype(str).str.replace('<1', '0').str.replace(',', ''), errors='coerce').fillna(0)
@@ -320,7 +396,7 @@ def page_keyword_analysis():
         return
 
     with st.sidebar:
-        st.header("🛠️ 탐지기 설정")
+        st.markdown("### 🛠️ 탐지기 설정")
         keywords = df.columns.tolist()
         selected_keywords = st.multiselect("추적할 신호(키워드)", keywords, default=keywords[:2] if len(keywords) > 1 else keywords)
 
@@ -328,7 +404,6 @@ def page_keyword_analysis():
         st.warning("추적할 신호를 선택하세요.")
         return
 
-    # [시각화 1] 시계열
     st.subheader("📈 시간대별 신호 강도 변화")
     fig = px.line(
         df, y=selected_keywords,
@@ -336,10 +411,10 @@ def page_keyword_analysis():
         template=CHART_THEME,
         color_discrete_sequence=SPACE_PALETTE
     )
-    fig.update_layout(hovermode="x unified", plot_bgcolor="rgba(0,0,0,0)")
+    # 차트 배경 투명화
+    fig.update_layout(hovermode="x unified", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig, use_container_width=True)
 
-    # [시각화 2] 요약 지표
     st.subheader("📊 최근 트렌드 신호 요약")
     cols = st.columns(4)
     for i, key in enumerate(selected_keywords):
@@ -348,21 +423,21 @@ def page_keyword_analysis():
         with cols[i % 4]:
             st.metric(label=f"{key}", value=f"{curr:.0f}", delta=f"{diff:.1f} (vs 4주평균)")
 
-    # [시각화 3] 히트맵
     st.divider()
     col_h1, col_h2 = st.columns([2, 1])
     with col_h1:
         st.subheader("🔗 신호 상관관계 분석")
         if len(selected_keywords) >= 2:
             corr = df[selected_keywords].corr()
-            fig_corr = px.imshow(corr, text_auto=".2f", color_continuous_scale="Purples", aspect="auto")
+            fig_corr = px.imshow(corr, text_auto=".2f", color_continuous_scale="Purples", aspect="auto", template=CHART_THEME)
+            fig_corr.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_corr, use_container_width=True)
     with col_h2:
         st.markdown("#### 💡 탐사 인사이트")
         st.write("상관계수가 높을수록 두 신호는 동일한 궤도 패턴을 보입니다.")
 
 # =========================================================
-# 3. 행성 좌표: 식품 기업 거점 지도 (Map) - 수정됨
+# 3. 행성 좌표: 식품 기업 거점 지도 (Map)
 # =========================================================
 def page_map_visualization():
     df_map, _ = get_company_data()
@@ -376,40 +451,34 @@ def page_map_visualization():
         st.subheader("🏆 기업 행성 영향력")
         fig = px.bar(
             df_map, x="총점", y="기업명", orientation='h', text="총점",
-            color="총점", color_continuous_scale="PuBu", template=CHART_THEME
+            color="총점", color_continuous_scale=["#00D2FF", "#2979FF"], template=CHART_THEME
         )
-        fig.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor="rgba(0,0,0,0)")
+        fig.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig, use_container_width=True)
 
     with col_map:
         st.subheader("📍 거점 좌표 확인")
-        
-        # [수정] PyDeck Layer - Map Style 제거하여 기본 스타일(Light) 사용 (에러 방지)
+        # PyDeck Layer (Neon Style)
         layer = pdk.Layer(
             "ScatterplotLayer",
             data=df_map,
             get_position='[lon, lat]',
             get_radius=2000,
-            get_fill_color='[26, 35, 126, 180]', # 딥 네이비
+            get_fill_color='[213, 0, 249, 150]', # Neon Purple
             pickable=True,
             stroked=True,
             filled=True,
-            get_line_color=[255, 255, 255],
-            get_line_width=100
+            get_line_color=[0, 229, 255], # Neon Cyan Border
+            get_line_width=150
         )
-
         view_state = pdk.ViewState(latitude=36.5, longitude=127.5, zoom=6, pitch=30)
-        
-        tooltip = {
-            "html": "<div style='background-color: white; color: black; padding: 5px;'><b>{기업명}</b><br>총점: {총점}</div>"
-        }
+        tooltip = {"html": "<div style='color:black;'><b>{기업명}</b><br>총점: {총점}</div>"}
 
-        # map_style 인자를 제거하거나 None으로 두어 기본값 사용
         st.pydeck_chart(pdk.Deck(
             layers=[layer],
             initial_view_state=view_state,
             tooltip=tooltip
-            # map_style 제거: 토큰 없이 안정적으로 지도 표시
+            # map_style removed for stability
         ))
 
 # =========================================================
@@ -438,7 +507,7 @@ def page_company_info():
                         with b2: st.link_button("📺 유튜브", c["유튜브"], use_container_width=True)
 
 # =========================================================
-# 5. 심우주 탐사: 학술 연구 트렌드 (Research) - 수정됨
+# 5. 심우주 탐사: 학술 연구 트렌드 (Research)
 # =========================================================
 def page_scholar_analysis():
     st.title("🔭 심우주 탐사: 학술 연구 데이터")
@@ -459,18 +528,15 @@ def page_scholar_analysis():
         progress_bar = st.progress(0)
         
         with st.spinner(f"'{query}' 영역으로 탐사선을 보내는 중..."):
-            time.sleep(1.5) 
-            
-            # 가상 데이터 (시뮬레이션)
+            time.sleep(1.5)
+            # 가상 데이터
             base_years = [2021, 2022, 2023, 2024, 2025]
             simulated_count = 60
             all_years = random.choices(base_years, k=simulated_count)
             dummy_text = (f"{query} " * 20) + "AI Machine-Learning Quality Safety Sustainability Innovation " * 10
-            
             progress_bar.progress(100)
             status_text.success("✅ 탐사 성공! 연구 데이터 신호 확보.")
 
-        # 시각화 1: 연도별 추이
         st.subheader(f"📊 연도별 연구 데이터 출판 수")
         year_counts = Counter(all_years)
         df_trend = pd.DataFrame(year_counts.items(), columns=['Year', 'Count']).sort_values('Year')
@@ -478,28 +544,23 @@ def page_scholar_analysis():
         fig = px.bar(
             df_trend, x='Year', y='Count', text='Count',
             template=CHART_THEME,
-            color='Count', color_continuous_scale="PuBu"
+            color='Count', color_continuous_scale=["#00E5FF", "#D500F9"]
         )
-        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)")
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig, use_container_width=True)
 
-        # [수정] 시각화 2: 워드클라우드 (배경 문제 해결)
         st.subheader("🌌 핵심 신호 클라우드")
-        
-        # WordCloud 생성 시 배경 투명 또는 흰색 지정
         wc = WordCloud(
             font_path=font_path, width=800, height=400,
-            background_color="white", # 배경을 흰색으로 하여 가시성 확보
-            colormap="viridis", # 깔끔한 컬러맵
+            background_color="black", # 배경을 검은색으로
+            colormap="cool", # 네온 컬러맵
             max_words=50
         ).generate(dummy_text)
         
         fig_wc, ax = plt.subplots(figsize=(10, 5))
         ax.imshow(wc, interpolation='bilinear')
         ax.axis("off")
-        
-        # Matplotlib Figure의 배경도 투명하게 설정
-        fig_wc.patch.set_alpha(0)
+        fig_wc.patch.set_alpha(0) # 배경 투명
         st.pyplot(fig_wc)
 
 # =========================================================
@@ -509,10 +570,12 @@ def page_conclusion():
     st.title("🚩 궤도 안착: 결론 및 제언")
     
     st.markdown("""
-    <div style='background-color: #FFFFFF; padding: 20px; border-radius: 12px; border-left: 5px solid #1A237E; box-shadow: 0 4px 6px rgba(0,0,0,0.05);'>
-        <h4 style='margin:0; color:#1A237E !important;'>💡 융합 탐사 최종 리포트</h4>
-        <p style='margin-top:10px;'>본 프로젝트를 통해 <b>식품 공학적 도메인</b>과 <b>데이터 분석 기술</b>을 결합하여,
-        막연했던 진로의 우주에서 <b>시장성 있는 기회의 궤도</b>를 발견했습니다.</p>
+    <div style='background: rgba(0, 0, 0, 0.3); padding: 25px; border-radius: 15px; border-left: 5px solid #00D2FF; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);'>
+        <h4 style='margin:0; color:#00D2FF !important;'>💡 융합 탐사 최종 리포트</h4>
+        <p style='margin-top:15px; font-size: 16px; color: #E0E0FF;'>
+        본 프로젝트를 통해 <b>식품 공학적 도메인</b>과 <b>데이터 분석 기술</b>을 결합하여,<br>
+        막연했던 진로의 우주에서 <b>시장성 있는 기회의 궤도</b>를 발견했습니다.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -531,7 +594,6 @@ def page_conclusion():
 
     st.markdown("---")
     st.info('**"데이터는 식품 산업이라는 우주를 여행하는 히치하이커의 안내서입니다."**')
-    
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("<div style='text-align: center; color: #546E7A;'>🛰️ Mission Director: <b>Jiho Jung</b> | 📡 Signal: jiho.foodtech@email.com</div>", unsafe_allow_html=True)
 
@@ -543,25 +605,27 @@ def main():
         st.markdown("## 🛸 탐사선 제어 패널")
         selected = option_menu(
             menu_title=None,
-            options=["항해 시작 (Intro)", "신호 탐지 (Trend)", "행성 좌표 (Map)", "상세 데이터 (Info)", "심우주 탐사 (Research)", "궤도 안착 (Conclusion)"],
-            icons=["rocket-takeoff", "radar", "globe", "cpu", "telescope", "flag"],
+            options=["0. 프롤로그 (Cover)", "1. 항해 시작 (Intro)", "2. 신호 탐지 (Trend)", "3. 행성 좌표 (Map)", "4. 상세 데이터 (Info)", "5. 심우주 탐사 (Research)", "6. 궤도 안착 (Conclusion)"],
+            icons=["star", "rocket-takeoff", "radar", "globe", "cpu", "telescope", "flag"],
             menu_icon="cast",
             default_index=0,
             styles={
-                "container": {"padding": "0!important", "background-color": "#E8EAF6"},
-                "icon": {"color": "#1A237E", "font-size": "18px"},
-                "nav-link": {"font-size": "15px", "text-align": "left", "margin":"0px", "color": "#1A237E"},
-                "nav-link-selected": {"background-color": "#C5CAE9", "color": "#1A237E", "font-weight": "bold"},
+                "container": {"padding": "0!important", "background-color": "#0B0D17"},
+                "icon": {"color": "#00D2FF", "font-size": "18px"},
+                "nav-link": {"font-size": "14px", "text-align": "left", "margin":"0px", "color": "#B0C4DE"},
+                "nav-link-selected": {"background-color": "#1A237E", "color": "#FFFFFF", "border-left": "3px solid #00D2FF"},
             }
         )
         st.caption("🪐 Powered by Streamlit")
 
-    if selected == "항해 시작 (Intro)": page_intro()
-    elif selected == "신호 탐지 (Trend)": page_keyword_analysis()
-    elif selected == "행성 좌표 (Map)": page_map_visualization()
-    elif selected == "상세 데이터 (Info)": page_company_info()
-    elif selected == "심우주 탐사 (Research)": page_scholar_analysis()
-    elif selected == "궤도 안착 (Conclusion)": page_conclusion()
+    # 페이지 라우팅
+    if selected == "0. 프롤로그 (Cover)": page_title_screen()
+    elif selected == "1. 항해 시작 (Intro)": page_intro()
+    elif selected == "2. 신호 탐지 (Trend)": page_keyword_analysis()
+    elif selected == "3. 행성 좌표 (Map)": page_map_visualization()
+    elif selected == "4. 상세 데이터 (Info)": page_company_info()
+    elif selected == "5. 심우주 탐사 (Research)": page_scholar_analysis()
+    elif selected == "6. 궤도 안착 (Conclusion)": page_conclusion()
 
 if __name__ == "__main__":
     main()

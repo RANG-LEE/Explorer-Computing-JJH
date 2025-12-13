@@ -1000,7 +1000,7 @@ def main():
         selected = option_menu(
             menu_title=None,
             options=["0. 프롤로그", "1. 항해 시작 (Intro)", "2. 신호 탐지 (Trend)", "3. 행성 좌표 (Map)", "4. 기업 상세 데이터 (Info)", "5. 심우주 탐사 (Research)", "6. 궤도 안착 (Conclusion)"],
-            icons=["star", "rocket-takeoff", "radar", "globe", "cpu", "telescope", "flag"],
+            icons=["star", "rocket-takeoff", "radar", "globe", "cpu", "binoculars", "flag"],
             menu_icon="cast",
             default_index=0,
             styles={
@@ -1024,6 +1024,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

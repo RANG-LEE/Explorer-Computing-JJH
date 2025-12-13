@@ -358,7 +358,7 @@ def page_title_screen():
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
-        st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Computing Explorer</div>", unsafe_allow_html=True)
 
 # 항해 시작 (Intro)
 def page_intro():
@@ -1192,6 +1192,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

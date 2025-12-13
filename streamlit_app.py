@@ -956,33 +956,104 @@ def page_scholar_analysis():
 def page_conclusion():
     st.title("🚩 궤도 안착: 결론 및 제언")
     
+    # [Intro] 최종 리포트 카드
     st.markdown("""
-    <div style='background: rgba(0, 0, 0, 0.2); padding: 25px; border-radius: 15px; border-left: 5px solid #29B6F6; box-shadow: 0 0 20px rgba(41, 182, 246, 0.3);'>
-        <h4 style='margin:0; color:#29B6F6 !important;'>💡 융합 탐사 최종 리포트</h4>
-        <p style='margin-top:15px; font-size: 16px; color: #FFFFFF !important;'>
-        본 프로젝트를 통해 <b>식품 공학적 도메인</b>과 <b>데이터 분석 기술</b>을 결합하여,<br>
-        막연했던 진로의 우주에서 <b>시장성 있는 기회의 궤도</b>를 발견했습니다.
+    <div style='background: linear-gradient(135deg, rgba(41, 182, 246, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%); padding: 30px; border-radius: 15px; border-left: 5px solid #29B6F6; box-shadow: 0 4px 20px rgba(41, 182, 246, 0.2);'>
+        <h4 style='margin:0; color:#29B6F6 !important; display:flex; align-items:center;'>
+            <span style='font-size:24px; margin-right:10px;'>👨🏻‍🚀</span> Mission Status: 궤도 안착 성공 (Success)
+        </h4>
+        <p style='margin-top:15px; font-size: 16px; color: #E0E0E0 !important; line-height: 1.8;'>
+            본 프로젝트(항해)는 <b>식품 공학(Food Tech)</b>이라는 본진과 <b>데이터 사이언스(Data Science)</b>라는 추진체를 결합한 시뮬레이션이었습니다.<br>
+            불확실한 취업 시장이라는 심우주(Deep Space) 속에서, <b>데이터에 기반한 의사결정</b>만이 목적지로 향하는 가장 정확한 나침반임을 확인했습니다.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    st.divider()
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
+    # [Main] 2단 컬럼: 핵심 발견 및 인사이트
+    col1, col2 = st.columns(2, gap="medium")
+    
     with col1:
-        st.subheader("1. 항해사의 진로 좌표 수정")
-        st.markdown("- **명확한 좌표 확인**: '융합 역량'을 데이터 시각화로 구현하며, 단순 R&D를 넘어 **데이터 기반 상품 기획(PM)** 직무 가능성 확인.")
-        st.markdown("- **강력한 무기**: 면접 시 추상적 열정이 아닌 **데이터 분석 경험**을 근거로 제시.")
+        st.markdown("""
+        <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; height: 100%;'>
+            <h5 style='color: #00E5FF !important;'>🚀 항해사의 재정의 (Identity)</h5>
+            <ul style='color: #B0BEC5; margin-top: 15px; line-height: 1.8; list-style-type: none; padding-left: 0;'>
+                <li style='margin-bottom: 10px;'>
+                    <b style='color: white;'>🧬 Hybrid Specialist</b><br>
+                    식품의 물성을 이해하는 공학적 지식에 프로그래밍 활용 능력을 더해, 개발자와 현장 전문가를 잇는 <b>가교(Bridge)</b> 역할을 수행합니다.
+                </li>
+                <li>
+                    <b style='color: white;'>📊 Evidence-Based Decision</b><br>
+                    '감'이나 '직관'에 의존하던 기획 방식에서 벗어나, <b>객관적 데이터 수치</b>로 설득하고 증명하는 문제 해결 방식을 체득했습니다.
+                </li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
         
     with col2:
-        st.subheader("2. 탐사 플랫폼의 확장성")
-        st.markdown("- **다중 우주 도킹**: 경영학, 디자인 등 타 전공자에게도 적용 가능한 **범용 진로 탐색 모델**.")
-        st.markdown("- **집단 지성 허브**: 각자의 관심 신호(키워드)를 공유하는 **융합 진로 관제센터**로 발전 가능.")
+        st.markdown("""
+        <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; height: 100%;'>
+            <h5 style='color: #E040FB !important;'>🔭 산업적 시사점 (Industry View)</h5>
+            <ul style='color: #B0BEC5; margin-top: 15px; line-height: 1.8; list-style-type: none; padding-left: 0;'>
+                <li style='margin-bottom: 10px;'>
+                    <b style='color: white;'>🌍 DX (Digital Transformation)</b><br>
+                    보수적인 식품 산업에서도 트렌드 분석, 공정 최적화, 타겟 마케팅 등 <b>데이터 전환(DX)</b>이 필수 생존 전략임을 파악했습니다.
+                </li>
+                <li>
+                    <b style='color: white;'>🛰️ 확장 가능한 탐사 모델</b><br>
+                    본 프로젝트의 방법론(트렌드-기업-연구 분석)은 향후 제약, 바이오, 화장품 등 <b>유관 산업 분야로 즉시 확장</b> 가능한 범용 모델입니다.
+                </li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("---")
-    st.info('**"데이터는 식품 산업이라는 우주를 여행하는 히치하이커의 안내서입니다."**')
+    st.divider()
+
+    # [Roadmap] 향후 계획 (Next Coordinates)
+    st.subheader("📡 Next Coordinates: 차기 탐사 계획")
+    st.markdown("""
+    <div style='display: flex; flex-direction: column; gap: 10px; margin-top: 10px;'>
+        <div style='display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #C6FF00;'>
+            <span style='color: #C6FF00; font-weight: bold; width: 100px;'>Phase 1</span>
+            <span style='color: #FFFFFF;'>Python 심화 학습 및 SQL 데이터베이스 구축 능력 확보</span>
+        </div>
+        <div style='display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #C6FF00; opacity: 0.8;'>
+            <span style='color: #C6FF00; font-weight: bold; width: 100px;'>Phase 2</span>
+            <span style='color: #E0E0E0;'>실제 식품 공공 데이터(식약처 등)를 활용한 머신러닝 예측 모델링 프로젝트 수행</span>
+        </div>
+        <div style='display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #C6FF00; opacity: 0.5;'>
+            <span style='color: #C6FF00; font-weight: bold; width: 100px;'>Phase 3</span>
+            <span style='color: #B0BEC5;'>데이터 기반 식품 기획(PM) 직무 지원 및 현업 적용</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center; color: #B0BEC5 !important;'>🛰️ Mission Director: <b>Jiho Jung</b> | 📡 Signal: jiho.foodtech@email.com</div>", unsafe_allow_html=True)
+
+    # [Footer] 명언 및 연락처 (변경된 이메일 적용)
+    st.markdown("---")
+    st.markdown("""
+    <div style='text-align: center;'>
+        <p style='font-size: 20px; font-weight: bold; color: #FFFFFF; font-style: italic;'>
+            "탐험의 끝은 새로운 시작입니다."
+        </p>
+        <p style='font-size: 16px; color: #B0BEC5; margin-top: 10px;'>
+            이제 관측자가 아닌 개척자로서, 저만의 새로운 궤도를 만들어가겠습니다.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # 연락처 박스
+    st.markdown("""
+    <div style='text-align: center; background-color: #212121; padding: 15px; border-radius: 30px; width: fit-content; margin: 0 auto; border: 1px solid #424242;'>
+        <span style='margin-right: 15px; color: #B0BEC5;'>🛰️ Mission Director: <b>Jiho Jung</b></span>
+        <span style='color: #4FC3F7;'>📡 Signal: <b>sookh37@snu.ac.kr</b></span>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # =========================================================
 # 메인 실행 블록
@@ -1024,6 +1095,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

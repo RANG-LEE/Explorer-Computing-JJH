@@ -917,69 +917,67 @@ def page_scholar_analysis():
 
     df_research = load_scholar_data()
     
-# ... (이전 코드는 그대로) ...
-
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
+    # --------------------------------------------------------------------------------
+    # [수정] 들여쓰기 교정 완료 & 스타일 주입
+    # --------------------------------------------------------------------------------
     with st.container():
-            col_in1, col_in2 = st.columns([3, 1])
-            with col_in1:
-                # ====================================================================
-                # [수정 완료] 글씨 흰색(#FFFFFF), 배경 짙은 회색(#424242) 적용
-                # ====================================================================
-                st.markdown("""
-                <style>
-                /* 1. 선택 박스 본체 (배경: 짙은 회색) */
-                div[data-baseweb="select"] > div {
-                    background-color: #424242 !important; /* 짙은 회색 배경 */
-                    border: 2px solid #29B6F6 !important; /* 테두리 파란색 */
-                    color: #FFFFFF !important;            /* 글자 흰색 */
-                }
-                
-                /* 2. 박스 내부 텍스트 강제 흰색 */
-                div[data-baseweb="select"] span {
-                    color: #FFFFFF !important;
-                    -webkit-text-fill-color: #FFFFFF !important;
-                    font-weight: bold !important;
-                }
-    
-                /* 3. 화살표 아이콘 흰색 */
-                div[data-baseweb="select"] svg {
-                    fill: #FFFFFF !important;
-                }
-    
-                /* 4. 드롭다운 메뉴 리스트 (팝업창) */
-                ul[data-baseweb="menu"] {
-                    background-color: #424242 !important; /* 리스트 배경도 짙은 회색 */
-                }
-                
-                /* 5. 리스트 아이템 글자색 */
-                ul[data-baseweb="menu"] li span {
-                    color: #FFFFFF !important; /* 리스트 글자 흰색 */
-                }
-                
-                /* 6. 마우스 올렸을 때(Hover) 배경색 */
-                ul[data-baseweb="menu"] li:hover {
-                    background-color: #616161 !important; /* 마우스 올리면 약간 밝은 회색 */
-                }
-                </style>
-                """, unsafe_allow_html=True)
-                # ====================================================================
-    
-                # 라벨 (파란 배경)
-                st.markdown("""
-                <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
-                    <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                query = st.selectbox(
-                    "탐사 키워드 선택", 
-                    keywords_available, 
-                    index=4, 
-                    label_visibility="collapsed"
-                )
-        # ... (이후 코드는 그대로) ...
+        col_in1, col_in2 = st.columns([3, 1])
+        with col_in1:
+            # CSS 스타일 주입 (짙은 회색 배경 + 흰색 글씨)
+            st.markdown("""
+            <style>
+            /* 1. 선택 박스 본체 (배경: 짙은 회색 #424242) */
+            div[data-baseweb="select"] > div {
+                background-color: #424242 !important; 
+                border: 2px solid #29B6F6 !important; 
+                color: #FFFFFF !important;            
+            }
+            
+            /* 2. 박스 내부 텍스트 (흰색 #FFFFFF) */
+            div[data-baseweb="select"] span {
+                color: #FFFFFF !important;
+                -webkit-text-fill-color: #FFFFFF !important;
+                font-weight: bold !important;
+            }
+
+            /* 3. 화살표 아이콘 (흰색) */
+            div[data-baseweb="select"] svg {
+                fill: #FFFFFF !important;
+            }
+
+            /* 4. 드롭다운 메뉴 리스트 (배경 짙은 회색) */
+            ul[data-baseweb="menu"] {
+                background-color: #424242 !important; 
+            }
+            
+            /* 5. 리스트 아이템 글자색 (흰색) */
+            ul[data-baseweb="menu"] li span {
+                color: #FFFFFF !important; 
+            }
+            
+            /* 6. 마우스 올렸을 때 (약간 밝은 회색) */
+            ul[data-baseweb="menu"] li:hover {
+                background-color: #616161 !important; 
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+            # 라벨 부분
+            st.markdown("""
+            <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
+                <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            query = st.selectbox(
+                "탐사 키워드 선택", 
+                keywords_available, 
+                index=4, 
+                label_visibility="collapsed"
+            )
+
         with col_in2:
             st.write("") 
             st.write("") 
@@ -1187,6 +1185,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

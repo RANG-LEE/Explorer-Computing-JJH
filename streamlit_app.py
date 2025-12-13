@@ -333,14 +333,14 @@ def page_intro():
                     <span style='font-size:22px; margin-right:10px;'>💰</span> 보조 추진체: 금융경제
                 </h5>
                 <ul style='color: #E0E0E0 !important; margin-top: 15px; margin-left: 20px; line-height: 1.8;'>
-                    <li>시장(Market)의 거시적 중력과 흐름 파악</li>
+                    <li>시장(Market)의 거시적 흐름과 미시적 흐름 파악</li>
                     <li>경제 데이터 해석 및 사업성 분석 능력</li>
                 </ul>
             </div>
             """, unsafe_allow_html=True)
         
         st.divider()
-        st.markdown("#### 📅 궤도 수정 로그 (Mission Log)")
+        st.markdown("#### 🔮 2025년도 2학기 학습궤도 (Mission log)")
         
         st.markdown("""
         <div style='display: flex; flex-direction: column; gap: 15px; margin-top: 20px;'>
@@ -348,36 +348,79 @@ def page_intro():
                 <div style='font-size: 24px; margin-right: 20px;'>🛰️</div>
                 <div>
                     <b style='color: #00E5FF; font-size: 16px;'>IT/데이터 모듈 장착</b>
-                    <p style='margin: 5px 0 0 0; font-size: 14px; color: #B0BEC5;'>컴퓨팅 탐색/핵심 | Python 기초 및 알고리즘 이해</p>
+                    <p style='margin: 5px 0 0 0; font-size: 14px; color: #B0BEC5;'>컴퓨팅 탐색:컴퓨터로 생각하기/컴퓨팅 핵심:실생활에서 활용하기 | Python 기초 및 알고리즘 이해</p>
                 </div>
             </div>
             <div style='display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid #C6FF00;'>
                 <div style='font-size: 24px; margin-right: 20px;'>📈</div>
                 <div>
                     <b style='color: #C6FF00; font-size: 16px;'>경제 네비게이션 동기화</b>
-                    <p style='margin: 5px 0 0 0; font-size: 14px; color: #B0BEC5;'>미시/거시경제이론 | 시장 메커니즘 및 환경 분석</p>
+                    <p style='margin: 5px 0 0 0; font-size: 14px; color: #B0BEC5;'>미시경제이론/거시경제이론 | 시장 메커니즘 및 환경 분석</p>
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
     with tab2:
-        st.subheader("🌌 개인적인 탐사 동기 (Interest)")
-        col_t1, col_t2 = st.columns([1, 2], gap="large")
-        with col_t1:
-            st.markdown(
-                """<div style='background: radial-gradient(circle, rgba(255,64,129,0.2) 0%, rgba(0,0,0,0) 70%); border-radius: 20px; height: 220px; display: flex; justify-content: center; align-items: center; border: 2px solid #FF4081; box-shadow: 0 0 30px rgba(255, 64, 129, 0.4); animation: pulse 3s infinite;'>
-                    <span style='font-size: 100px; filter: drop-shadow(0 0 10px #FF4081);'>🧁🪐</span>
-                </div>""", unsafe_allow_html=True)
-        with col_t2:
-            st.markdown("""
-            <h3 style='color: #FF4081 !important; margin-top:0;'>“Taste is the Gravity.”</h3>
-            <p style='font-size:16px; line-height:1.8;'>
-            아무리 뛰어난 기술도 결국 '맛'이라는 중력이 없다면 시장 궤도를 이탈합니다.<br>
-            저는 주말마다 베이킹 실험실에서 재료의 배합이 만들어내는 <b>맛의 소우주(Micro-cosmos)</b>를 탐구하며, 기술과 감성의 최적 균형점을 찾고 있습니다.
+        st.subheader("🌌 취미 & 영감 (Hobby & Inspiration)")
+
+        # 1. 섹션 소개글 (항해 컨셉)
+        st.markdown("""
+        <div style='background: rgba(255, 64, 129, 0.1); padding: 25px; border-radius: 15px; border-left: 5px solid #FF4081; margin-bottom: 25px;'>
+            <h5 style='color: #FF4081 !important; margin: 0; display: flex; align-items: center;'>
+                🔋 항해의 원동력 (Fuel for Voyage)
+            </h5>
+            <p style='margin-top: 15px; font-size: 16px; line-height: 1.6;'>
+                끝없는 우주를 항해(학습과 연구)하기 위해서는 <b>엔진의 열을 식히고 연료를 재충전</b>하는 시간이 필수적입니다.<br>
+                제가 지칠 때마다 다시 나아갈 힘을 주는, <b>감성(Taste)</b>과 <b>열정(Passion)</b>, 그리고 <b>지성(Logic)</b>의 신호원(Signal Source)들을 소개합니다.
             </p>
-            """)
-            st.link_button("📺 영감의 신호원: 유튜브 '빵딘' 채널 접속", "https://www.youtube.com/@bbangdin", use_container_width=True)
+        </div>
+        """, unsafe_allow_html=True)
+
+        # 2. 유튜버 카드 리스트 (3열 배치)
+        c1, c2, c3 = st.columns(3)
+
+        # [1] 빵딘 (감성/베이킹)
+        with c1:
+            st.markdown("""
+            <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 64, 129, 0.3); height: 220px; display: flex; flex-direction: column;'>
+                <div style='font-size: 32px; margin-bottom: 10px;'>🧁</div>
+                <b style='color: #FF4081; font-size: 18px; margin-bottom: 8px;'>빵딘 (Bbangdin)</b>
+                <p style='font-size: 14px; color: #E0E0E0; line-height: 1.5;'>
+                    "베이킹은 과학이자 예술입니다."<br>
+                    재료의 배합이 만들어내는 <b>시각적, 미각적 즐거움</b>을 통해 식품 공학적 영감과 힐링을 얻습니다.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+            st.link_button("📺 채널 접속 (Youtube)", "https://www.youtube.com/@%EB%B9%B5%EB%94%98", use_container_width=True)
+
+        # [2] 이지영 (열정/동기부여)
+        with c2:
+            st.markdown("""
+            <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 193, 7, 0.3); height: 220px; display: flex; flex-direction: column;'>
+                <div style='font-size: 32px; margin-bottom: 10px;'>🔥</div>
+                <b style='color: #FFC107; font-size: 18px; margin-bottom: 8px;'>이지영 (Motivation)</b>
+                <p style='font-size: 14px; color: #E0E0E0; line-height: 1.5;'>
+                    "독기는 가장 강력한 연료입니다."<br>
+                    항해가 힘들고 지칠 때, 치열한 삶의 태도를 배우며 <b>정신적 엔진(Mental Engine)</b>을 재정비합니다.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+            st.link_button("📺 채널 접속 (Youtube)", "https://www.youtube.com/@leejiyoung_official", use_container_width=True)
+
+        # [3] GeniusSKLee (지성/화학)
+        with c3:
+            st.markdown("""
+            <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(0, 229, 255, 0.3); height: 220px; display: flex; flex-direction: column;'>
+                <div style='font-size: 32px; margin-bottom: 10px;'>🧪</div>
+                <b style='color: #00E5FF; font-size: 18px; margin-bottom: 8px;'>GeniusSKLee (Science)</b>
+                <p style='font-size: 14px; color: #E0E0E0; line-height: 1.5;'>
+                    "원리를 알면 세상이 보입니다."<br>
+                    화학적 원리를 명쾌하게 탐구하며, 전공 분야인 <b>식품 및 화학에 대한 논리적 깊이</b>를 다집니다.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+            st.link_button("📺 채널 접속 (Youtube)", "https://www.youtube.com/@GeniusSKLee", use_container_width=True)
 
     with tab3:
         st.subheader("🎯 금번 임무 목표 (Project Directive)")
@@ -668,5 +711,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 

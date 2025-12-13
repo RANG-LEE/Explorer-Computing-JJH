@@ -126,17 +126,17 @@ def apply_custom_theme():
             border: 1px solid #4FC3F7 !important;
         }
         
-        /* 입력창 내부 텍스트: 짙은 회색 (#333333) - 요청사항 반영 */
+        /* 입력창 내부 텍스트: 완전한 검은색 (#000000)으로 변경 */
         div[data-baseweb="select"] span,
         div[data-baseweb="base-input"] input {
-            color: #333333 !important; 
-            -webkit-text-fill-color: #333333 !important;
+            color: #000000 !important; 
+            -webkit-text-fill-color: #000000 !important;
             font-weight: bold !important;
         }
 
-        /* 드롭다운 메뉴 아이콘(화살표) 색상: 짙은 회색 */
+        /* 드롭다운 메뉴 아이콘(화살표) 색상: 검은색 */
         div[data-baseweb="select"] svg {
-            fill: #333333 !important;
+            fill: #000000 !important;
         }
 
         /* 드롭다운 메뉴 리스트 (팝업) 배경: 흰색 */
@@ -144,9 +144,9 @@ def apply_custom_theme():
             background-color: #FFFFFF !important;
         }
         
-        /* 드롭다운 메뉴 리스트 내부 글씨: 짙은 회색 */
+        /* 드롭다운 메뉴 리스트 내부 글씨: 검은색 */
         ul[data-baseweb="menu"] li span {
-            color: #333333 !important;
+            color: #000000 !important;
         }
         
         /* 멀티셀렉트 태그 (선택된 항목) 스타일 */
@@ -1224,6 +1224,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

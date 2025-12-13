@@ -638,7 +638,7 @@ def page_map_visualization():
     <div style='background: rgba(0, 229, 255, 0.1); padding: 20px; border-radius: 15px; border-left: 5px solid #00E5FF; margin-bottom: 25px;'>
         <h5 style='color: #00E5FF !important; margin: 0;'>🗺️ 진로 탐색을 위한 성도(Star Map) 작성</h5>
         <p style='margin-top: 10px; font-size: 16px; line-height: 1.6;'>
-            식품 산업이라는 거대한 우주에서 내가 착륙할 목표 행성을 정하기 위해선, 그들의 <b>물리적 위치(본사)</b>와 <b>경제적 중력(브랜드 영향력)</b>을 파악하는 것이 필수적입니다.<br>
+            식품 산업이라는 거대한 우주에서 착륙할 목표 행성을 정하기 위해선, 그들의 <b>물리적 위치(본사)</b>와 <b>경제적 중력(브랜드 영향력)</b>을 파악하는 것이 필수적입니다.<br>
             최신 <b>K-Brand Index 빅데이터</b>를 기반으로, 현재 대한민국 식품 업계를 이끄는 10대 기업의 좌표를 시각화했습니다.
         </p>
     </div>
@@ -861,7 +861,7 @@ def main():
         
         selected = option_menu(
             menu_title=None,
-            options=["0. 프롤로그 (Cover)", "1. 항해 시작 (Intro)", "2. 신호 탐지 (Trend)", "3. 행성 좌표 (Map)", "4. 상세 데이터 (Info)", "5. 심우주 탐사 (Research)", "6. 궤도 안착 (Conclusion)"],
+            options=["0. 프롤로그", "1. 항해 시작 (Intro)", "2. 신호 탐지 (Trend)", "3. 행성 좌표 (Map)", "4. 기업 상세 데이터 (Info)", "5. 심우주 탐사 (Research)", "6. 궤도 안착 (Conclusion)"],
             icons=["star", "rocket-takeoff", "radar", "globe", "cpu", "telescope", "flag"],
             menu_icon="cast",
             default_index=0,
@@ -886,6 +886,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

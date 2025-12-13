@@ -120,7 +120,7 @@ def apply_custom_theme():
         /* 입력창 박스 배경: 밝은 회색 (#F0F0F0) */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="base-input"] {
-            background-color: #F0F0F0 !important;
+            background-color: #333333 !important;
             border: 2px solid #29B6F6 !important; /* 테두리도 파란색 강조 */
         }
         
@@ -1191,6 +1191,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

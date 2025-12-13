@@ -309,7 +309,7 @@ def page_intro():
     st.markdown("<br><br>", unsafe_allow_html=True)
     
     # 탭 부분
-    tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
+    tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (2025-2)", "🌌 탐사 연료 주입 (취미)", "🎯 본 프로젝트 목표"])
 
     with tab1:
         st.subheader("📚 우주항해 커리큘럼")
@@ -364,7 +364,7 @@ def page_intro():
     with tab2:
         st.subheader("🌌 취미 & 영감 (Hobby & Inspiration)")
 
-        # 1. 섹션 소개글 (항해 컨셉)
+        # 1. 섹션 소개글 
         st.markdown("""
         <div style='background: rgba(255, 64, 129, 0.1); padding: 25px; border-radius: 15px; border-left: 5px solid #FF4081; margin-bottom: 25px;'>
             <h5 style='color: #FF4081 !important; margin: 0; display: flex; align-items: center;'>
@@ -372,7 +372,7 @@ def page_intro():
             </h5>
             <p style='margin-top: 15px; font-size: 16px; line-height: 1.6;'>
                 끝없는 우주를 항해(학습과 연구)하기 위해서는 <b>엔진의 열을 식히고 연료를 재충전</b>하는 시간이 필수적입니다.<br>
-                제가 지칠 때마다 다시 나아갈 힘을 주는, <b>감성(Taste)</b>과 <b>열정(Passion)</b>, 그리고 <b>지성(Logic)</b>의 신호원(Signal Source)들을 소개합니다.
+                제가 지칠 때마다 다시 나아갈 힘을 주는 것들은 제가 좋아하는 취미들입니다. <b></b>빵과 <b>인문학</b>, 그리고 <b>영화</b>를 소재로 항해하는 유튜버들을 소개합니다.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -380,15 +380,13 @@ def page_intro():
         # 2. 유튜버 카드 리스트 (3열 배치)
         c1, c2, c3 = st.columns(3)
 
-        # [1] 빵딘 (감성/베이킹)
+        # [1] 빵딘 (베이킹)
         with c1:
             st.markdown("""
-            <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 64, 129, 0.3); height: 220px; display: flex; flex-direction: column;'>
-                <div style='font-size: 32px; margin-bottom: 10px;'>🧁</div>
                 <b style='color: #FF4081; font-size: 18px; margin-bottom: 8px;'>빵딘 (Bbangdin)</b>
                 <p style='font-size: 14px; color: #E0E0E0; line-height: 1.5;'>
                     "베이킹은 과학이자 예술입니다."<br>
-                    재료의 배합이 만들어내는 <b>시각적, 미각적 즐거움</b>을 통해 식품 공학적 영감과 힐링을 얻습니다.
+                    재료의 배합이 만들어내는 <b>시각적, 미각적 즐거움</b>을 통해 힐링을 얻습니다.
                 </p>
             </div>
             """, unsafe_allow_html=True)
@@ -711,6 +709,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

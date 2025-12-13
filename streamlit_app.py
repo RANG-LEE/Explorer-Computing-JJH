@@ -239,18 +239,6 @@ def page_intro():
                     👨‍🚀
                 </div>
                 
-                <div style='
-                    background: linear-gradient(90deg, #212121 0%, #37474F 100%);
-                    color: #29B6F6; 
-                    padding: 8px 24px; 
-                    border-radius: 20px; 
-                    font-size: 15px; 
-                    font-weight: bold; 
-                    border: 2px solid #29B6F6;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-                '>
-                    Commander
-                </div>
             </div>
             """, unsafe_allow_html=True
         )
@@ -680,3 +668,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

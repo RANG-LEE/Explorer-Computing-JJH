@@ -608,8 +608,16 @@ def page_conclusion():
 # =========================================================
 def main():
     with st.sidebar:
-        # [수정] !important 추가로 색상 강제 적용
-        st.markdown("<h2 style='color: #1E88E5 !important;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
+        # 👇 [수정] 제목 뒤에 배경색 박스를 추가하는 코드입니다.
+        st.markdown("""
+        <div style='background-color: #383838; padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
+            <h2 style='color: #FFFFFF !important; margin: 0; font-size: 22px; text-shadow: none;'>
+                🛸 탐사선 제어 패널
+            </h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # ... (아래 option_menu 코드는 그대로 두세요) ...
         
         selected = option_menu(
             menu_title=None,
@@ -639,5 +647,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 

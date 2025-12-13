@@ -900,6 +900,7 @@ def page_company_info():
                         with b2: 
                             st.markdown(f'<a href="{c["유튜브"]}" target="_blank" style="{btn_style}">📺 유튜브</a>', unsafe_allow_html=True)
                             
+
 # 심우주 탐사 (Research)
 def page_scholar_analysis():
     st.title("🔭 심우주 탐사: 학술 연구 데이터")
@@ -942,58 +943,41 @@ def page_scholar_analysis():
         return pd.read_csv(file_name)
 
     df_research = load_scholar_data()
-    
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
-    # --------------------------------------------------------------------------------
-    # [수정] 들여쓰기 교정 완료 & 스타일 주입
-    # --------------------------------------------------------------------------------
     with st.container():
-        col_in1, col_in2 = st.columns([3, 1])
-        with col_in1:
-            # CSS 스타일 주입 (짙은 회색 배경 + 흰색 글씨)
-            st.markdown("""
-            <style>
-            /* 1. 선택 박스 본체 (배경: 짙은 회색 #424242) */
+        # [수정됨] 높이 확대를 위한 부분 CSS 주입 (색상은 글로벌 테마 따름)
+        st.markdown("""
+        <style>
+            /* 1. 입력창(Selectbox) 높이 확대 (1.2배 approx 50px) 및 텍스트 수직 중앙 정렬 */
             div[data-baseweb="select"] > div {
-                background-color: #424242 !important; 
-                border: 2px solid #29B6F6 !important; 
-                color: #FFFFFF !important;            
+                min-height: 50px !important;
+                height: 50px !important;
+                display: flex;
+                align-items: center;
             }
-            
-            /* 2. 박스 내부 텍스트 (흰색 #FFFFFF) */
             div[data-baseweb="select"] span {
-                color: #FFFFFF !important;
-                -webkit-text-fill-color: #FFFFFF !important;
-                font-weight: bold !important;
+                line-height: normal !important; /* 텍스트 겹침 방지 */
             }
 
-            /* 3. 화살표 아이콘 (흰색) */
-            div[data-baseweb="select"] svg {
-                fill: #FFFFFF !important;
+            /* 2. 버튼 높이를 입력창과 동일하게 맞춤 */
+            div.stButton > button {
+                min-height: 50px !important;
+                height: 50px !important;
+                border-radius: 8px !important; /* 입력창과 모서리 둥글기 통일 */
+                margin-top: 0px !important;
             }
+        </style>
+        """, unsafe_allow_html=True)
 
-            /* 4. 드롭다운 메뉴 리스트 (배경 짙은 회색) */
-            ul[data-baseweb="menu"] {
-                background-color: #424242 !important; 
-            }
-            
-            /* 5. 리스트 아이템 글자색 (흰색) */
-            ul[data-baseweb="menu"] li span {
-                color: #FFFFFF !important; 
-            }
-            
-            /* 6. 마우스 올렸을 때 (약간 밝은 회색) */
-            ul[data-baseweb="menu"] li:hover {
-                background-color: #616161 !important; 
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
-            # 라벨 부분
+        # [수정됨] vertical_alignment="bottom"으로 라벨 높이 무시하고 입력창끼리 하단 정렬
+        col_in1, col_in2 = st.columns([3, 1], vertical_alignment="bottom")
+        
+        with col_in1:
+            # 커스텀 라벨 (입력창 바로 위)
             st.markdown("""
-            <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
-                <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
+            <div style='background-color: #29B6F6; padding: 5px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 0px;'>
+                <span style='color: #000000; font-weight: bold; font-size: 14px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1001,13 +985,11 @@ def page_scholar_analysis():
                 "탐사 키워드 선택", 
                 keywords_available, 
                 index=4, 
-                label_visibility="collapsed"
+                label_visibility="collapsed" # 라벨 숨김 (커스텀 라벨 사용)
             )
 
         with col_in2:
-            st.write("") 
-            st.write("") 
-            st.write("") 
+            # 버튼 (CSS로 높이 50px 강제 적용됨)
             run_btn = st.button("🚀 탐사선 발사", use_container_width=True)
 
     if run_btn:
@@ -1076,7 +1058,6 @@ def page_scholar_analysis():
                 use_container_width=True,
                 column_config={"Year": st.column_config.NumberColumn(format="%d")}
             )
-
 # 궤도 안착 (Conclusion)
 def page_conclusion():
     st.title("🚩 궤도 안착: 결론 및 제언")
@@ -1211,6 +1192,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

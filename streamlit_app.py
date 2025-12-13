@@ -921,34 +921,47 @@ def page_scholar_analysis():
 
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
-    with st.container():
+with st.container():
         col_in1, col_in2 = st.columns([3, 1])
         with col_in1:
             # ====================================================================
-            # [수정 포인트] 여기에 CSS 스타일을 강제로 주입합니다.
+            # [수정 완료] 글씨 검은색(#000000), 배경 흰색(#FFFFFF) 강제 적용
             # ====================================================================
             st.markdown("""
             <style>
-            /* 1. 현재 선택된 값(박스 안에 보이는 글자) 색상 변경 */
+            /* 1. 선택 박스 닫혀있을 때 (보이는 글자 & 배경) */
             div[data-baseweb="select"] > div {
-                color: #bcbcbc !important;  /* 밝은 회색 */
-                background-color: #262730; /* 박스 배경색 (필요시 조정) */
+                background-color: #FFFFFF !important; /* 배경 흰색 */
+                border: 2px solid #29B6F6 !important; /* 테두리 파란색 */
             }
             
-            /* 2. 드롭다운 메뉴를 클릭했을 때 나오는 리스트 아이템 색상 변경 */
+            /* 2. 실제 글자 색상 (가장 중요: 검은색 강제) */
+            div[data-baseweb="select"] span {
+                color: #000000 !important;  /* 글자색: 검정 */
+                -webkit-text-fill-color: #000000 !important;
+                font-weight: bold !important;
+            }
+
+            /* 3. 화살표 아이콘 색상 (검은색) */
+            div[data-baseweb="select"] svg {
+                fill: #000000 !important;
+            }
+
+            /* 4. 클릭해서 나오는 리스트 창 (팝업) 스타일 */
+            ul[data-baseweb="menu"] {
+                background-color: #FFFFFF !important; /* 리스트 배경 흰색 */
+            }
             ul[data-baseweb="menu"] li span {
-                color: #bcbcbc !important; /* 리스트 글자색 */
+                color: #000000 !important; /* 리스트 글자 검은색 */
             }
-            
-            /* 3. 리스트에 마우스를 올렸을 때(Hover) 글자색 */
-            ul[data-baseweb="menu"] li:hover span {
-                color: #bcbcbc !important; /* 마우스 올리면 흰색으로 강조 */
+            ul[data-baseweb="menu"] li:hover {
+                background-color: #E0E0E0 !important; /* 마우스 올리면 연회색 */
             }
             </style>
             """, unsafe_allow_html=True)
             # ====================================================================
 
-            # 키워드 선택 박스 라벨 배경색 변경 (파란색 배경 #29B6F6 적용)
+            # 라벨 부분 (파란 배경)
             st.markdown("""
             <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
                 <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
@@ -961,7 +974,6 @@ def page_scholar_analysis():
                 index=4, 
                 label_visibility="collapsed"
             )
-
         # ... (이후 코드는 그대로) ...
         with col_in2:
             st.write("") 
@@ -1170,5 +1182,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 

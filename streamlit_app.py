@@ -481,7 +481,7 @@ def page_keyword_analysis():
         else:
             df.index = pd.to_datetime(df.index)
         
-        # [수정 1] 컬럼명에서 불필요한 국가명 '(South Korea)' 제거
+        # [수정] 컬럼명 정리
         df.columns = [col.replace(' (South Korea)', '') for col in df.columns]
 
         for col in df.columns:
@@ -491,7 +491,7 @@ def page_keyword_analysis():
         st.error(f"데이터 처리 오류: {e}")
         return
 
-    # [수정 3] 5개년 트렌드 정밀 분석 코멘트 (CSV 데이터 기반 분석)
+    # [분석 데이터] 트렌드 인사이트 사전
     trend_insights = {
         "Matcha": "🍵 **Matcha (말차)**: 지난 5년간 꾸준한 검색량을 유지하고 있습니다. 디저트 및 음료 시장에서 유행을 타지 않는 '스테디셀러'로 자리 잡았으며, 여름과 겨울 시즌에 소폭 상승하는 주기적 패턴을 보입니다.",
         "Zero": "🥤 **Zero (제로)**: 2020년 대비 검색량이 가장 가파르게 급증한 '메가 트렌드'입니다. 초기 '제로 콜라' 중심에서 소주, 과자 등 식품 전반으로 '제로 슈거' 열풍이 확산되며 우상향 곡선을 그리고 있습니다.",
@@ -503,14 +503,13 @@ def page_keyword_analysis():
     with st.sidebar:
         st.markdown("### 🛠️ 탐지기 설정")
         keywords = df.columns.tolist()
-        # [수정 1] 정제된 키워드(국가명 제외)가 표시됨
         selected_keywords = st.multiselect("추적할 신호(키워드)", keywords, default=keywords[:2] if len(keywords) > 1 else keywords)
 
     if not selected_keywords:
         st.warning("추적할 신호를 선택하세요.")
         return
 
-    # [수정 2] 그래프 제목 변경
+    # 1. 그래프 영역
     st.subheader("📊 최근 5개년 키워드 신호 강도 변화")
     fig = px.line(
         df, y=selected_keywords,
@@ -522,7 +521,7 @@ def page_keyword_analysis():
                       font=dict(color="white"))
     st.plotly_chart(fig, use_container_width=True)
 
-    # [수정 3] 선택한 키워드에 대한 트렌드 설명 표시 (나타났다 사라짐)
+    # 2. 선택 키워드 개별 인사이트
     st.markdown("##### 🧐 선택한 신호(키워드) 정밀 분석")
     for key in selected_keywords:
         if key in trend_insights:
@@ -530,10 +529,10 @@ def page_keyword_analysis():
         else:
              st.info(f"**{key}**: 데이터 기반 트렌드 분석 정보를 불러오는 중...")
 
-    # [수정 4] 데이터 출처 각주 추가
     st.caption("※ 데이터 출처: Google Trends (2025년 핵심 키워드 5개 분석 - 대한민국 기준)")
     st.divider()
 
+    # 3. 수치 요약
     st.subheader("📊 최근 4주 트렌드 요약")
     cols = st.columns(4)
     for i, key in enumerate(selected_keywords):
@@ -543,41 +542,88 @@ def page_keyword_analysis():
             st.metric(label=f"{key}", value=f"{curr:.0f}", delta=f"{diff:.1f} (vs 4주평균)")
 
     st.divider()
-    col_h1, col_h2 = st.columns([2, 1])
     
+    # 4. 상관관계 분석 (화면 분할)
+    col_h1, col_h2 = st.columns([1.5, 1.2])
+    
+    # [왼쪽] 히트맵 차트
     with col_h1:
-        st.subheader("🔗 신호 상관관계 분석")
+        st.subheader("🔗 신호 상관관계 매트릭스")
         if len(selected_keywords) >= 2:
             corr = df[selected_keywords].corr()
             fig_corr = px.imshow(corr, text_auto=".2f", color_continuous_scale="Purples", aspect="auto", template=CHART_THEME)
             fig_corr.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=dict(color="white"))
             st.plotly_chart(fig_corr, use_container_width=True)
-            
-    # [수정 5] 상관관계 분석 인사이트 구체화
-    with col_h2:
-        st.markdown("#### 💡 탐사 인사이트")
-        if len(selected_keywords) >= 2:
-            # 자기 자신(1.0)을 제외한 최대 상관관계 찾기
-            corr_mat = df[selected_keywords].corr()
-            np.fill_diagonal(corr_mat.values, 0) # 대각선 0 처리
-            
-            if not corr_mat.empty:
-                max_val = corr_mat.max().max()
-                # stack()을 사용하여 인덱스(행, 열) 쌍을 찾음
-                max_pair = corr_mat.stack().idxmax()
-                
-                st.write(f"선택된 데이터 간의 패턴을 분석합니다.")
-                
-                if max_val > 0.6:
-                    st.success(f"**{max_pair[0]}**와(과) **{max_pair[1]}**는 **{max_val:.2f}**의 높은 상관관계를 보입니다. 두 키워드는 소비자의 관심사가 비슷하게 움직이며, 함께 마케팅했을 때 시너지가 날 가능성이 높습니다.")
-                elif max_val > 0.3:
-                    st.info(f"**{max_pair[0]}**와(과) **{max_pair[1]}**는 **{max_val:.2f}**의 양의 상관관계를 보입니다. 어느 정도 유사한 유행 흐름을 공유하고 있습니다.")
-                elif max_val < -0.3:
-                    st.warning(f"**{max_pair[0]}**와(과) **{max_pair[1]}**는 **{max_val:.2f}**의 음의 상관관계를 보입니다. 한쪽의 관심이 높아지면 다른 쪽이 줄어드는 경향이 있습니다.")
-                else:
-                    st.write("선택된 키워드들은 서로 독립적인 관심도 패턴을 보입니다. 각기 다른 요인(계절, 이슈 등)에 의해 검색량이 변화하고 있습니다.")
         else:
-            st.write("두 개 이상의 키워드를 선택하면 키워드 간의 연관성 분석 결과가 여기에 표시됩니다.")
+            st.warning("상관관계를 분석하려면 2개 이상의 신호를 선택하세요.")
+
+    # [오른쪽] 탐사 인사이트 (개선된 로직)
+    with col_h2:
+        st.markdown("#### 💡 탐사 인사이트 (Correlation)")
+        
+        if len(selected_keywords) < 2:
+            st.write("신호가 충분하지 않아 분석할 수 없습니다.")
+        
+        else:
+            # 상관관계 매트릭스에서 모든 쌍 추출 (중복 제거)
+            corr_matrix = df[selected_keywords].corr()
+            pairs = []
+            columns = corr_matrix.columns
+            for i in range(len(columns)):
+                for j in range(i + 1, len(columns)):
+                    col1 = columns[i]
+                    col2 = columns[j]
+                    val = corr_matrix.loc[col1, col2]
+                    pairs.append({'pair': (col1, col2), 'value': val})
+            
+            # 분석 로직: 쌍이 1개뿐인 경우와 여러 개일 경우 분기 처리
+            if len(pairs) == 1:
+                p = pairs[0]
+                val = p['value']
+                n1, n2 = p['pair']
+                st.markdown(f"""
+                <div style='background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px;'>
+                    <strong style='color:#00E5FF'>🔍 단일 관계 분석</strong><br>
+                    <b>{n1}</b> & <b>{n2}</b> (r={val:.2f})<br>
+                    <span style='font-size:14px; color:#B0BEC5'>
+                    { "두 신호는 매우 밀접하게 함께 움직입니다." if val > 0.6 else 
+                      "두 신호는 서로 반대로 움직이는 경향이 있습니다." if val < -0.4 else 
+                      "두 신호는 서로 큰 영향 없이 독립적입니다." }
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
+                
+            else:
+                # 3가지 핵심 인사이트 추출
+                # 1. 가장 양의 상관관계 (Max)
+                max_pos = max(pairs, key=lambda x: x['value'])
+                # 2. 가장 음의 상관관계 (Min) - 음수가 없으면 가장 낮은 값
+                max_neg = min(pairs, key=lambda x: x['value'])
+                # 3. 0에 가장 가까운 관계 (Min Abs)
+                closest_zero = min(pairs, key=lambda x: abs(x['value']))
+                
+                # 시각화 함수
+                def display_card(title, pair, val, color, desc):
+                    st.markdown(f"""
+                    <div style='background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px; border-left: 4px solid {color};'>
+                        <strong style='color:{color}'>{title}</strong> <span style='float:right; color:#E0E0E0'>r = {val:.2f}</span><br>
+                        <b>{pair[0]}</b> ↔ <b>{pair[1]}</b><br>
+                        <span style='font-size:14px; color:#B0BEC5'>{desc}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                # 1. Best Synergy (가장 높은 양의 상관관계)
+                desc_pos = "두 관심사는 강력한 동반 상승 패턴을 보입니다." if max_pos['value'] > 0.5 else "가장 비슷한 흐름을 보이지만, 연관성은 약합니다."
+                display_card("🔥 최고 시너지 (Max Positive)", max_pos['pair'], max_pos['value'], "#FF4081", desc_pos)
+
+                # 2. Top Conflict (가장 낮은/음의 상관관계)
+                desc_neg = "한쪽이 뜨면 한쪽이 지는 역의 관계입니다." if max_neg['value'] < -0.3 else "서로 가장 관련성이 적거나 상반된 흐름입니다."
+                display_card("🧊 상반된 흐름 (Max Negative)", max_neg['pair'], max_neg['value'], "#00E5FF", desc_neg)
+
+                # 3. Most Independent (0에 가장 가까움)
+                # 중복 방지: 이미 위에서 보여준 것과 겹치지 않을 때만 표시하거나, 의미가 다르면 표시
+                if closest_zero != max_pos and closest_zero != max_neg:
+                    display_card("⚖️ 독립적 관계 (Independent)", closest_zero['pair'], closest_zero['value'], "#C6FF00", "서로 영향을 주지 않고 독자적으로 움직입니다.")
 
 # =========================================================
 # 3. 행성 좌표: 식품 기업 거점 지도 (Map)
@@ -788,6 +834,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

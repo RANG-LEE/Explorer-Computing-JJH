@@ -963,8 +963,8 @@ def page_conclusion():
             <span style='font-size:24px; margin-right:10px;'>👨🏻‍🚀</span> Mission Status: 궤도 안착 성공 (Success)
         </h4>
         <p style='margin-top:15px; font-size: 16px; color: #E0E0E0 !important; line-height: 1.8;'>
-            본 프로젝트(항해)는 <b>식품 공학(Food Tech)</b>이라는 본진과 <b>데이터 사이언스(Data Science)</b>라는 추진체를 결합한 시뮬레이션이었습니다.<br>
-            불확실한 취업 시장이라는 심우주(Deep Space) 속에서, <b>데이터에 기반한 의사결정</b>만이 목적지로 향하는 가장 정확한 나침반임을 확인했습니다.
+            본 프로젝트(항해)는 <b>식품 공학(Food Tech)</b>이라는 본진과 <b>프로그래밍(Programming)</b>라는 추진체를 결합한 시뮬레이션이었습니다.<br>
+            불확실한 취업 시장이라는 심우주(Deep Space) 속에서, <b>데이터에 기반한 의사결정</b>은 목적지로 향하는 가장 정확한 나침반임을 확인했습니다.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -977,11 +977,11 @@ def page_conclusion():
     with col1:
         st.markdown("""
         <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; height: 100%;'>
-            <h5 style='color: #00E5FF !important;'>🚀 항해사의 재정의 (Identity)</h5>
+            <h5 style='color: #00E5FF !important;'>🚀 프로그래밍이라는 새로운 도구 </h5>
             <ul style='color: #B0BEC5; margin-top: 15px; line-height: 1.8; list-style-type: none; padding-left: 0;'>
                 <li style='margin-bottom: 10px;'>
                     <b style='color: white;'>🧬 Hybrid Specialist</b><br>
-                    식품의 물성을 이해하는 공학적 지식에 프로그래밍 활용 능력을 더해, 개발자와 현장 전문가를 잇는 <b>가교(Bridge)</b> 역할을 수행합니다.
+                    식품을 이해하는 공학적 지식에 프로그래밍 활용 능력을 더해, 개발자와 현장 전문가를 잇는 <b>가교(Bridge)</b> 역할을 수행할 수 있을 것입니다.
                 </li>
                 <li>
                     <b style='color: white;'>📊 Evidence-Based Decision</b><br>
@@ -994,15 +994,15 @@ def page_conclusion():
     with col2:
         st.markdown("""
         <div style='background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; height: 100%;'>
-            <h5 style='color: #E040FB !important;'>🔭 산업적 시사점 (Industry View)</h5>
+            <h5 style='color: #E040FB !important;'>🔭 산업적 시사점</h5>
             <ul style='color: #B0BEC5; margin-top: 15px; line-height: 1.8; list-style-type: none; padding-left: 0;'>
                 <li style='margin-bottom: 10px;'>
                     <b style='color: white;'>🌍 DX (Digital Transformation)</b><br>
-                    보수적인 식품 산업에서도 트렌드 분석, 공정 최적화, 타겟 마케팅 등 <b>데이터 전환(DX)</b>이 필수 생존 전략임을 파악했습니다.
+                    보수적인 식품 산업에서도 트렌드 분석, 기술 최적화, 타겟 마케팅 등 <b>데이터 전환(DX)</b>이 필수적인 생존 전략임을 파악했습니다.
                 </li>
                 <li>
                     <b style='color: white;'>🛰️ 확장 가능한 탐사 모델</b><br>
-                    본 프로젝트의 방법론(트렌드-기업-연구 분석)은 향후 제약, 바이오, 화장품 등 <b>유관 산업 분야로 즉시 확장</b> 가능한 범용 모델입니다.
+                    본 프로젝트의 방법론(트렌드-기업-연구 분석)은 향후 다른 탐사자들에게 있어서도 <b>유관 산업 분야로 확장</b> 가능한 진로 탐색 범용 모델입니다.
                 </li>
             </ul>
         </div>
@@ -1016,15 +1016,15 @@ def page_conclusion():
     <div style='display: flex; flex-direction: column; gap: 10px; margin-top: 10px;'>
         <div style='display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #C6FF00;'>
             <span style='color: #C6FF00; font-weight: bold; width: 100px;'>Phase 1</span>
-            <span style='color: #FFFFFF;'>Python 심화 학습 및 SQL 데이터베이스 구축 능력 확보</span>
+            <span style='color: #FFFFFF;'>Python 심화 학습 이후 유관 대회 및 해커톤 참여</span>
         </div>
         <div style='display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #C6FF00; opacity: 0.8;'>
             <span style='color: #C6FF00; font-weight: bold; width: 100px;'>Phase 2</span>
-            <span style='color: #E0E0E0;'>실제 식품 공공 데이터(식약처 등)를 활용한 머신러닝 예측 모델링 프로젝트 수행</span>
+            <span style='color: #E0E0E0;'>실제로 프로그래밍을 활용하여 연구실 인턴 경험 확보</span>
         </div>
         <div style='display: flex; align-items: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #C6FF00; opacity: 0.5;'>
             <span style='color: #C6FF00; font-weight: bold; width: 100px;'>Phase 3</span>
-            <span style='color: #B0BEC5;'>데이터 기반 식품 기획(PM) 직무 지원 및 현업 적용</span>
+            <span style='color: #B0BEC5;'>향후 데이터 기반 식품 기획, 연구원 등과 같은 현업으로의 적용</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1039,7 +1039,7 @@ def page_conclusion():
             "탐험의 끝은 새로운 시작입니다."
         </p>
         <p style='font-size: 16px; color: #B0BEC5; margin-top: 10px;'>
-            이제 관측자가 아닌 개척자로서, 저만의 새로운 궤도를 만들어가겠습니다.
+            열정 가득한 개척자로서, 저만의 새로운 궤도를 만들어가겠습니다.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -1095,6 +1095,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

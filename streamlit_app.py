@@ -633,7 +633,7 @@ def page_map_visualization():
 
     st.title("🪐 행성 좌표: 식품 기업 10대 거점")
     
-    # [수정 1] 구체적인 기획 의도 및 설명 추가 (디자인 박스 적용)
+    # 구체적인 기획 의도 및 설명
     st.markdown("""
     <div style='background: rgba(0, 229, 255, 0.1); padding: 20px; border-radius: 15px; border-left: 5px solid #00E5FF; margin-bottom: 25px;'>
         <h5 style='color: #00E5FF !important; margin: 0;'>🗺️ 진로 탐색을 위한 성도(Star Map) 작성</h5>
@@ -681,7 +681,7 @@ def page_map_visualization():
 
     st.divider()
 
-    # [수정 2] 데이터 출처 및 링크 추가
+    # 데이터 출처 및 링크
     col_source, col_next = st.columns([2, 1])
     
     with col_source:
@@ -692,14 +692,29 @@ def page_map_visualization():
             <li><b>지표:</b> 빅데이터 시스템 온라인 인덱스 수치 합산 (트렌드, 미디어, 소셜 등)</li>
         </ul>
         """, unsafe_allow_html=True)
-        st.link_button("🔗 K-Brand Index 공식 홈페이지 확인", "https://kbrandindex.co.kr/")
+       st.markdown("""
+        <a href="https://kbrandindex.co.kr/" target="_blank" style="
+            display: inline-block;
+            background-color: #EEEEEE;
+            color: #212121 !important;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid #BDBDBD;
+            transition: 0.3s;
+            text-align: center;
+        ">
+            🔗 K-Brand Index 공식 홈페이지 확인
+        </a>
+        """, unsafe_allow_html=True)
 
-    # [수정 3] 다음 페이지 안내 (Transition Teaser)
+    # 다음 페이지 안내 (Transition Teaser)
     with col_next:
         st.markdown("<br>", unsafe_allow_html=True) # 레이아웃 줄맞춤용 공백
         st.info("""
         **👉 다음 단계 안내 (Next Step)**\n
-        각 기업 행성의 상세 스펙(비전, 인재상, 주요 제품 등)은 
+        각 기업 행성의 상세 스펙(개요, 주력 상품, 비전)은 
         다음 페이지인 **[4. 상세 데이터 (Info)]** 챕터에서 
         정밀 분석합니다.
         """)
@@ -870,6 +885,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

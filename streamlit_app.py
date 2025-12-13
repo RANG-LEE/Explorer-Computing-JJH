@@ -593,9 +593,14 @@ def page_conclusion():
 # =========================================================
 # 메인 실행 블록
 # =========================================================
+# =========================================================
+# 메인 실행 블록
+# =========================================================
 def main():
     with st.sidebar:
-        st.markdown("## 🛸 탐사선 제어 패널")
+        # [수정] 헤더 폰트 색상 변경 (어두운 파란색 계열: #1E88E5)
+        st.markdown("<h2 style='color: #1E88E5;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
+        
         selected = option_menu(
             menu_title=None,
             options=["0. 프롤로그 (Cover)", "1. 항해 시작 (Intro)", "2. 신호 탐지 (Trend)", "3. 행성 좌표 (Map)", "4. 상세 데이터 (Info)", "5. 심우주 탐사 (Research)", "6. 궤도 안착 (Conclusion)"],
@@ -609,7 +614,9 @@ def main():
                 "nav-link-selected": {"background-color": "#424242", "color": "#29B6F6", "border-left": "4px solid #29B6F6"},
             }
         )
-        st.caption("🪐 Powered by Streamlit")
+        
+        # [수정] 캡션 폰트 색상 변경 (기존 st.caption 대신 st.markdown 사용)
+        st.markdown("<p style='color: #1E88E5; font-size: 14px;'>🪐 Powered by Streamlit</p>", unsafe_allow_html=True)
 
     # 페이지 라우팅
     if selected == "0. 프롤로그 (Cover)": page_title_screen()
@@ -623,5 +630,6 @@ def main():
 if __name__ == "__main__":
     main()
 	
+
 
 

@@ -692,7 +692,8 @@ def page_map_visualization():
             <li><b>지표:</b> 빅데이터 시스템 온라인 인덱스 수치 합산 (트렌드, 미디어, 소셜 등)</li>
         </ul>
         """, unsafe_allow_html=True)
-       st.markdown("""
+        
+        st.markdown("""
         <a href="https://kbrandindex.co.kr/" target="_blank" style="
             display: inline-block;
             background-color: #EEEEEE;
@@ -885,6 +886,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

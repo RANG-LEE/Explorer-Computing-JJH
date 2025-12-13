@@ -54,12 +54,12 @@ def apply_custom_theme():
         /* 1. 전체 배경: 가시성이 좋은 밝은 다크 그레이 (Titanium Gray) */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
-            color: #FFFFFF;
+            color: #D3D3D3;
         }
         
         /* 2. 텍스트 스타일: 선명한 흰색 및 네온 포인트 */
         h1, h2, h3 {
-            color: #FFFFFF !important;
+            color: #D3D3D3 !important;
             font-family: 'AppleGothic', 'Malgun Gothic', sans-serif;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
@@ -69,7 +69,7 @@ def apply_custom_theme():
         }
         /* 본문 텍스트 가독성 강화 */
         p, .stMarkdown, label, li, span, div {
-            color: #FFFFFF !important; 
+            color: #D3D3D3 !important; 
             line-height: 1.8;
             font-size: 16px;
         }
@@ -119,7 +119,7 @@ def apply_custom_theme():
         }
         .stTabs [aria-selected="true"] {
             background-color: rgba(41, 182, 246, 0.2) !important;
-            color: #FFFFFF !important;
+            color: #D3D3D3 !important;
             border: 1px solid #29B6F6;
             border-radius: 10px;
         }
@@ -139,7 +139,7 @@ apply_custom_theme()
 
 # [디자인] 차트 테마 색상 (High Contrast Palette)
 # Cyan, Pink, Violet, Lime, White
-SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#FFFFFF']
+SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#D3D3D3']
 CHART_THEME = "plotly_dark"
 
 # =========================================================
@@ -228,12 +228,12 @@ def page_title_screen():
     
     st.markdown("""
     <div style='text-align: center;'>
-        <h1 class='animate-text' style='font-size: 80px; margin-bottom: 20px; color: #FFFFFF;'>🌌 진로 탐색 포트폴리오</h1>
+        <h1 class='animate-text' style='font-size: 80px; margin-bottom: 20px; color: #D3D3D3;'>🌌 진로 탐색 포트폴리오</h1>
         <h3 class='animate-text' style='font-size: 28px; color: #4FC3F7; font-weight: 300; animation-delay: 0.3s;'>
             2025-2 컴퓨팅 탐색 실생활에서 활용하기 기말과제
         </h3>
         <br>
-        <h2 class='animate-text' style='font-size: 36px; color: #FFFFFF; animation-delay: 0.6s;'>
+        <h2 class='animate-text' style='font-size: 36px; color: #D3D3D3; animation-delay: 0.6s;'>
             Explorer. 정지호
         </h2>
     </div>
@@ -271,13 +271,13 @@ def page_intro():
         )
 
     with col2:
-        st.markdown("<h2 style='margin-bottom: 5px; color: #FFFFFF;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='margin-bottom: 5px; color: #D3D3D3;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
         st.markdown("<h4 style='margin-top: 0; color: #4FC3F7;'>🛰️ 식품 & 경제 융합 궤도 항해사</h4>", unsafe_allow_html=True)
         
         st.write("")
         st.markdown("""
         <div style='background: rgba(41, 182, 246, 0.1); padding: 20px; border-left: 5px solid #29B6F6; border-radius: 8px;'>
-            <p style='margin: 0; color: #FFFFFF; font-size: 17px; line-height: 1.6;'>
+            <p style='margin: 0; color: #D3D3D3; font-size: 17px; line-height: 1.6;'>
             <b>"식품 공학(Product)의 추진력에 경제학(Market)의 네비게이션을 더하다."</b><br>
             미지의 시장 궤도에 진입할 준비가 된 융합 인재, 정지호입니다.
             </p>
@@ -285,7 +285,7 @@ def page_intro():
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <p style='margin-top: 15px; font-size: 16px; color: #FFFFFF;'>
+        <p style='margin-top: 15px; font-size: 16px; color: #D3D3D3;'>
         반갑습니다. 저는 식품 산업이라는 거대한 우주에서 데이터를 나침반 삼아 새로운 기회를 탐색하고 있습니다.
         단순 전공 지식을 넘어, <b>시장 전체를 조망하는 거시적 안목</b>을 갖추기 위해 끊임없이 항로를 개척 중입니다.
         </p>
@@ -314,7 +314,7 @@ def page_intro():
             st.markdown("""
             <div style='border: 1px solid #29B6F6; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2);'>
                 <h5 style='color: #29B6F6 !important; font-size: 18px;'>1. 주 추진체: 식품생명공학</h5>
-                <ul style='color: #FFFFFF; margin-top: 10px;'>
+                <ul style='color: #D3D3D3; margin-top: 10px;'>
                     <li>제품(Product)의 구성 원리 이해</li>
                     <li>식품화학, 미생물학 기초 설계 능력</li>
                 </ul>
@@ -324,7 +324,7 @@ def page_intro():
             st.markdown("""
             <div style='border: 1px solid #E040FB; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2);'>
                 <h5 style='color: #E040FB !important; font-size: 18px;'>2. 보조 추진체: 금융경제</h5>
-                <ul style='color: #FFFFFF; margin-top: 10px;'>
+                <ul style='color: #D3D3D3; margin-top: 10px;'>
                     <li>시장(Market)의 중력과 흐름 파악</li>
                     <li>거시/미시 경제 데이터 해석 능력</li>
                 </ul>
@@ -565,7 +565,7 @@ def page_conclusion():
     st.markdown("""
     <div style='background: rgba(0, 0, 0, 0.2); padding: 25px; border-radius: 15px; border-left: 5px solid #29B6F6; box-shadow: 0 0 20px rgba(41, 182, 246, 0.3);'>
         <h4 style='margin:0; color:#29B6F6 !important;'>💡 융합 탐사 최종 리포트</h4>
-        <p style='margin-top:15px; font-size: 16px; color: #FFFFFF;'>
+        <p style='margin-top:15px; font-size: 16px; color: #D3D3D3;'>
         본 프로젝트를 통해 <b>식품 공학적 도메인</b>과 <b>데이터 분석 기술</b>을 결합하여,<br>
         막연했던 진로의 우주에서 <b>시장성 있는 기회의 궤도</b>를 발견했습니다.
         </p>
@@ -605,7 +605,7 @@ def main():
             styles={
                 "container": {"padding": "0!important", "background-color": "#212121"},
                 "icon": {"color": "#29B6F6", "font-size": "18px"},
-                "nav-link": {"font-size": "14px", "text-align": "left", "margin":"0px", "color": "#FFFFFF"},
+                "nav-link": {"font-size": "14px", "text-align": "left", "margin":"0px", "color": "#D3D3D3"},
                 "nav-link-selected": {"background-color": "#424242", "color": "#29B6F6", "border-left": "4px solid #29B6F6"},
             }
         )
@@ -623,3 +623,4 @@ def main():
 if __name__ == "__main__":
     main()
 	
+

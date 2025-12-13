@@ -252,9 +252,7 @@ def page_title_screen():
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
         st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
 
-# =========================================================
-# 1. 항해 시작: 탐색자 프로필 (Intro)
-# =========================================================
+
 # =========================================================
 # 1. 항해 시작: 탐색자 프로필 (Intro)
 # =========================================================
@@ -267,15 +265,18 @@ def page_intro():
     with col1:
         st.markdown(
             """
+       with col1:
+        st.markdown(
+            """
             <div style='display: flex; flex-direction: column; align-items: center; justify-content: center;'>
                 <div style='
-                    width: 260px; height: 260px;
+                    width: 240px; height: 240px;
                     border-radius: 50%;
-                    border: 4px solid #29B6F6;
-                    box-shadow: 0 0 30px rgba(41, 182, 246, 0.4);
-                    background: rgba(255, 255, 255, 0.05);
+                    border: 5px solid #29B6F6;
+                    box-shadow: 0 0 35px rgba(41, 182, 246, 0.5);
+                    background: #2b2b2b;
                     display: flex; justify-content: center; align-items: center;
-                    font-size: 130px; 
+                    font-size: 100px;
                     margin-bottom: 20px;
                 '>
                     👨‍🚀
@@ -724,6 +725,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

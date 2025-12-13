@@ -256,6 +256,9 @@ def page_title_screen():
 # =========================================================
 # 1. 항해 시작: 탐색자 프로필 (Intro)
 # =========================================================
+# =========================================================
+# 1. 항해 시작: 탐색자 프로필 (Intro)
+# =========================================================
 def page_intro():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
@@ -263,9 +266,6 @@ def page_intro():
     
     # --- [좌측] 심플한 이모티콘 프로필 ---
     with col1:
-        st.markdown(
-            """
-       with col1:
         st.markdown(
             """
             <div style='display: flex; flex-direction: column; align-items: center; justify-content: center;'>
@@ -298,7 +298,7 @@ def page_intro():
             """, unsafe_allow_html=True
         )
 
-    # --- [중앙] 소개글 (이전과 동일하게 내용 유지) ---
+    # --- [중앙] 소개글 ---
     with col2:
         st.markdown("<h2 style='margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.5);'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
         
@@ -327,7 +327,7 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-    # --- [우측] 핵심 역량 (이전과 동일하게 내용 유지) ---
+    # --- [우측] 핵심 역량 ---
     with col3:
         st.markdown("##### ⚡ Core Booster Systems")
         st.markdown("""
@@ -363,7 +363,7 @@ def page_intro():
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # 탭 부분 (내용 유지)
+    # 탭 부분
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
 
     with tab1:
@@ -725,6 +725,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

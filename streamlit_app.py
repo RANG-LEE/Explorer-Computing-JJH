@@ -931,18 +931,18 @@ def page_scholar_analysis():
             <style>
             /* 1. 현재 선택된 값(박스 안에 보이는 글자) 색상 변경 */
             div[data-baseweb="select"] > div {
-                color: #E0E0E0 !important;  /* 밝은 회색 */
+                color: #bcbcbc !important;  /* 밝은 회색 */
                 background-color: #262730; /* 박스 배경색 (필요시 조정) */
             }
             
             /* 2. 드롭다운 메뉴를 클릭했을 때 나오는 리스트 아이템 색상 변경 */
             ul[data-baseweb="menu"] li span {
-                color: #E0E0E0 !important; /* 리스트 글자색 */
+                color: #bcbcbc !important; /* 리스트 글자색 */
             }
             
             /* 3. 리스트에 마우스를 올렸을 때(Hover) 글자색 */
             ul[data-baseweb="menu"] li:hover span {
-                color: #FFFFFF !important; /* 마우스 올리면 흰색으로 강조 */
+                color: #bcbcbc !important; /* 마우스 올리면 흰색으로 강조 */
             }
             </style>
             """, unsafe_allow_html=True)
@@ -1170,4 +1170,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

@@ -42,11 +42,12 @@ else:
 plt.rcParams['axes.unicode_minus'] = False
 
 # 커스텀 CSS 적용
-# [디자인] 커스텀 CSS (수정됨: 입력창 글씨 짙은 파란색 적용)
+
+# [디자인] 커스텀 CSS (수정됨: 드롭다운/멀티셀렉트 완벽 다크모드 적용)
 def apply_custom_theme():
     st.markdown("""
     <style>
-        /* 1. 전체 앱 배경 및 폰트 설정 (기존 유지) */
+        /* 1. 전체 앱 배경 및 폰트 설정 */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
@@ -69,7 +70,7 @@ def apply_custom_theme():
             color: #E0E0E0 !important;
         }
 
-        /* 2. 컨테이너 스타일 (기존 유지) */
+        /* 2. 컨테이너 스타일 */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -80,7 +81,7 @@ def apply_custom_theme():
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* 3. 버튼 스타일 (기존 유지) */
+        /* 3. 버튼 스타일 */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -97,7 +98,7 @@ def apply_custom_theme():
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
-        /* 4. 탭 스타일 (기존 유지) */
+        /* 4. 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -115,60 +116,72 @@ def apply_custom_theme():
             border-radius: 10px;
         }
 
-        /* 5. [중요 수정] 입력 필드 및 드롭다운 메뉴 스타일 (Dark Mode 완벽 적용) */
-        
-        /* (1) 입력창 박스 자체 스타일 (평소 상태) */
-        div[data-baseweb="select"] > div, 
+        /* ====================================================================
+           5. [핵심 수정] 입력 필드(Selectbox, MultiSelect) 다크모드 강제 적용
+           ==================================================================== */
+
+        /* (1) 입력창 컨테이너 배경 (멀티셀렉트/일반셀렉트 공통) */
+        .stMultiSelect div[data-baseweb="select"] > div,
+        .stSelectbox div[data-baseweb="select"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #2b2b2b !important; /* 어두운 회색 배경 */
-            border: 2px solid #4FC3F7 !important; /* 밝은 파란색 테두리 */
-            color: #FFFFFF !important; /* 기본 글자색 흰색 */
-        }
-        
-        /* (2) 입력창 내부에 선택된 텍스트 색상 (흰색 강제 적용) */
-        div[data-baseweb="select"] span,
-        div[data-baseweb="base-input"] input {
-            color: #FFFFFF !important; 
-            -webkit-text-fill-color: #FFFFFF !important; /* 크롬 등 브라우저 강제 적용 */
-            caret-color: #FFFFFF !important; /* 커서 색상 */
-            font-weight: 700 !important;
+            background-color: #2b2b2b !important; /* 짙은 회색 배경 */
+            border-color: #4FC3F7 !important;     /* 파란 테두리 */
+            color: white !important;
         }
 
-        /* (3) 드롭다운 화살표 아이콘 색상 (흰색) */
+        /* (2) 입력창 내부 텍스트 및 아이콘 색상 */
+        .stMultiSelect div[data-baseweb="select"] span,
+        .stSelectbox div[data-baseweb="select"] span,
         div[data-baseweb="select"] svg {
+            color: #FFFFFF !important;
             fill: #FFFFFF !important;
         }
 
-        /* (4) 클릭했을 때 펼쳐지는 메뉴 리스트 (팝업창) */
-        ul[data-baseweb="menu"] {
-            background-color: #333333 !important; /* 리스트 배경: 어두운 회색 */
-            border: 1px solid #4FC3F7 !important; /* 테두리 */
-        }
-        
-        /* (5) 메뉴 리스트 내부의 각 항목 글씨 (흰색) */
-        ul[data-baseweb="menu"] li span {
-            color: #FFFFFF !important; 
-        }
-        
-        /* (6) 마우스 올렸을 때 (Hover) 강조 색상 */
-        ul[data-baseweb="menu"] li[aria-selected="false"]:hover {
-            background-color: #4FC3F7 !important; /* 파란색 하이라이트 */
-        }
-        
-        /* (7) 마우스 올렸을 때 글씨 색상 (검은색으로 반전시켜 가독성 확보) */
-        ul[data-baseweb="menu"] li[aria-selected="false"]:hover span {
-            color: #000000 !important;
-        }
-
-        /* (8) 멀티셀렉트 태그 (이미 선택된 항목) 스타일 */
+        /* (3) 선택된 태그(Chips) 스타일 - 키워드 4개, 3개 뜨는 부분 */
         span[data-baseweb="tag"] {
-            background-color: #0288D1 !important;
+            background-color: #0288D1 !important; /* 짙은 파란색 배경 */
+            border-radius: 20px !important;
+            border: 1px solid #29B6F6 !important;
         }
+        
+        /* 태그 안의 텍스트 색상 */
         span[data-baseweb="tag"] span {
             color: #FFFFFF !important;
         }
+        
+        /* 태그 닫기(X) 버튼 색상 */
+        span[data-baseweb="tag"] svg {
+            fill: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+        }
 
-        /* 애니메이션 (기존 유지) */
+        /* (4) 드롭다운 메뉴 리스트 (클릭 시 뜨는 팝업) */
+        div[data-baseweb="popover"],
+        div[data-baseweb="popover"] > div,
+        ul[data-baseweb="menu"] {
+            background-color: #333333 !important; /* 메뉴 배경 */
+            border: 1px solid #4FC3F7 !important;
+        }
+
+        /* (5) 메뉴 리스트의 각 항목(Option) 스타일 */
+        li[role="option"] {
+            background-color: #333333 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* 마우스 올렸을 때(Hover) / 선택된 항목 */
+        li[role="option"]:hover,
+        li[role="option"][aria-selected="true"] {
+            background-color: #4FC3F7 !important; /* 하이라이트 배경 */
+        }
+        
+        /* Hover 시 글자색 반전 (가독성) */
+        li[role="option"]:hover span,
+        li[role="option"][aria-selected="true"] span {
+            color: #000000 !important; 
+        }
+
+        /* 애니메이션 */
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -1198,6 +1211,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

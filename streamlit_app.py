@@ -401,7 +401,7 @@ def page_intro():
             st.markdown(f"""
             <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 64, 129, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
                 <div>
-                    <b style='color: #FF4081; font-size: 20px; display:block; margin-bottom: 10px;'>빵딘 (Bbangdin)</b>
+                    <b style='color: #FF4081; font-size: 20px; display:block; margin-bottom: 10px;'>빵딘 (Bakery)</b>
                     <p style='font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
                         "베이킹은 과학이자 예술입니다."<br><br>
                         재료의 배합이 만들어내는 <b>시각적, 미각적 즐거움</b>을 통해 식품 공학적 영감과 힐링을 얻습니다.
@@ -413,12 +413,12 @@ def page_intro():
             </div>
             """, unsafe_allow_html=True)
 
-        # [2] 이지영 (열정/동기부여)
+        # [2] 이지영 (인문학학)
         with c2:
             st.markdown(f"""
             <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 193, 7, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
                 <div>
-                    <b style='color: #FFC107; font-size: 20px; display:block; margin-bottom: 10px;'>이지영 (Motivation)</b>
+                    <b style='color: #FFC107; font-size: 20px; display:block; margin-bottom: 10px;'>이지영 (Humanity)</b>
                     <p style='font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
                         "인문학는 가장 강력한 연료입니다."<br><br>
                         항해가 힘들고 지칠 때, 치열한 삶의 태도를 배우며 <b>정신적인 엔진(Mental Engine)</b>을 재정비합니다.
@@ -430,12 +430,12 @@ def page_intro():
             </div>
             """, unsafe_allow_html=True)
 
-        # [3] GeniusSKLee (지성/화학)
+        # [3] GeniusSKLee (영화)
         with c3:
             st.markdown(f"""
             <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(0, 229, 255, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
                 <div>
-                    <b style='color: #00E5FF; font-size: 20px; display:block; margin-bottom: 10px;'>GeniusSKLee (Science)</b>
+                    <b style='color: #00E5FF; font-size: 20px; display:block; margin-bottom: 10px;'>천재이승국 (Movie)</b>
                     <p style='font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
                         "영화를 보면 세상이 보입니다."<br><br>
                         다양한 소재와 장르의 영화를 보고, 분석하며 <b>사회와 문화에 대한 교양</b>을 정비합니다.
@@ -736,6 +736,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

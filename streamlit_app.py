@@ -399,7 +399,7 @@ def page_intro():
         # [1] 빵딘 (감성/베이킹)
         with c1:
             st.markdown(f"""
-            <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 64, 129, 0.3); height: 260px; display: flex; flex-direction: column; justify-content: space-between;'>
+            <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 64, 129, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
                 <div>
                     <b style='color: #FF4081; font-size: 20px; display:block; margin-bottom: 10px;'>빵딘 (Bbangdin)</b>
                     <p style='font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
@@ -736,6 +736,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

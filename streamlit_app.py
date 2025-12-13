@@ -634,7 +634,7 @@ def main():
         )
         
         # [수정] !important 추가로 색상 강제 적용
-        st.markdown("<p style='color: #1E88E5 !important; font-size: 14px;'>🪐 Powered by Streamlit</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #1E88E5 !important; font-size: 14px;'>🪐 Designed by Jung Jiho</p>", unsafe_allow_html=True)
 
     # 페이지 라우팅
     if selected == "0. 프롤로그 (Cover)": page_title_screen()
@@ -647,6 +647,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

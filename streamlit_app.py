@@ -236,7 +236,7 @@ def page_intro():
                     font-size: 100px;
                     margin-bottom: 20px;
                 '>
-                    👨‍🚀
+                    👨🏻‍🚀
                 </div>
                 
             </div>
@@ -245,11 +245,11 @@ def page_intro():
 
     # --- [중앙] 소개글 ---
     with col2:
-        st.markdown("<h2 style='margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.5);'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.5);'>탐색자: 정지호</h2>", unsafe_allow_html=True)
         
         st.markdown("""
             <h3 style='margin-top: 0; background: linear-gradient(to right, #29B6F6, #E040FB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;'>
-                🛰️ 식품 & 경제 융합 궤도 항해사
+                🛰️ 식품생명공학 전공 우주항해사
             </h3>
         """, unsafe_allow_html=True)
         
@@ -257,18 +257,18 @@ def page_intro():
         st.markdown("""
         <div style='background: rgba(41, 182, 246, 0.08); padding: 25px; border-left: 4px solid #29B6F6; border-radius: 0 12px 12px 0; box-shadow: inset 0 0 20px rgba(41, 182, 246, 0.1);'>
             <p style='margin: 0; font-size: 18px; line-height: 1.6; font-style: italic;'>
-            <b>"식품 공학(Product)의 추진력에<br>경제학(Market)의 네비게이션을 더하다."</b>
+            <b>"식품 공학(Food biotech.)의 추진력에<br>프로그래밍이라는 도구를 더하다."</b>
             </p>
             <p style='margin-top: 12px; font-size: 16px; color: #B0BEC5 !important;'>
-            — 미지의 시장 궤도에 진입할 준비가 된 융합 인재, 정지호
+            — 전공 지식과 프로그래밍이라는 도구를 바탕으로 미지의 취업 시장 궤도에 진입할 준비를 하고 있는 항해사
             </p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("""
         <div style='margin-top: 20px;'>
-            <p>반갑습니다. 저는 식품 산업이라는 거대한 우주에서 데이터를 <span style='color:#C6FF00; font-weight:bold;'>나침반</span> 삼아 새로운 기회를 탐색하고 있습니다.</p>
-            <p>단순 전공 지식을 넘어, <span style='color:#00E5FF; font-weight:bold; border-bottom: 2px solid #00E5FF;'>시장 전체를 조망하는 거시적 안목</span>을 갖추기 위해 끊임없이 항로를 개척 중입니다.</p>
+            <p>안녕하세요. 저는 식품 산업이라는 거대한 규모의 우주 속에서 세상의 각종 데이터를 <span style='color:#C6FF00; font-weight:bold;'>나침반</span> 삼아 새로운 기회를 탐색하고 있습니다.</p>
+            <p>단순 전공 지식을 넘어, <span style='color:#00E5FF; font-weight:bold; border-bottom: 2px solid #00E5FF;'>시장 전체를 조망하는 거시적 안목</span>을 갖추기 위해 끊임없이 항로를 개척해나가겠습니다.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -281,14 +281,14 @@ def page_intro():
                 <small style='color:#B0BEC5; display:block; margin-bottom:5px;'>🚀 Main Engines</small>
                 <div style='display:flex; gap:8px; flex-wrap:wrap;'>
                     <span style='background: rgba(41, 182, 246, 0.2); color:#29B6F6; padding: 6px 12px; border-radius: 15px; border: 1px solid #29B6F6; font-weight: bold; font-size: 14px;'>🧬 식품생명공학</span>
-                    <span style='background: rgba(224, 64, 251, 0.2); color:#E040FB; padding: 6px 12px; border-radius: 15px; border: 1px solid #E040FB; font-weight: bold; font-size: 14px;'>💰 금융경제</span>
+                    <span style='background: rgba(224, 64, 251, 0.2); color:#E040FB; padding: 6px 12px; border-radius: 15px; border: 1px solid #E040FB; font-weight: bold; font-size: 14px;'>💰 금융경제학</span>
                 </div>
             </div>
             <div>
                  <small style='color:#B0BEC5; display:block; margin-bottom:5px;'>📡 Sub Systems</small>
                  <div style='display:flex; gap:8px; flex-wrap:wrap;'>
-                    <span style='background: rgba(0, 229, 255, 0.2); color:#00E5FF; padding: 6px 12px; border-radius: 15px; border: 1px solid #00E5FF; font-weight: bold; font-size: 14px;'>📊 데이터 분석</span>
-                    <span style='background: rgba(198, 255, 0, 0.2); color:#C6FF00; padding: 6px 12px; border-radius: 15px; border: 1px solid #C6FF00; font-weight: bold; font-size: 14px;'>🛰️ R&D 탐색</span>
+                    <span style='background: rgba(0, 229, 255, 0.2); color:#00E5FF; padding: 6px 12px; border-radius: 15px; border: 1px solid #00E5FF; font-weight: bold; font-size: 14px;'>📊 프로그래밍</span>
+                    <span style='background: rgba(198, 255, 0, 0.2); color:#C6FF00; padding: 6px 12px; border-radius: 15px; border: 1px solid #C6FF00; font-weight: bold; font-size: 14px;'>🛰️ 데이터 분석</span>
                 </div>
             </div>
         </div>
@@ -301,7 +301,7 @@ def page_intro():
             <div style='font-size: 24px; margin-right: 15px;'>📍</div>
             <div>
                 <small style='color: #B0BEC5;'>Current Orbit Status</small><br>
-                <b style='color: #FFFFFF;'>Programming, Economics, Food Tech</b>
+                <b style='color: #FFFFFF;'>Food Biotech, Programming, Economics</b>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -312,17 +312,17 @@ def page_intro():
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
 
     with tab1:
-        st.subheader("📚 융합 항해 커리큘럼")
+        st.subheader("📚 우주항해 커리큘럼")
         col_a1, col_a2 = st.columns(2)
         with col_a1:
             st.markdown("""
             <div style='border: 1px solid #29B6F6; padding: 20px; border-radius: 12px; background: linear-gradient(135deg, rgba(41,182,246,0.1) 0%, transparent 100%);'>
                 <h5 style='color: #29B6F6 !important; font-size: 18px; display: flex; align-items: center;'>
-                    <span style='font-size:22px; margin-right:10px;'>🧬</span> 주 추진체: 식품생명공학
+                    <span style='font-size:22px; margin-right:10px;'>🧬</span> 핵심 추진체: 식품생명공학
                 </h5>
                 <ul style='color: #E0E0E0 !important; margin-top: 15px; margin-left: 20px; line-height: 1.8;'>
-                    <li>제품(Product)의 구성 원리 및 소재 이해</li>
-                    <li>식품화학, 미생물학 기반 기초 설계 능력</li>
+                    <li>식품(Food)의 물리화학적 성질, 가공과 저장, 건강에 대한 영향을 이해</li>
+                    <li>식품화학, 미생물학, 식품공학, 대사체학 기반 기초 연구 능력</li>
                 </ul>
             </div>
             """, unsafe_allow_html=True)
@@ -668,4 +668,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

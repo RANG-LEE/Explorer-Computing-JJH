@@ -3,24 +3,21 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import pydeck as pdk
-from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import os
 from matplotlib import rc, font_manager
 import platform
 import time
-import random
-from collections import Counter
 from streamlit_option_menu import option_menu
 
-# 페이지 및 테마 설정
+# 1. 페이지 설정
 st.set_page_config(
     page_title="진로 탐색 포트폴리오",
     page_icon="🌌",
     layout="wide"
 )
 
-# 폰트 설정
+# 2. 폰트 설정
 system_name = platform.system()
 font_path = None
 
@@ -41,13 +38,11 @@ else:
 
 plt.rcParams['axes.unicode_minus'] = False
 
-# 커스텀 CSS 적용
-
-# [디자인] 커스텀 CSS (수정됨: 드롭다운/멀티셀렉트 완벽 다크모드 적용)
+# 3. 디자인 테마 (CSS) 설정
 def apply_custom_theme():
     st.markdown("""
     <style>
-        /* 1. 전체 앱 배경 및 폰트 설정 */
+        /* 앱 배경 및 기본 폰트 */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
@@ -70,7 +65,7 @@ def apply_custom_theme():
             color: #E0E0E0 !important;
         }
 
-        /* 2. 컨테이너 스타일 */
+        /* 컨테이너 스타일 */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -81,7 +76,7 @@ def apply_custom_theme():
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* 3. 버튼 스타일 */
+        /* 버튼 스타일 */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -98,7 +93,7 @@ def apply_custom_theme():
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
-        /* 4. 탭 스타일 */
+        /* 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -116,20 +111,15 @@ def apply_custom_theme():
             border-radius: 10px;
         }
 
-        /* ====================================================================
-           5. [핵심 수정] 입력 필드(Selectbox, MultiSelect) 다크모드 강제 적용
-           ==================================================================== */
-
-        /* (1) 입력창 컨테이너 배경 (멀티셀렉트/일반셀렉트 공통) */
+        /* 입력 필드(Selectbox, MultiSelect) 다크모드 적용 */
         .stMultiSelect div[data-baseweb="select"] > div,
         .stSelectbox div[data-baseweb="select"] > div,
         div[data-baseweb="base-input"] {
-            background-color: #2b2b2b !important; /* 짙은 회색 배경 */
-            border-color: #4FC3F7 !important;     /* 파란 테두리 */
+            background-color: #2b2b2b !important;
+            border-color: #4FC3F7 !important;
             color: white !important;
         }
 
-        /* (2) 입력창 내부 텍스트 및 아이콘 색상 */
         .stMultiSelect div[data-baseweb="select"] span,
         .stSelectbox div[data-baseweb="select"] span,
         div[data-baseweb="select"] svg {
@@ -137,45 +127,35 @@ def apply_custom_theme():
             fill: #FFFFFF !important;
         }
 
-        /* (3) 선택된 태그(Chips) 스타일 - 키워드 4개, 3개 뜨는 부분 */
+        /* 선택된 태그(Chips) 스타일 */
         span[data-baseweb="tag"] {
-            background-color: #0288D1 !important; /* 짙은 파란색 배경 */
+            background-color: #0288D1 !important;
             border-radius: 20px !important;
             border: 1px solid #29B6F6 !important;
         }
-        
-        /* 태그 안의 텍스트 색상 */
         span[data-baseweb="tag"] span {
             color: #FFFFFF !important;
         }
-        
-        /* 태그 닫기(X) 버튼 색상 */
         span[data-baseweb="tag"] svg {
             fill: #FFFFFF !important;
             stroke: #FFFFFF !important;
         }
 
-        /* (4) 드롭다운 메뉴 리스트 (클릭 시 뜨는 팝업) */
+        /* 드롭다운 메뉴 리스트 */
         div[data-baseweb="popover"],
         div[data-baseweb="popover"] > div,
         ul[data-baseweb="menu"] {
-            background-color: #333333 !important; /* 메뉴 배경 */
+            background-color: #333333 !important;
             border: 1px solid #4FC3F7 !important;
         }
-
-        /* (5) 메뉴 리스트의 각 항목(Option) 스타일 */
         li[role="option"] {
             background-color: #333333 !important;
             color: #FFFFFF !important;
         }
-
-        /* 마우스 올렸을 때(Hover) / 선택된 항목 */
         li[role="option"]:hover,
         li[role="option"][aria-selected="true"] {
-            background-color: #4FC3F7 !important; /* 하이라이트 배경 */
+            background-color: #4FC3F7 !important;
         }
-        
-        /* Hover 시 글자색 반전 (가독성) */
         li[role="option"]:hover span,
         li[role="option"][aria-selected="true"] span {
             color: #000000 !important; 
@@ -197,7 +177,7 @@ apply_custom_theme()
 SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#FFFFFF']
 CHART_THEME = "plotly_dark"
 
-# 데이터 로드 함수
+# 4. 데이터 로드 함수
 @st.cache_data
 def load_data(file_path):
     if not os.path.exists(file_path):
@@ -331,7 +311,8 @@ def get_company_data():
     ]
     return df_map, company_details
 
-# 프롤로그 페이지
+# 5. 페이지 구성 함수들
+# [0] 프롤로그
 def page_title_screen():
     st.markdown("""
     <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
@@ -358,9 +339,9 @@ def page_title_screen():
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
-        st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Computing Explorer</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
 
-# 항해 시작 (Intro)
+# [1] 항해 시작
 def page_intro():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
@@ -600,7 +581,7 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-# 신호 탐지 (Trend)
+# [2] 신호 탐지
 def page_keyword_analysis():
     st.title("📡 신호 탐지: 2025 식품 트렌드 분석")
     st.markdown("Google Trend 데이터를 레이더로 활용하여 **소비자 관심도 신호**를 포착합니다. 좌측의 **탐지기 설정**을 클릭하여 추적할 신호들을 정하세요.")
@@ -737,7 +718,7 @@ def page_keyword_analysis():
                 if closest_zero != max_pos and closest_zero != max_neg:
                     display_card("⚖️ 독립적 관계 (Independent)", closest_zero['pair'], closest_zero['value'], "#C6FF00", "서로 영향을 주지 않고 독자적으로 움직입니다.")
 
-# 행성 좌표 (Map)
+# [3] 행성 좌표
 def page_map_visualization():
     df_map, _ = get_company_data()
 
@@ -827,7 +808,7 @@ def page_map_visualization():
         정밀 분석합니다.
         """)
 
-# 기업 상세 데이터 (Info)
+# [4] 기업 상세 데이터
 def page_company_info():
     _, company_details = get_company_data()
 
@@ -835,9 +816,9 @@ def page_company_info():
     st.write("각 기업 행성의 개요, 주력 상품, 그리고 비전을 분석한 데이터 카드입니다.")
     st.markdown("---")
 
+    # Expander 스타일
     st.markdown("""
     <style>
-        /* Expander 스타일 재정의 */
         div[data-testid="stExpander"] details summary p {
             color: #495057 !important; 
             font-size: 18px !important;
@@ -899,9 +880,8 @@ def page_company_info():
                             st.markdown(f'<a href="{c["홈페이지"]}" target="_blank" style="{btn_style}">🏠 홈페이지</a>', unsafe_allow_html=True)
                         with b2: 
                             st.markdown(f'<a href="{c["유튜브"]}" target="_blank" style="{btn_style}">📺 유튜브</a>', unsafe_allow_html=True)
-                            
 
-# 심우주 탐사 (Research)
+# [5] 심우주 탐사 (정렬 및 디자인 최적화 적용됨)
 def page_scholar_analysis():
     st.title("🔭 심우주 탐사: 학술 연구 데이터")
     
@@ -946,10 +926,10 @@ def page_scholar_analysis():
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
     with st.container():
-        # [수정됨] 높이 확대를 위한 부분 CSS 주입 (색상은 글로벌 테마 따름)
+        # 입력창 높이 확대 및 버튼 정렬을 위한 CSS
         st.markdown("""
         <style>
-            /* 1. 입력창(Selectbox) 높이 확대 (1.2배 approx 50px) 및 텍스트 수직 중앙 정렬 */
+            /* 입력창(Selectbox) 높이 확대 (50px) 및 텍스트 수직 중앙 정렬 */
             div[data-baseweb="select"] > div {
                 min-height: 50px !important;
                 height: 50px !important;
@@ -957,24 +937,23 @@ def page_scholar_analysis():
                 align-items: center;
             }
             div[data-baseweb="select"] span {
-                line-height: normal !important; /* 텍스트 겹침 방지 */
+                line-height: normal !important;
             }
 
-            /* 2. 버튼 높이를 입력창과 동일하게 맞춤 */
+            /* 버튼 높이를 입력창과 동일하게 맞춤 */
             div.stButton > button {
                 min-height: 50px !important;
                 height: 50px !important;
-                border-radius: 8px !important; /* 입력창과 모서리 둥글기 통일 */
+                border-radius: 8px !important;
                 margin-top: 0px !important;
             }
         </style>
         """, unsafe_allow_html=True)
 
-        # [수정됨] vertical_alignment="bottom"으로 라벨 높이 무시하고 입력창끼리 하단 정렬
+        # vertical_alignment="bottom"으로 입력창과 버튼 하단 정렬
         col_in1, col_in2 = st.columns([3, 1], vertical_alignment="bottom")
         
         with col_in1:
-            # 커스텀 라벨 (입력창 바로 위)
             st.markdown("""
             <div style='background-color: #29B6F6; padding: 5px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 0px;'>
                 <span style='color: #000000; font-weight: bold; font-size: 14px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
@@ -985,11 +964,10 @@ def page_scholar_analysis():
                 "탐사 키워드 선택", 
                 keywords_available, 
                 index=4, 
-                label_visibility="collapsed" # 라벨 숨김 (커스텀 라벨 사용)
+                label_visibility="collapsed"
             )
 
         with col_in2:
-            # 버튼 (CSS로 높이 50px 강제 적용됨)
             run_btn = st.button("🚀 탐사선 발사", use_container_width=True)
 
     if run_btn:
@@ -1058,7 +1036,8 @@ def page_scholar_analysis():
                 use_container_width=True,
                 column_config={"Year": st.column_config.NumberColumn(format="%d")}
             )
-# 궤도 안착 (Conclusion)
+
+# [6] 궤도 안착
 def page_conclusion():
     st.title("🚩 궤도 안착: 결론 및 제언")
     
@@ -1155,7 +1134,7 @@ def page_conclusion():
     </div>
     """, unsafe_allow_html=True)
 
-# 메인 실행 블록
+# 6. 메인 실행 블록
 def main():
     with st.sidebar:
         st.markdown("""
@@ -1192,14 +1171,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-

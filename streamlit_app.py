@@ -255,39 +255,52 @@ def page_title_screen():
 # =========================================================
 # 1. 항해 시작: 탐색자 프로필 (Intro)
 # =========================================================
+# =========================================================
+# 1. 항해 시작: 탐색자 프로필 (Intro)
+# =========================================================
 def page_intro():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
-    # 레이아웃 비율 미세 조정
     col1, col2, col3 = st.columns([1.3, 2, 1.3], gap="medium")
     
-    # --- [좌측] 프로필 이미지 및 직함 ---
+    # --- [좌측] 심플한 이모티콘 프로필 ---
     with col1:
         st.markdown(
             """
-            <div style='position: relative; width: 280px; margin: auto;'>
-                <img src="https://images.unsplash.com/photo-1614728853913-1e22ba6e8a1e?q=80&w=2070&auto=format&fit=crop" 
-                     onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/2026/2026465.png';"
-                     style='width: 280px; height: 280px; border-radius: 50%; object-fit: cover; object-position: center top;
-                            border: 4px solid #29B6F6; box-shadow: 0 0 30px rgba(41, 182, 246, 0.6);'>
+            <div style='display: flex; flex-direction: column; align-items: center; justify-content: center;'>
+                <div style='
+                    width: 260px; height: 260px;
+                    border-radius: 50%;
+                    border: 4px solid #29B6F6;
+                    box-shadow: 0 0 30px rgba(41, 182, 246, 0.4);
+                    background: rgba(255, 255, 255, 0.05);
+                    display: flex; justify-content: center; align-items: center;
+                    font-size: 130px; 
+                    margin-bottom: 20px;
+                '>
+                    👨‍🚀
+                </div>
                 
-                <div style='position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
-                            background: linear-gradient(90deg, #212121 0%, #37474F 100%); color: #29B6F6; 
-                            padding: 8px 24px; border-radius: 20px; font-size: 15px; font-weight:bold; 
-                            border: 2px solid #29B6F6; box-shadow: 0 4px 10px rgba(0,0,0,0.5); white-space: nowrap;'>
-                    👨‍🚀 Commander
+                <div style='
+                    background: linear-gradient(90deg, #212121 0%, #37474F 100%);
+                    color: #29B6F6; 
+                    padding: 8px 24px; 
+                    border-radius: 20px; 
+                    font-size: 15px; 
+                    font-weight: bold; 
+                    border: 2px solid #29B6F6;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                '>
+                    Commander
                 </div>
             </div>
             """, unsafe_allow_html=True
         )
-        # 여백 추가
-        st.markdown("<br>", unsafe_allow_html=True)
 
-    # --- [중앙] 소개글 ---
+    # --- [중앙] 소개글 (이전과 동일하게 내용 유지) ---
     with col2:
         st.markdown("<h2 style='margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.5);'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
         
-        # [디자인 강화] 타이틀에 네온 그래디언트 적용
         st.markdown("""
             <h3 style='margin-top: 0; background: linear-gradient(to right, #29B6F6, #E040FB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;'>
                 🛰️ 식품 & 경제 융합 궤도 항해사
@@ -295,7 +308,6 @@ def page_intro():
         """, unsafe_allow_html=True)
         
         st.write("")
-        # 인용구 박스 디자인 개선 (은은한 광채 추가)
         st.markdown("""
         <div style='background: rgba(41, 182, 246, 0.08); padding: 25px; border-left: 4px solid #29B6F6; border-radius: 0 12px 12px 0; box-shadow: inset 0 0 20px rgba(41, 182, 246, 0.1);'>
             <p style='margin: 0; font-size: 18px; line-height: 1.6; font-style: italic;'>
@@ -307,7 +319,6 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
         
-        # 본문 내용 강화 (가독성 및 키워드 강조)
         st.markdown("""
         <div style='margin-top: 20px;'>
             <p>반갑습니다. 저는 식품 산업이라는 거대한 우주에서 데이터를 <span style='color:#C6FF00; font-weight:bold;'>나침반</span> 삼아 새로운 기회를 탐색하고 있습니다.</p>
@@ -315,10 +326,9 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-    # --- [우측] 핵심 역량 및 상태 ---
+    # --- [우측] 핵심 역량 (이전과 동일하게 내용 유지) ---
     with col3:
         st.markdown("##### ⚡ Core Booster Systems")
-        # 역량 배지 레이아웃 정리 (주/보조 구분)
         st.markdown("""
         <div style='display: flex; flex-direction: column; gap: 12px;'>
             <div>
@@ -340,7 +350,6 @@ def page_intro():
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # 현재 상태 표시 디자인 개선
         st.markdown("""
         <div style='background: #212121; padding: 15px; border-radius: 12px; border: 1px solid #424242; display: flex; align-items: center;'>
             <div style='font-size: 24px; margin-right: 15px;'>📍</div>
@@ -353,10 +362,9 @@ def page_intro():
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # 탭 스타일 미세 조정 (CSS로 이미 적용되었지만 확실하게 하기 위해)
+    # 탭 부분 (내용 유지)
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
 
-    # --- [탭 1] 학습 기록 (디자인 변경: DataFrame -> 타임라인) ---
     with tab1:
         st.subheader("📚 융합 항해 커리큘럼")
         col_a1, col_a2 = st.columns(2)
@@ -388,7 +396,6 @@ def page_intro():
         st.divider()
         st.markdown("#### 📅 궤도 수정 로그 (Mission Log)")
         
-        # [디자인 변경] 밋밋한 표 대신 시각적인 타임라인 스타일 적용
         st.markdown("""
         <div style='display: flex; flex-direction: column; gap: 15px; margin-top: 20px;'>
             <div style='display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid #00E5FF;'>
@@ -398,7 +405,7 @@ def page_intro():
                     <p style='margin: 5px 0 0 0; font-size: 14px; color: #B0BEC5;'>컴퓨팅 탐색/핵심 | Python 기초 및 알고리즘 이해</p>
                 </div>
             </div>
-             <div style='display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid #C6FF00;'>
+            <div style='display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 4px solid #C6FF00;'>
                 <div style='font-size: 24px; margin-right: 20px;'>📈</div>
                 <div>
                     <b style='color: #C6FF00; font-size: 16px;'>경제 네비게이션 동기화</b>
@@ -408,12 +415,10 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-    # --- [탭 2] 관심사 ---
     with tab2:
         st.subheader("🌌 개인적인 탐사 동기 (Interest)")
         col_t1, col_t2 = st.columns([1, 2], gap="large")
         with col_t1:
-            # 아이콘 박스 디자인 개선
             st.markdown(
                 """<div style='background: radial-gradient(circle, rgba(255,64,129,0.2) 0%, rgba(0,0,0,0) 70%); border-radius: 20px; height: 220px; display: flex; justify-content: center; align-items: center; border: 2px solid #FF4081; box-shadow: 0 0 30px rgba(255, 64, 129, 0.4); animation: pulse 3s infinite;'>
                     <span style='font-size: 100px; filter: drop-shadow(0 0 10px #FF4081);'>🧁🪐</span>
@@ -421,20 +426,15 @@ def page_intro():
         with col_t2:
             st.markdown("""
             <h3 style='color: #FF4081 !important; margin-top:0;'>“Taste is the Gravity.”</h3>
-            
             <p style='font-size:16px; line-height:1.8;'>
             아무리 뛰어난 기술도 결국 '맛'이라는 중력이 없다면 시장 궤도를 이탈합니다.<br>
             저는 주말마다 베이킹 실험실에서 재료의 배합이 만들어내는 <b>맛의 소우주(Micro-cosmos)</b>를 탐구하며, 기술과 감성의 최적 균형점을 찾고 있습니다.
             </p>
             """)
-            # 외부 링크 버튼 스타일링
             st.link_button("📺 영감의 신호원: 유튜브 '빵딘' 채널 접속", "https://www.youtube.com/@bbangdin", use_container_width=True)
 
-    # --- [탭 3] 프로젝트 목표 ---
     with tab3:
         st.subheader("🎯 금번 임무 목표 (Project Directive)")
-        
-        # [디자인 변경] 단순 success 박스 대신 테마에 맞는 작전명령서 스타일
         st.markdown("""
         <div style='background: rgba(0, 229, 255, 0.1); padding: 30px; border-radius: 15px; border: 2px solid #00E5FF; position: relative; overflow: hidden;'>
             <div style='position: absolute; top: -20px; right: -20px; font-size: 100px; opacity: 0.1; color: #00E5FF;'>🎯</div>
@@ -450,7 +450,7 @@ def page_intro():
             </ul>
         </div>
         """, unsafe_allow_html=True)
-
+        
 # =========================================================
 # 2. 신호 탐지: 식품 트렌드 분석 (Trend)
 # =========================================================
@@ -724,6 +724,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

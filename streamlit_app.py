@@ -596,7 +596,7 @@ def page_conclusion():
 def main():
     with st.sidebar:
         # [수정] !important 추가로 색상 강제 적용
-        st.markdown("<h2 style='color: #1E88E5 !important;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='color: #E1DDDB !important;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
         
         selected = option_menu(
             menu_title=None,
@@ -626,3 +626,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

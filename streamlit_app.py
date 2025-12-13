@@ -632,12 +632,23 @@ def page_map_visualization():
     df_map, _ = get_company_data()
 
     st.title("🪐 행성 좌표: 식품 기업 10대 거점")
-    st.caption("식품 기업 '행성'들의 물리적 위치와 영향력(순위)을 시각화합니다.")
+    
+    # [수정 1] 구체적인 기획 의도 및 설명 추가 (디자인 박스 적용)
+    st.markdown("""
+    <div style='background: rgba(0, 229, 255, 0.1); padding: 20px; border-radius: 15px; border-left: 5px solid #00E5FF; margin-bottom: 25px;'>
+        <h5 style='color: #00E5FF !important; margin: 0;'>🗺️ 진로 탐색을 위한 성도(Star Map) 작성</h5>
+        <p style='margin-top: 10px; font-size: 16px; line-height: 1.6;'>
+            식품 산업이라는 거대한 우주에서 내가 착륙할 목표 행성을 정하기 위해선, 그들의 <b>물리적 위치(본사)</b>와 <b>경제적 중력(브랜드 영향력)</b>을 파악하는 것이 필수적입니다.<br>
+            최신 <b>K-Brand Index 빅데이터</b>를 기반으로, 현재 대한민국 식품 업계를 이끄는 10대 기업의 좌표를 시각화했습니다.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     col_map, col_bar = st.columns([1.6, 1])
 
     with col_bar:
         st.subheader("🏆 기업 행성 영향력")
+        st.caption("※ 총점: 빅데이터 인덱스 수치 합산")
         fig = px.bar(
             df_map, x="총점", y="기업명", orientation='h', text="총점",
             color="총점", color_continuous_scale=["#29B6F6", "#0288D1"], template=CHART_THEME
@@ -667,6 +678,31 @@ def page_map_visualization():
             initial_view_state=view_state,
             tooltip=tooltip
         ))
+
+    st.divider()
+
+    # [수정 2] 데이터 출처 및 링크 추가
+    col_source, col_next = st.columns([2, 1])
+    
+    with col_source:
+        st.subheader("📊 K-Brand Index 식품 부문 TOP 10")
+        st.markdown("""
+        <ul style='color: #E0E0E0; line-height: 1.8;'>
+            <li><b>출처:</b> 아시아브랜드연구소 (2025.11.01 ~ 11.30)</li>
+            <li><b>지표:</b> 빅데이터 시스템 온라인 인덱스 수치 합산 (트렌드, 미디어, 소셜 등)</li>
+        </ul>
+        """, unsafe_allow_html=True)
+        st.link_button("🔗 K-Brand Index 공식 홈페이지 확인", "https://kbrandindex.co.kr/")
+
+    # [수정 3] 다음 페이지 안내 (Transition Teaser)
+    with col_next:
+        st.markdown("<br>", unsafe_allow_html=True) # 레이아웃 줄맞춤용 공백
+        st.info("""
+        **👉 다음 단계 안내 (Next Step)**\n
+        각 기업 행성의 상세 스펙(비전, 인재상, 주요 제품 등)은 
+        다음 페이지인 **[4. 상세 데이터 (Info)]** 챕터에서 
+        정밀 분석합니다.
+        """)
 
 # =========================================================
 # 4. 상세 데이터: 기업 정보 분석 (Info)
@@ -834,6 +870,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

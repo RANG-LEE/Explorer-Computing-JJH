@@ -58,6 +58,7 @@ def apply_custom_theme():
         }
         
         /* 2. 텍스트 스타일: 선명한 흰색 및 네온 포인트 */
+        /* !important가 있어도 개별 태그에서 !important를 쓰면 덮어쓸 수 있음 */
         h1, h2, h3 {
             color: #FFFFFF !important;
             font-family: 'AppleGothic', 'Malgun Gothic', sans-serif;
@@ -138,7 +139,6 @@ def apply_custom_theme():
 apply_custom_theme()
 
 # [디자인] 차트 테마 색상 (High Contrast Palette)
-# Cyan, Pink, Violet, Lime, White
 SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#FFFFFF']
 CHART_THEME = "plotly_dark"
 
@@ -228,12 +228,12 @@ def page_title_screen():
     
     st.markdown("""
     <div style='text-align: center;'>
-        <h1 class='animate-text' style='font-size: 80px; margin-bottom: 20px; color: #FFFFFF;'>🌌 진로 탐색 포트폴리오</h1>
-        <h3 class='animate-text' style='font-size: 28px; color: #4FC3F7; font-weight: 300; animation-delay: 0.3s;'>
+        <h1 class='animate-text' style='font-size: 80px; margin-bottom: 20px; color: #FFFFFF !important;'>🌌 진로 탐색 포트폴리오</h1>
+        <h3 class='animate-text' style='font-size: 28px; color: #4FC3F7 !important; font-weight: 300; animation-delay: 0.3s;'>
             2025-2 컴퓨팅 탐색 실생활에서 활용하기 기말과제
         </h3>
         <br>
-        <h2 class='animate-text' style='font-size: 36px; color: #FFFFFF; animation-delay: 0.6s;'>
+        <h2 class='animate-text' style='font-size: 36px; color: #FFFFFF !important; animation-delay: 0.6s;'>
             Explorer. 정지호
         </h2>
     </div>
@@ -244,7 +244,7 @@ def page_title_screen():
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
-        st.markdown("<div style='text-align:center; color:#B0BEC5;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
 
 # =========================================================
 # 1. 항해 시작: 탐색자 프로필 (Intro)
@@ -255,7 +255,7 @@ def page_intro():
     col1, col2, col3 = st.columns([1.2, 2, 1.3])
     
     with col1:
-        # [수정] 캐릭터 이미지 확대 (220px -> 280px) 및 꽉 차게 표시
+        # 캐릭터 이미지 확대 (220px -> 280px) 및 꽉 차게 표시
         st.markdown(
             """
             <div style='display: flex; justify-content: center; align-items: center; margin: auto; position: relative;'>
@@ -271,13 +271,13 @@ def page_intro():
         )
 
     with col2:
-        st.markdown("<h2 style='margin-bottom: 5px; color: #FFFFFF;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
-        st.markdown("<h4 style='margin-top: 0; color: #4FC3F7;'>🛰️ 식품 & 경제 융합 궤도 항해사</h4>", unsafe_allow_html=True)
+        st.markdown("<h2 style='margin-bottom: 5px; color: #FFFFFF !important;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin-top: 0; color: #4FC3F7 !important;'>🛰️ 식품 & 경제 융합 궤도 항해사</h4>", unsafe_allow_html=True)
         
         st.write("")
         st.markdown("""
         <div style='background: rgba(41, 182, 246, 0.1); padding: 20px; border-left: 5px solid #29B6F6; border-radius: 8px;'>
-            <p style='margin: 0; color: #FFFFFF; font-size: 17px; line-height: 1.6;'>
+            <p style='margin: 0; color: #FFFFFF !important; font-size: 17px; line-height: 1.6;'>
             <b>"식품 공학(Product)의 추진력에 경제학(Market)의 네비게이션을 더하다."</b><br>
             미지의 시장 궤도에 진입할 준비가 된 융합 인재, 정지호입니다.
             </p>
@@ -285,7 +285,7 @@ def page_intro():
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <p style='margin-top: 15px; font-size: 16px; color: #FFFFFF;'>
+        <p style='margin-top: 15px; font-size: 16px; color: #FFFFFF !important;'>
         반갑습니다. 저는 식품 산업이라는 거대한 우주에서 데이터를 나침반 삼아 새로운 기회를 탐색하고 있습니다.
         단순 전공 지식을 넘어, <b>시장 전체를 조망하는 거시적 안목</b>을 갖추기 위해 끊임없이 항로를 개척 중입니다.
         </p>
@@ -295,14 +295,14 @@ def page_intro():
         st.markdown("##### ⚡ Core Booster Systems")
         st.markdown("""
         <div style='display: flex; flex-wrap: wrap; gap: 10px;'>
-            <span style='background: rgba(41, 182, 246, 0.15); color:#29B6F6; padding: 8px 15px; border-radius: 20px; border: 1px solid #29B6F6; font-weight: bold;'>🧬 식품생명공학</span>
-            <span style='background: rgba(224, 64, 251, 0.15); color:#E040FB; padding: 8px 15px; border-radius: 20px; border: 1px solid #E040FB; font-weight: bold;'>💰 금융경제</span>
-            <span style='background: rgba(0, 229, 255, 0.15); color:#00E5FF; padding: 8px 15px; border-radius: 20px; border: 1px solid #00E5FF; font-weight: bold;'>📊 데이터 분석</span>
-            <span style='background: rgba(198, 255, 0, 0.15); color:#C6FF00; padding: 8px 15px; border-radius: 20px; border: 1px solid #C6FF00; font-weight: bold;'>🛰️ R&D 탐색</span>
+            <span style='background: rgba(41, 182, 246, 0.15); color:#29B6F6 !important; padding: 8px 15px; border-radius: 20px; border: 1px solid #29B6F6; font-weight: bold;'>🧬 식품생명공학</span>
+            <span style='background: rgba(224, 64, 251, 0.15); color:#E040FB !important; padding: 8px 15px; border-radius: 20px; border: 1px solid #E040FB; font-weight: bold;'>💰 금융경제</span>
+            <span style='background: rgba(0, 229, 255, 0.15); color:#00E5FF !important; padding: 8px 15px; border-radius: 20px; border: 1px solid #00E5FF; font-weight: bold;'>📊 데이터 분석</span>
+            <span style='background: rgba(198, 255, 0, 0.15); color:#C6FF00 !important; padding: 8px 15px; border-radius: 20px; border: 1px solid #C6FF00; font-weight: bold;'>🛰️ R&D 탐색</span>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
-        st.caption("📍 Current Orbit: **Programming, Economics, Food Tech**")
+        st.markdown("<p class='stCaption'>📍 Current Orbit: <b>Programming, Economics, Food Tech</b></p>", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
@@ -314,7 +314,7 @@ def page_intro():
             st.markdown("""
             <div style='border: 1px solid #29B6F6; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2);'>
                 <h5 style='color: #29B6F6 !important; font-size: 18px;'>1. 주 추진체: 식품생명공학</h5>
-                <ul style='color: #FFFFFF; margin-top: 10px;'>
+                <ul style='color: #FFFFFF !important; margin-top: 10px;'>
                     <li>제품(Product)의 구성 원리 이해</li>
                     <li>식품화학, 미생물학 기초 설계 능력</li>
                 </ul>
@@ -324,7 +324,7 @@ def page_intro():
             st.markdown("""
             <div style='border: 1px solid #E040FB; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2);'>
                 <h5 style='color: #E040FB !important; font-size: 18px;'>2. 보조 추진체: 금융경제</h5>
-                <ul style='color: #FFFFFF; margin-top: 10px;'>
+                <ul style='color: #FFFFFF !important; margin-top: 10px;'>
                     <li>시장(Market)의 중력과 흐름 파악</li>
                     <li>거시/미시 경제 데이터 해석 능력</li>
                 </ul>
@@ -565,7 +565,7 @@ def page_conclusion():
     st.markdown("""
     <div style='background: rgba(0, 0, 0, 0.2); padding: 25px; border-radius: 15px; border-left: 5px solid #29B6F6; box-shadow: 0 0 20px rgba(41, 182, 246, 0.3);'>
         <h4 style='margin:0; color:#29B6F6 !important;'>💡 융합 탐사 최종 리포트</h4>
-        <p style='margin-top:15px; font-size: 16px; color: #FFFFFF;'>
+        <p style='margin-top:15px; font-size: 16px; color: #FFFFFF !important;'>
         본 프로젝트를 통해 <b>식품 공학적 도메인</b>과 <b>데이터 분석 기술</b>을 결합하여,<br>
         막연했던 진로의 우주에서 <b>시장성 있는 기회의 궤도</b>를 발견했습니다.
         </p>
@@ -588,18 +588,15 @@ def page_conclusion():
     st.markdown("---")
     st.info('**"데이터는 식품 산업이라는 우주를 여행하는 히치하이커의 안내서입니다."**')
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center; color: #B0BEC5;'>🛰️ Mission Director: <b>Jiho Jung</b> | 📡 Signal: jiho.foodtech@email.com</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; color: #B0BEC5 !important;'>🛰️ Mission Director: <b>Jiho Jung</b> | 📡 Signal: jiho.foodtech@email.com</div>", unsafe_allow_html=True)
 
-# =========================================================
-# 메인 실행 블록
-# =========================================================
 # =========================================================
 # 메인 실행 블록
 # =========================================================
 def main():
     with st.sidebar:
-        # [수정] 헤더 폰트 색상 변경 (어두운 파란색 계열: #1E88E5)
-        st.markdown("<h2 style='color: #1E88E5;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
+        # [수정] !important 추가로 색상 강제 적용
+        st.markdown("<h2 style='color: #1E88E5 !important;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
         
         selected = option_menu(
             menu_title=None,
@@ -615,8 +612,8 @@ def main():
             }
         )
         
-        # [수정] 캡션 폰트 색상 변경 (기존 st.caption 대신 st.markdown 사용)
-        st.markdown("<p style='color: #1E88E5; font-size: 14px;'>🪐 Powered by Streamlit</p>", unsafe_allow_html=True)
+        # [수정] !important 추가로 색상 강제 적용
+        st.markdown("<p style='color: #1E88E5 !important; font-size: 14px;'>🪐 Powered by Streamlit</p>", unsafe_allow_html=True)
 
     # 페이지 라우팅
     if selected == "0. 프롤로그 (Cover)": page_title_screen()
@@ -629,7 +626,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-	
-
-
-

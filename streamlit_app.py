@@ -889,29 +889,36 @@ def page_company_info():
 def page_scholar_analysis():
     st.title("🔭 심우주 탐사: 학술 연구 데이터")
     
-    # [설명] 데이터 출처 및 방법론 (요청사항 반영)
+    # [설명] 데이터 출처 및 방법론 (요청사항 2, 4번 반영)
     st.markdown("""
-    <div style='background: rgba(41, 182, 246, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #29B6F6; margin-bottom: 25px;'>
+    <div style='background: rgba(41, 182, 246, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #29B6F6; margin-bottom: 20px;'>
         <h5 style='color: #29B6F6 !important; margin: 0;'>📊 데이터 출처 및 수집 방법론 (Methodology)</h5>
         <ul style='margin-top: 10px; font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
             <li><b>출처 (Source):</b> Google Scholar (구글 스칼라) 학술 데이터베이스</li>
             <li><b>수집 도구 (Tools):</b> Python <code>BeautifulSoup</code>, <code>Requests</code> 라이브러리 활용 웹 크롤링</li>
-            <li><b>수집 방법 (Process):</b> 
-                각 키워드에 대해 연도별(2015~2025) 검색 쿼리를 전송하여, 검색 결과 상단에 표시되는 
-                <b>'약 00,000개 (About results)'</b> 수치 데이터를 정량적으로 추출하여 DB화 하였습니다.
+            <li><b>수집 기준 (Process):</b> 
+                각 키워드에 대해 연도별(2015~2025) 검색을 수행하여, 상단에 표시되는 
+                <b>'검색 결과 건수 (Total Results, 예: 약 15,300개)'</b>를 정량적으로 추출하여 DB화 하였습니다.
+            </li>
+            <li style='margin-top: 8px; color: #FFD54F;'>
+                <b>⚠️ 안정성 공지:</b> 실시간 웹 크롤링은 구글의 보안 정책(Captcha 차단 등)으로 인해 시연 중 연결이 불안정할 수 있습니다. 
+                따라서 본 포트폴리오에서는 <b>사전에 수집 및 검증 완료된 데이터셋(CSV)</b>을 로드하여 분석합니다.
             </li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("구글 스칼라의 심우주에서 수집한 **연도별 학술 연구량**을 통해 미래 기술의 성장 궤도를 예측합니다.")
+    # [인사이트] 데이터의 의미 (요청사항 3번 반영)
+    st.info("💡 **Why Research Data?** 학술 논문 수의 급증은 해당 분야에 대한 **R&D 자금과 인재의 대규모 유입**을 의미합니다. 이는 곧 3~5년 후 **기술 상용화 및 시장 폭발(Growth)**을 예측할 수 있는 가장 확실한 선행 지표입니다.")
 
-    # 1. 데이터 로드 함수 (내부 정의)
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 1. 데이터 로드 함수
     @st.cache_data
     def load_scholar_data():
         file_name = 'scholar_data.csv'
+        # 파일이 없을 경우를 대비해 CSV 내용 하드코딩 (에러 방지용)
         if not os.path.exists(file_name):
-            # 파일이 없을 경우를 대비해 CSV 내용 하드코딩 (에러 방지용)
             data = {
                 "Year": range(2015, 2026),
                 "Food Safety": [145, 158, 172, 189, 205, 234, 287, 312, 341, 378, 392],
@@ -931,15 +938,24 @@ def page_scholar_analysis():
     with st.container():
         col_in1, col_in2 = st.columns([3, 1])
         with col_in1:
-            # AI 등 5개 키워드 선택 가능
+            # [디자인 수정] 검은색 글씨로 보이게 배경색이 있는 라벨 적용 (요청사항 1번 반영)
+            st.markdown("""
+            <div style='background-color: #E0E0E0; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
+                <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # 라벨은 위에서 커스텀으로 만들었으므로 label_visibility="collapsed" 사용
             query = st.selectbox(
-                "📡 탐사할 신호(Keyword) 선택 (2015-2025)", 
+                "탐사 키워드 선택", 
                 keywords_available, 
-                index=4 # 기본값 AI 선택
+                index=4, # 기본값 AI 선택
+                label_visibility="collapsed"
             )
         with col_in2:
-            st.write("")
-            st.write("")
+            st.write("") # 줄맞춤용 공백
+            st.write("") 
+            st.write("") 
             run_btn = st.button("🚀 탐사선 발사", use_container_width=True)
 
     # 3. 분석 결과 시각화
@@ -980,7 +996,7 @@ def page_scholar_analysis():
             paper_bgcolor="rgba(0,0,0,0)", 
             font=dict(color="white"),
             xaxis=dict(title="연도", tickmode='linear'),
-            yaxis=dict(title="논문 출판 수"),
+            yaxis=dict(title="논문 출판 수 (건)"),
             margin=dict(t=50, b=50),
             showlegend=False
         )
@@ -1005,7 +1021,7 @@ def page_scholar_analysis():
             max_year = dftrend.loc[dftrend['Count'].idxmax(), 'Year']
             st.metric("Peak 연도", f"{max_year}년")
 
-        # [Table] 상세 데이터 테이블 (WordCloud 대체)
+        # [Table] 상세 데이터 테이블
         st.markdown("<br>", unsafe_allow_html=True)
         with st.expander("📋 연도별 상세 데이터 로그 확인 (Data Log)"):
             st.dataframe(
@@ -1158,6 +1174,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

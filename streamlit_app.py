@@ -17,7 +17,7 @@ from collections import Counter
 # 사이드바 메뉴 라이브러리
 from streamlit_option_menu import option_menu
 
-# 크롤링 관련 라이브러리
+# 크롤링 관련 라이브러리 (필요시 사용)
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -31,20 +31,26 @@ st.set_page_config(
     layout="wide"
 )
 
-# [디자인] 폰트 설정
+# [디자인] 폰트 설정 (OS별 호환성 확보)
 system_name = platform.system()
+font_path = None # 기본 초기화
+
 if system_name == 'Windows':
-    font_path = "C:/Windows/Fonts/malgun.ttf"
+    _font_path = "C:/Windows/Fonts/malgun.ttf"
     try:
-        if os.path.exists(font_path):
-            font_name = font_manager.FontProperties(fname=font_path).get_name()
+        if os.path.exists(_font_path):
+            font_name = font_manager.FontProperties(fname=_font_path).get_name()
             rc('font', family=font_name)
+            font_path = _font_path
     except:
         pass
 elif system_name == 'Darwin': 
     rc('font', family='AppleGothic')
+    font_path = '/System/Library/Fonts/AppleGothic.ttf' # Mac 기본 경로 예시
 else:
-    pass
+    # Linux (Streamlit Cloud 등)에서는 한글 폰트가 없을 수 있으므로 기본 설정 유지
+    plt.rcParams['font.family'] = 'sans-serif'
+
 plt.rcParams['axes.unicode_minus'] = False
 
 # [디자인] 커스텀 CSS (High Visibility Dark Theme)
@@ -58,7 +64,6 @@ def apply_custom_theme():
         }
         
         /* 2. 텍스트 스타일: 선명한 흰색 및 네온 포인트 */
-        /* !important가 있어도 개별 태그에서 !important를 쓰면 덮어쓸 수 있음 */
         h1, h2, h3 {
             color: #FFFFFF !important;
             font-family: 'AppleGothic', 'Malgun Gothic', sans-serif;
@@ -163,6 +168,7 @@ def get_driver():
 
 @st.cache_data
 def load_data(file_path):
+    # 파일이 없으면 더미 데이터 생성
     if not os.path.exists(file_path):
         dates = pd.date_range(start="2024-01-01", periods=52, freq="W")
         data = {
@@ -263,7 +269,7 @@ def page_intro():
                      style='width: 280px; height: 280px; border-radius: 50%; object-fit: cover; object-position: center top;
                             border: 5px solid #29B6F6; box-shadow: 0 0 35px rgba(41, 182, 246, 0.5);'>
                 <div style='position: absolute; bottom: 15px; background: rgba(0,0,0,0.85); color: #29B6F6; 
-                            padding: 8px 20px; border-radius: 25px; font-size: 16px; font-weight:bold; border: 1px solid #29B6F6;'>
+                           padding: 8px 20px; border-radius: 25px; font-size: 16px; font-weight:bold; border: 1px solid #29B6F6;'>
                     👨‍🚀 Commander
                 </div>
             </div>
@@ -543,12 +549,19 @@ def page_scholar_analysis():
         st.plotly_chart(fig, use_container_width=True)
 
         st.subheader("🌌 핵심 신호 클라우드")
-        wc = WordCloud(
-            font_path=font_path, width=800, height=400,
-            background_color="black", # 배경을 검은색으로
-            colormap="cool", # 네온 컬러맵
-            max_words=50
-        ).generate(dummy_text)
+        
+        # WordCloud 생성 (font_path가 None이면 기본 폰트 사용)
+        wc_args = {
+            "width": 800, 
+            "height": 400,
+            "background_color": "black",
+            "colormap": "cool",
+            "max_words": 50
+        }
+        if font_path and os.path.exists(font_path):
+            wc_args["font_path"] = font_path
+            
+        wc = WordCloud(**wc_args).generate(dummy_text)
         
         fig_wc, ax = plt.subplots(figsize=(10, 5))
         ax.imshow(wc, interpolation='bilinear')
@@ -596,7 +609,7 @@ def page_conclusion():
 def main():
     with st.sidebar:
         # [수정] !important 추가로 색상 강제 적용
-        st.markdown("<h2 style='color: #E1DDDB !important;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='color: #1E88E5 !important;'>🛸 탐사선 제어 패널</h2>", unsafe_allow_html=True)
         
         selected = option_menu(
             menu_title=None,
@@ -626,4 +639,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

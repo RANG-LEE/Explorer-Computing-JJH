@@ -43,10 +43,11 @@ else:
 
 plt.rcParams['axes.unicode_minus'] = False
 
-# [디자인] 커스텀 CSS
+# [디자인] 커스텀 CSS (수정됨: 입력창 가시성 해결)
 def apply_custom_theme():
     st.markdown("""
     <style>
+        /* 1. 전체 앱 배경 및 폰트 설정 */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
@@ -68,6 +69,8 @@ def apply_custom_theme():
         .stCaption {
             color: #E0E0E0 !important;
         }
+
+        /* 2. 컨테이너 스타일 (투명도 및 블러 효과) */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -77,6 +80,8 @@ def apply_custom_theme():
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
+
+        /* 3. 버튼 스타일 */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -92,6 +97,8 @@ def apply_custom_theme():
             transform: scale(1.03);
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
+
+        /* 4. 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -108,6 +115,38 @@ def apply_custom_theme():
             border: 1px solid #29B6F6;
             border-radius: 10px;
         }
+
+        /* 5. [수정됨] 입력 필드 (Selectbox, Multiselect) 가시성 해결 */
+        /* 입력창 배경을 어두운 회색으로, 테두리를 파란색으로 변경 */
+        div[data-baseweb="select"] > div, 
+        div[data-baseweb="base-input"] {
+            background-color: #424242 !important;
+            border: 1px solid #4FC3F7 !important;
+            color: white !important;
+        }
+        
+        /* 입력창 내부 텍스트 색상 (흰색) */
+        div[data-baseweb="select"] span,
+        div[data-baseweb="base-input"] input {
+            color: white !important;
+            -webkit-text-fill-color: white !important; /* 크롬/사파리 호환 */
+        }
+
+        /* 드롭다운 메뉴 (옵션 리스트) 배경 및 글씨 */
+        ul[data-baseweb="menu"] {
+            background-color: #333333 !important;
+        }
+        ul[data-baseweb="menu"] li span {
+            color: white !important;
+        }
+        
+        /* 멀티셀렉트 태그 (선택된 항목) 스타일 */
+        span[data-baseweb="tag"] {
+            background-color: #0288D1 !important;
+            color: white !important;
+        }
+
+        /* 애니메이션 */
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -1174,6 +1213,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -452,15 +452,16 @@ def page_intro():
         st.markdown("""
         <div style='background: rgba(0, 229, 255, 0.1); padding: 30px; border-radius: 15px; border: 2px solid #00E5FF; position: relative; overflow: hidden;'>
             <div style='position: absolute; top: -20px; right: -20px; font-size: 100px; opacity: 0.1; color: #00E5FF;'>🎯</div>
-            <h4 style='color: #00E5FF !important; margin-top: 0;'>MISSION: 불확실성의 안개 속 좌표 설정</h4>
+            <h4 style='color: #00E5FF !important; margin-top: 0;'>MISSION: 불확실성의 안개 속에서 좌표 설정하라</h4>
             <p style='font-size: 17px; line-height: 1.7; margin-bottom: 20px;'>
-            이 프로젝트는 막연한 진로 탐색을 위한 <b>실전 데이터 시뮬레이션</b>입니다.
-            추상적인 고민 대신, 실제 데이터를 수집하고 시각화하여 제가 안착해야 할 최적의 궤도를 스스로 증명해내는 과정입니다.
+            이 프로젝트는 불안하고 막연한 진로 탐색을 위한 <b>실전 데이터 시뮬레이션</b>입니다.
+            추상적인 고민 대신, 실제 데이터를 수집하고 시각화하여 제가 안착해야 할 최적의 궤도를 스스로 탐색해나가는 과정입니다.
+            <b>본 시뮬레이션의 결과는 서울대학교 식품생명공학과 동료 항해사들에게도 공유될 예정입니다.</b> 
             </p>
             <ul style='line-height: 1.8; color: #E0E0E0;'>
-                <li>📡 <b>신호 탐지:</b> 구글 트렌드로 시장 관심도 추적</li>
-                <li>🪐 <b>행성 좌표:</b> 주요 식품 기업의 물리적/경제적 위치 시각화</li>
-                <li>🔭 <b>심우주 탐사:</b> 학술 데이터로 미래 기술 트렌드 예측</li>
+                <li>📡 <b>신호 탐지:</b> 구글 트렌드로 식품 시장의 트렌드를 추적</li>
+                <li>🪐 <b>행성 좌표:</b> 국내 식품 기업의 물리적/경제적 위치 시각화</li>
+                <li>🔭 <b>심우주 탐사:</b> 구글 스칼라 학술 데이터 크롤링을 통한 현재 기술 트렌드 예측</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -736,6 +737,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

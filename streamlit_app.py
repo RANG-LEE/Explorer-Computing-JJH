@@ -737,11 +737,28 @@ def page_company_info():
                 c = company_details[i+j]
                 with cols[j]:
                     with st.expander(f"**[Rank {c['순위']}] {c['기업명']} 시스템**", expanded=True):
-                        st.markdown(f"**📝 개요:** {c['소개']}")
-                        st.markdown(f"**🛒 주력:** {c['주력제품']}")
-                        st.markdown(f"**🔭 비전:** {c['비전']}")
-                        st.markdown("---")
+                        # [수정] 가시성이 좋은 파란 계열(Neon Blue & Light Sky)로 텍스트 스타일링 적용
+                        st.markdown(f"""
+                        <div style='line-height: 1.8; margin-bottom: 10px;'>
+                            <div>
+                                <span style='color: #00B0FF; font-weight: bold; font-size: 16px;'>📝 개요:</span>
+                                <span style='color: #B3E5FC;'>{c['소개']}</span>
+                            </div>
+                            <div style='margin-top: 5px;'>
+                                <span style='color: #00B0FF; font-weight: bold; font-size: 16px;'>🛒 주력:</span>
+                                <span style='color: #B3E5FC;'>{c['주력제품']}</span>
+                            </div>
+                            <div style='margin-top: 5px;'>
+                                <span style='color: #00B0FF; font-weight: bold; font-size: 16px;'>🔭 비전:</span>
+                                <span style='color: #B3E5FC;'>{c['비전']}</span>
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        st.markdown("<div style='margin: 10px 0; border-top: 1px solid rgba(41, 182, 246, 0.3);'></div>", unsafe_allow_html=True)
+                        
                         b1, b2 = st.columns(2)
+                        # 버튼은 Streamlit 기본 스타일 유지 (필요시 커스텀 HTML로 변경 가능)
                         with b1: st.link_button("🏠 홈페이지", c["홈페이지"], use_container_width=True)
                         with b2: st.link_button("📺 유튜브", c["유튜브"], use_container_width=True)
 
@@ -886,6 +903,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -380,25 +380,6 @@ def page_intro():
         # 2. 유튜버 카드 리스트 (3열 배치)
         c1, c2, c3 = st.columns(3)
 
-with tab2:
-        st.subheader("🌌 취미 & 영감 (Hobby & Inspiration)")
-
-        # 1. 섹션 소개글
-        st.markdown("""
-        <div style='background: rgba(255, 64, 129, 0.1); padding: 25px; border-radius: 15px; border-left: 5px solid #FF4081; margin-bottom: 25px;'>
-            <h5 style='color: #FF4081 !important; margin: 0; display: flex; align-items: center;'>
-                🔋 항해의 원동력 (Fuel for Voyage)
-            </h5>
-            <p style='margin-top: 15px; font-size: 16px; line-height: 1.6;'>
-                끝없는 우주를 항해(학습과 연구)하기 위해서는 <b>엔진의 열을 식히고 연료를 재충전</b>하는 시간이 필수적입니다.<br>
-                제가 지칠 때마다 다시 나아갈 힘을 주는, <b>감성(Taste)</b>과 <b>열정(Passion)</b>, 그리고 <b>지성(Logic)</b>의 신호원(Signal Source)들을 소개합니다.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # 2. 유튜버 카드 리스트 (3열 배치)
-        c1, c2, c3 = st.columns(3)
-
         # 공통 버튼 스타일 정의 (밝은 회색 배경, 검은 글씨)
         btn_style = """
             display: block;
@@ -755,6 +736,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

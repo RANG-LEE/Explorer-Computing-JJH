@@ -876,16 +876,17 @@ def main():
         st.markdown("<p style='color: #1E88E5 !important; font-size: 14px;'>🪐 Designed by Jung Jiho</p>", unsafe_allow_html=True)
 
     # 페이지 라우팅
-    if selected == "0. 프롤로그 (Cover)": page_title_screen()
+    if selected == "0. 프롤로그": page_title_screen()
     elif selected == "1. 항해 시작 (Intro)": page_intro()
     elif selected == "2. 신호 탐지 (Trend)": page_keyword_analysis()
     elif selected == "3. 행성 좌표 (Map)": page_map_visualization()
-    elif selected == "4. 상세 데이터 (Info)": page_company_info()
+    elif selected == "4. 기업 상세 데이터 (Info)": page_company_info()
     elif selected == "5. 심우주 탐사 (Research)": page_scholar_analysis()
     elif selected == "6. 궤도 안착 (Conclusion)": page_conclusion()
 
 if __name__ == "__main__":
     main()
+
 
 
 

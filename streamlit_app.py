@@ -735,14 +735,14 @@ def page_company_info():
     <style>
         /* Expander 제목 텍스트: 너무 밝지 않은 은회색 */
         div[data-testid="stExpander"] details summary p {
-            color: #B0BEC5 !important; /* Blue Grey 200 */
+            color: #495057 !important; /* Blue Grey 200 */
             font-size: 18px !important;
             font-weight: 700 !important;
         }
         /* Expander 화살표 아이콘 */
         div[data-testid="stExpander"] details summary svg {
-            fill: #B0BEC5 !important;
-            color: #B0BEC5 !important;
+            fill: #495057 !important;
+            color: #495057 !important;
         }
         /* Expander 테두리 */
         div[data-testid="stExpander"] {
@@ -773,8 +773,8 @@ def page_company_info():
             if i + j < len(company_details):
                 c = company_details[i+j]
                 with cols[j]:
-                    # Expander 제목은 위 CSS에 의해 진한 회색(#B0BEC5)으로 보입니다.
-                    with st.expander(f"Rank {c['순위']} | {c['기업명']} System", expanded=True):
+                    # Expander 제목은 위 CSS에 의해 진한 회색(#495057)으로 보입니다.
+                    with st.expander(f"Rank {c['순위']} | {c['기업명']}", expanded=True):
                         
                         # [가시성 강화] 내부 텍스트 스타일링 (네온 블루 & 스카이 블루)
                         st.markdown(f"""
@@ -944,6 +944,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

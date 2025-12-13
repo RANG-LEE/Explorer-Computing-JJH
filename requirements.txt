@@ -7,7 +7,7 @@ wordcloud
 matplotlib
 beautifulsoup4
 selenium
-
 chromedriver-autoinstaller
+streamlit-option-menu
 
 

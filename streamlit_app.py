@@ -416,12 +416,12 @@ def page_intro():
         # [2] 이지영 (열정/동기부여)
         with c2:
             st.markdown(f"""
-            <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 193, 7, 0.3); height: 260px; display: flex; flex-direction: column; justify-content: space-between;'>
+            <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 193, 7, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
                 <div>
                     <b style='color: #FFC107; font-size: 20px; display:block; margin-bottom: 10px;'>이지영 (Motivation)</b>
                     <p style='font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
-                        "독기는 가장 강력한 연료입니다."<br><br>
-                        항해가 힘들고 지칠 때, 치열한 삶의 태도를 배우며 <b>정신적 엔진(Mental Engine)</b>을 재정비합니다.
+                        "인문학는 가장 강력한 연료입니다."<br><br>
+                        항해가 힘들고 지칠 때, 치열한 삶의 태도를 배우며 <b>정신적인 엔진(Mental Engine)</b>을 재정비합니다.
                     </p>
                 </div>
                 <a href="https://www.youtube.com/@leejiyoung_official" target="_blank" style='{btn_style}'>
@@ -433,12 +433,12 @@ def page_intro():
         # [3] GeniusSKLee (지성/화학)
         with c3:
             st.markdown(f"""
-            <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(0, 229, 255, 0.3); height: 260px; display: flex; flex-direction: column; justify-content: space-between;'>
+            <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(0, 229, 255, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
                 <div>
                     <b style='color: #00E5FF; font-size: 20px; display:block; margin-bottom: 10px;'>GeniusSKLee (Science)</b>
                     <p style='font-size: 15px; color: #E0E0E0; line-height: 1.6;'>
-                        "원리를 알면 세상이 보입니다."<br><br>
-                        화학적 원리를 명쾌하게 탐구하며, 전공 분야인 <b>식품 및 화학에 대한 논리적 깊이</b>를 다집니다.
+                        "영화를 보면 세상이 보입니다."<br><br>
+                        다양한 소재와 장르의 영화를 보고, 분석하며 <b>사회와 문화에 대한 교양</b>을 정비합니다.
                     </p>
                 </div>
                 <a href="https://www.youtube.com/@GeniusSKLee" target="_blank" style='{btn_style}'>
@@ -736,6 +736,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

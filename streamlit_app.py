@@ -730,6 +730,22 @@ def page_company_info():
     st.write("각 기업 행성의 주요 임무(비전)와 통신 채널을 분석한 데이터 카드입니다.")
     st.markdown("---")
 
+    # 버튼 스타일 정의 (밝은 회색 배경 + 검은 글씨)
+    btn_style = """
+        display: block;
+        width: 100%;
+        background-color: #E0E0E0; 
+        color: #000000 !important; 
+        text-align: center;
+        padding: 10px 0;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        border: 1px solid #BDBDBD;
+        font-size: 15px;
+        transition: 0.3s;
+    """
+
     for i in range(0, len(company_details), 2):
         cols = st.columns(2)
         for j in range(2):
@@ -737,18 +753,18 @@ def page_company_info():
                 c = company_details[i+j]
                 with cols[j]:
                     with st.expander(f"**[Rank {c['순위']}] {c['기업명']} 시스템**", expanded=True):
-                        # [수정] 가시성이 좋은 파란 계열(Neon Blue & Light Sky)로 텍스트 스타일링 적용
+                        # [가시성 강화] 텍스트 스타일링 (네온 블루 & 스카이 블루)
                         st.markdown(f"""
-                        <div style='line-height: 1.8; margin-bottom: 10px;'>
-                            <div>
+                        <div style='line-height: 1.8; margin-bottom: 15px;'>
+                            <div style='margin-bottom: 5px;'>
                                 <span style='color: #00B0FF; font-weight: bold; font-size: 16px;'>📝 개요:</span>
                                 <span style='color: #B3E5FC;'>{c['소개']}</span>
                             </div>
-                            <div style='margin-top: 5px;'>
+                            <div style='margin-bottom: 5px;'>
                                 <span style='color: #00B0FF; font-weight: bold; font-size: 16px;'>🛒 주력:</span>
                                 <span style='color: #B3E5FC;'>{c['주력제품']}</span>
                             </div>
-                            <div style='margin-top: 5px;'>
+                            <div>
                                 <span style='color: #00B0FF; font-weight: bold; font-size: 16px;'>🔭 비전:</span>
                                 <span style='color: #B3E5FC;'>{c['비전']}</span>
                             </div>
@@ -757,10 +773,12 @@ def page_company_info():
                         
                         st.markdown("<div style='margin: 10px 0; border-top: 1px solid rgba(41, 182, 246, 0.3);'></div>", unsafe_allow_html=True)
                         
+                        # [수정] 잘 보이는 커스텀 버튼으로 교체
                         b1, b2 = st.columns(2)
-                        # 버튼은 Streamlit 기본 스타일 유지 (필요시 커스텀 HTML로 변경 가능)
-                        with b1: st.link_button("🏠 홈페이지", c["홈페이지"], use_container_width=True)
-                        with b2: st.link_button("📺 유튜브", c["유튜브"], use_container_width=True)
+                        with b1: 
+                            st.markdown(f'<a href="{c["홈페이지"]}" target="_blank" style="{btn_style}">🏠 홈페이지</a>', unsafe_allow_html=True)
+                        with b2: 
+                            st.markdown(f'<a href="{c["유튜브"]}" target="_blank" style="{btn_style}">📺 유튜브</a>', unsafe_allow_html=True)
 
 # =========================================================
 # 5. 심우주 탐사: 학술 연구 트렌드 (Research)
@@ -903,6 +921,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

@@ -13,16 +13,14 @@ import random
 from collections import Counter
 from streamlit_option_menu import option_menu
 
-# ==========================================
-# [설정] 페이지 및 테마 설정
-# ==========================================
+# 페이지 및 테마 설정
 st.set_page_config(
     page_title="진로 탐색 포트폴리오",
     page_icon="🌌",
     layout="wide"
 )
 
-# [디자인] 폰트 설정
+# 폰트 설정
 system_name = platform.system()
 font_path = None
 
@@ -43,12 +41,10 @@ else:
 
 plt.rcParams['axes.unicode_minus'] = False
 
-
-# [디자인] 커스텀 CSS 
+# 커스텀 CSS 적용
 def apply_custom_theme():
     st.markdown("""
     <style>
-        /* 1. 전체 앱 배경 및 폰트 설정 (기존 유지) */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
@@ -71,7 +67,7 @@ def apply_custom_theme():
             color: #E0E0E0 !important;
         }
 
-        /* 2. 컨테이너 스타일 (기존 유지) */
+        /* 컨테이너 스타일 */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -82,7 +78,7 @@ def apply_custom_theme():
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* 3. 버튼 스타일 (기존 유지) */
+        /* 버튼 스타일 */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -99,7 +95,7 @@ def apply_custom_theme():
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
-        /* 4. 탭 스타일 (기존 유지) */
+        /* 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -117,16 +113,13 @@ def apply_custom_theme():
             border-radius: 10px;
         }
 
-        /* 5. [중요 수정] 입력 필드 (Selectbox, Multiselect) 스타일 */
-        
-        /* 입력창 박스 배경: 밝은 회색 (#F0F0F0) */
+        /* 입력 필드 (Selectbox) 스타일 */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="base-input"] {
             background-color: #F0F0F0 !important;
             border: 1px solid #4FC3F7 !important;
         }
         
-        /* 입력창 내부 텍스트: 완전한 검은색 (#000000)으로 변경 */
         div[data-baseweb="select"] span,
         div[data-baseweb="base-input"] input {
             color: #000000 !important; 
@@ -134,30 +127,25 @@ def apply_custom_theme():
             font-weight: bold !important;
         }
 
-        /* 드롭다운 메뉴 아이콘(화살표) 색상: 검은색 */
         div[data-baseweb="select"] svg {
             fill: #000000 !important;
         }
 
-        /* 드롭다운 메뉴 리스트 (팝업) 배경: 흰색 */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
         
-        /* 드롭다운 메뉴 리스트 내부 글씨: 검은색 */
         ul[data-baseweb="menu"] li span {
             color: #000000 !important;
         }
         
-        /* 멀티셀렉트 태그 (선택된 항목) 스타일 */
         span[data-baseweb="tag"] {
             background-color: #0288D1 !important;
         }
         span[data-baseweb="tag"] span {
-            color: white !important; /* 태그 안의 글씨는 흰색 유지 */
+            color: white !important;
         }
 
-        /* 애니메이션 */
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -170,14 +158,10 @@ def apply_custom_theme():
 
 apply_custom_theme()
 
-# [디자인] 차트 테마 색상
 SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#FFFFFF']
 CHART_THEME = "plotly_dark"
 
-# =========================================================
-# 공통 데이터 관리 함수
-# =========================================================
-
+# 데이터 로드 함수
 @st.cache_data
 def load_data(file_path):
     if not os.path.exists(file_path):
@@ -311,9 +295,7 @@ def get_company_data():
     ]
     return df_map, company_details
 
-# =========================================================
-# 0. 프롤로그: 제목 및 오프닝 페이지
-# =========================================================
+# 프롤로그 페이지
 def page_title_screen():
     st.markdown("""
     <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
@@ -342,16 +324,12 @@ def page_title_screen():
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
         st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
 
-# =========================================================
-# 1. 항해 시작: 탐색자 프로필 (Intro)
-# =========================================================
+# 항해 시작 (Intro)
 def page_intro():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
-    # 레이아웃 컬럼 설정
     col1, col2, col3 = st.columns([1.3, 2, 1.3], gap="medium")
     
-    # --- [좌측] 이모티콘 프로필 ---
     with col1:
         st.markdown(
             """
@@ -368,12 +346,10 @@ def page_intro():
                 '>
                     👨🏻‍🚀
                 </div>
-                
             </div>
             """, unsafe_allow_html=True
         )
 
-    # --- [중앙] 소개글 ---
     with col2:
         st.markdown("<h2 style='margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.5);'>탐색자: 정지호</h2>", unsafe_allow_html=True)
         
@@ -402,7 +378,6 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-    # --- [우측] 핵심 역량 ---
     with col3:
         st.markdown("##### ⚡ Core Booster Systems")
         st.markdown("""
@@ -438,7 +413,6 @@ def page_intro():
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # 탭 부분
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (2025-2)", "🌌 탐사 연료 주입 (취미)", "🎯 본 프로젝트 목표"])
 
     with tab1:
@@ -494,7 +468,6 @@ def page_intro():
     with tab2:
         st.subheader("🌌 취미 & 영감 (Hobby & Inspiration)")
 
-        # 1. 섹션 소개글 
         st.markdown("""
         <div style='background: rgba(255, 64, 129, 0.1); padding: 25px; border-radius: 15px; border-left: 5px solid #FF4081; margin-bottom: 25px;'>
             <h5 style='color: #FF4081 !important; margin: 0; display: flex; align-items: center;'>
@@ -507,10 +480,8 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-        # 2. 유튜버 카드 리스트 (3열 배치)
         c1, c2, c3 = st.columns(3)
 
-        # 공통 버튼 스타일 정의 (밝은 회색 배경, 검은 글씨)
         btn_style = """
             display: block;
             width: 100%;
@@ -526,7 +497,6 @@ def page_intro():
             border: 1px solid #BDBDBD;
         """
 
-        # [1] 빵딘 (감성/베이킹)
         with c1:
             st.markdown(f"""
             <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 64, 129, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
@@ -543,7 +513,6 @@ def page_intro():
             </div>
             """, unsafe_allow_html=True)
 
-        # [2] 이지영 (인문학학)
         with c2:
             st.markdown(f"""
             <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 193, 7, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
@@ -560,7 +529,6 @@ def page_intro():
             </div>
             """, unsafe_allow_html=True)
 
-        # [3] GeniusSKLee (영화)
         with c3:
             st.markdown(f"""
             <div style='background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; border: 1px solid rgba(0, 229, 255, 0.3); height: 300px; display: flex; flex-direction: column; justify-content: space-between;'>
@@ -596,9 +564,7 @@ def page_intro():
         </div>
         """, unsafe_allow_html=True)
 
-# =========================================================
-# 2. 신호 탐지: 식품 트렌드 분석 (Trend)
-# =========================================================
+# 신호 탐지 (Trend)
 def page_keyword_analysis():
     st.title("📡 신호 탐지: 2025 식품 트렌드 분석")
     st.markdown("Google Trend 데이터를 레이더로 활용하여 **소비자 관심도 신호**를 포착합니다. 좌측의 **탐지기 설정**을 클릭하여 추적할 신호들을 정하세요.")
@@ -611,7 +577,6 @@ def page_keyword_analysis():
         else:
             df.index = pd.to_datetime(df.index)
         
-        # [수정] 컬럼명 정리
         df.columns = [col.replace(' (South Korea)', '') for col in df.columns]
 
         for col in df.columns:
@@ -621,7 +586,6 @@ def page_keyword_analysis():
         st.error(f"데이터 처리 오류: {e}")
         return
 
-    # [분석 데이터] 트렌드 인사이트 사전
     trend_insights = {
         "Matcha": "🍵 **Matcha (말차)**: 2020년 대비 검색량이 가장 가파르게 급증한 '메가 트렌드'입니다. 그간 디저트 및 음료 시장에서 유행을 타지 않는 '스테디셀러'로 자리 잡았으며, 2025년에는 미국에서의 선풍적인 인기로 검색량이 급증했습니다.",
         "Zero": "🥤 **Zero (제로)**: 5년 내내 가장 높은 베이스라인(기본 관심도)을 유지하는 강력한 키워드입니다. 초기 '제로 콜라' 중심에서 소주, 과자 등 식품 전반으로 '제로 슈거' 열풍이 확산되며 우상향 곡선을 그리고 있습니다.",
@@ -639,7 +603,6 @@ def page_keyword_analysis():
         st.warning("추적할 신호를 선택하세요.")
         return
 
-    # 1. 그래프 영역
     st.subheader("📊 최근 5개년 키워드 신호 강도 변화")
     fig = px.line(
         df, y=selected_keywords,
@@ -651,7 +614,6 @@ def page_keyword_analysis():
                       font=dict(color="white"))
     st.plotly_chart(fig, use_container_width=True)
 
-    # 2. 선택 키워드 개별 인사이트
     st.markdown("##### 🧐 선택한 신호(키워드) 정밀 분석")
     for key in selected_keywords:
         if key in trend_insights:
@@ -662,7 +624,6 @@ def page_keyword_analysis():
     st.caption("※ 데이터 출처: Google Trends (2025년 핵심 키워드 5개 분석 - 대한민국 기준)")
     st.divider()
 
-    # 3. 수치 요약
     st.subheader("📊 최근 4주 트렌드 요약")
     cols = st.columns(4)
     for i, key in enumerate(selected_keywords):
@@ -673,10 +634,8 @@ def page_keyword_analysis():
 
     st.divider()
     
-    # 4. 상관관계 분석 (화면 분할)
     col_h1, col_h2 = st.columns([1.5, 1.2])
     
-    # [왼쪽] 히트맵 차트
     with col_h1:
         st.subheader("🔗 신호 상관관계 매트릭스")
         if len(selected_keywords) >= 2:
@@ -687,15 +646,12 @@ def page_keyword_analysis():
         else:
             st.warning("상관관계를 분석하려면 2개 이상의 신호를 선택하세요.")
 
-    # [오른쪽] 탐사 인사이트 (개선된 로직)
     with col_h2:
         st.markdown("#### 💡 탐사 인사이트 (Correlation)")
         
         if len(selected_keywords) < 2:
             st.write("신호가 충분하지 않아 분석할 수 없습니다.")
-        
         else:
-            # 상관관계 매트릭스에서 모든 쌍 추출 (중복 제거)
             corr_matrix = df[selected_keywords].corr()
             pairs = []
             columns = corr_matrix.columns
@@ -706,7 +662,6 @@ def page_keyword_analysis():
                     val = corr_matrix.loc[col1, col2]
                     pairs.append({'pair': (col1, col2), 'value': val})
             
-            # 분석 로직: 쌍이 1개뿐인 경우와 여러 개일 경우 분기 처리
             if len(pairs) == 1:
                 p = pairs[0]
                 val = p['value']
@@ -724,15 +679,10 @@ def page_keyword_analysis():
                 """, unsafe_allow_html=True)
                 
             else:
-                # 3가지 핵심 인사이트 추출
-                # 1. 가장 양의 상관관계 (Max)
                 max_pos = max(pairs, key=lambda x: x['value'])
-                # 2. 가장 음의 상관관계 (Min) - 음수가 없으면 가장 낮은 값
                 max_neg = min(pairs, key=lambda x: x['value'])
-                # 3. 0에 가장 가까운 관계 (Min Abs)
                 closest_zero = min(pairs, key=lambda x: abs(x['value']))
                 
-                # 시각화 함수
                 def display_card(title, pair, val, color, desc):
                     st.markdown(f"""
                     <div style='background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:10px; border-left: 4px solid {color};'>
@@ -742,28 +692,21 @@ def page_keyword_analysis():
                     </div>
                     """, unsafe_allow_html=True)
 
-                # 1. Best Synergy (가장 높은 양의 상관관계)
                 desc_pos = "두 관심사는 강력한 동반 상승 패턴을 보입니다." if max_pos['value'] > 0.5 else "가장 비슷한 흐름을 보이지만, 연관성은 약합니다."
                 display_card("🔥 최고 시너지 (Max Positive)", max_pos['pair'], max_pos['value'], "#FF4081", desc_pos)
 
-                # 2. Top Conflict (가장 낮은/음의 상관관계)
                 desc_neg = "한쪽이 뜨면 한쪽이 지는 역의 관계입니다." if max_neg['value'] < -0.3 else "서로 가장 관련성이 적거나 상반된 흐름입니다."
                 display_card("🧊 상반된 흐름 (Max Negative)", max_neg['pair'], max_neg['value'], "#00E5FF", desc_neg)
 
-                # 3. Most Independent (0에 가장 가까움)
-                # 중복 방지: 이미 위에서 보여준 것과 겹치지 않을 때만 표시하거나, 의미가 다르면 표시
                 if closest_zero != max_pos and closest_zero != max_neg:
                     display_card("⚖️ 독립적 관계 (Independent)", closest_zero['pair'], closest_zero['value'], "#C6FF00", "서로 영향을 주지 않고 독자적으로 움직입니다.")
 
-# =========================================================
-# 3. 행성 좌표: 식품 기업 거점 지도 (Map)
-# =========================================================
+# 행성 좌표 (Map)
 def page_map_visualization():
     df_map, _ = get_company_data()
 
     st.title("🪐 행성 좌표: 식품 기업 10대 거점")
     
-    # 구체적인 기획 의도 및 설명
     st.markdown("""
     <div style='background: rgba(0, 229, 255, 0.1); padding: 20px; border-radius: 15px; border-left: 5px solid #00E5FF; margin-bottom: 25px;'>
         <h5 style='color: #00E5FF !important; margin: 0;'>🗺️ 진로 탐색을 위한 성도(Star Map) 작성</h5>
@@ -811,7 +754,6 @@ def page_map_visualization():
 
     st.divider()
 
-    # 데이터 출처 및 링크
     col_source, col_next = st.columns([2, 1])
     
     with col_source:
@@ -840,9 +782,8 @@ def page_map_visualization():
         </a>
         """, unsafe_allow_html=True)
 
-    # 다음 페이지 안내 (Transition Teaser)
     with col_next:
-        st.markdown("<br>", unsafe_allow_html=True) # 레이아웃 줄맞춤용 공백
+        st.markdown("<br>", unsafe_allow_html=True) 
         st.info("""
         **👉 다음 단계 안내 (Next Step)**\n
         각 기업 행성의 상세 스펙(개요, 주력 상품, 비전)은 
@@ -850,9 +791,7 @@ def page_map_visualization():
         정밀 분석합니다.
         """)
 
-# =========================================================
-# 4. 상세 데이터: 기업 정보 분석 (Info)
-# =========================================================
+# 기업 상세 데이터 (Info)
 def page_company_info():
     _, company_details = get_company_data()
 
@@ -860,28 +799,24 @@ def page_company_info():
     st.write("각 기업 행성의 개요, 주력 상품, 그리고 비전을 분석한 데이터 카드입니다.")
     st.markdown("---")
 
-    # [디자인 수정] Expander 제목과 아이콘 색상을 '진한 회색(Blue Grey)' 톤으로 변경
     st.markdown("""
     <style>
-        /* Expander 제목 텍스트: 너무 밝지 않은 은회색 */
+        /* Expander 스타일 재정의 */
         div[data-testid="stExpander"] details summary p {
-            color: #495057 !important; /* Blue Grey 200 */
+            color: #495057 !important; 
             font-size: 18px !important;
             font-weight: 700 !important;
         }
-        /* Expander 화살표 아이콘 */
         div[data-testid="stExpander"] details summary svg {
             fill: #495057 !important;
             color: #495057 !important;
         }
-        /* Expander 테두리 */
         div[data-testid="stExpander"] {
             border: 1px solid rgba(176, 190, 197, 0.3);
         }
     </style>
     """, unsafe_allow_html=True)
 
-    # [버튼 수정] 배경을 조금 더 진한 회색(#BDBDBD)으로 변경하여 흰색 글씨와 대비를 줄임
     btn_style = """
         display: block;
         width: 100%;
@@ -903,10 +838,7 @@ def page_company_info():
             if i + j < len(company_details):
                 c = company_details[i+j]
                 with cols[j]:
-                    # Expander 제목은 위 CSS에 의해 진한 회색(#495057)으로 보입니다.
                     with st.expander(f"Planet {c['순위']} | {c['기업명']}", expanded=True):
-                        
-                        # [가시성 강화] 내부 텍스트 스타일링 (네온 블루 & 스카이 블루)
                         st.markdown(f"""
                         <div style='line-height: 1.8; margin-bottom: 15px;'>
                             <div style='margin-bottom: 5px;'>
@@ -926,20 +858,16 @@ def page_company_info():
                         
                         st.markdown("<div style='margin: 10px 0; border-top: 1px solid rgba(41, 182, 246, 0.3);'></div>", unsafe_allow_html=True)
                         
-                        # [커스텀 버튼] 조금 더 진한 회색 배경의 버튼
                         b1, b2 = st.columns(2)
                         with b1: 
                             st.markdown(f'<a href="{c["홈페이지"]}" target="_blank" style="{btn_style}">🏠 홈페이지</a>', unsafe_allow_html=True)
                         with b2: 
                             st.markdown(f'<a href="{c["유튜브"]}" target="_blank" style="{btn_style}">📺 유튜브</a>', unsafe_allow_html=True)
                             
-# =========================================================
-# 5. 심우주 탐사: 학술 연구 트렌드 (Research)
-# =========================================================
+# 심우주 탐사 (Research)
 def page_scholar_analysis():
     st.title("🔭 심우주 탐사: 학술 연구 데이터")
     
-    # [설명] 데이터 출처 및 방법론 (요청사항 2, 4번 반영)
     st.markdown("""
     <div style='background: rgba(41, 182, 246, 0.1); padding: 20px; border-radius: 12px; border-left: 5px solid #29B6F6; margin-bottom: 20px;'>
         <h5 style='color: #29B6F6 !important; margin: 0;'>📊 데이터 출처 및 수집 방법론 (Methodology)</h5>
@@ -958,16 +886,13 @@ def page_scholar_analysis():
     </div>
     """, unsafe_allow_html=True)
 
-    # [인사이트] 데이터의 의미 (요청사항 3번 반영)
     st.info("💡 **Why Research Data?** 학술 논문 수의 급증은 해당 분야에 대한 **R&D 자금과 인재의 대규모 유입**을 의미합니다. 이는 곧 3~5년 후 **기술 상용화 및 시장 폭발(Growth)**을 예측할 수 있는 가장 확실한 선행 지표입니다.")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # 1. 데이터 로드 함수
     @st.cache_data
     def load_scholar_data():
         file_name = 'scholar_data.csv'
-        # 파일이 없을 경우를 대비해 CSV 내용 하드코딩 (에러 방지용)
         if not os.path.exists(file_name):
             data = {
                 "Year": range(2015, 2026),
@@ -982,48 +907,43 @@ def page_scholar_analysis():
 
     df_research = load_scholar_data()
     
-    # 2. 컨트롤 패널
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
     with st.container():
         col_in1, col_in2 = st.columns([3, 1])
         with col_in1:
-            # [디자인 수정] 검은색 글씨로 보이게 배경색이 있는 라벨 적용 (요청사항 1번 반영)
+            # 키워드 선택 박스 라벨 배경색 변경 (파란색 배경 #29B6F6 적용)
             st.markdown("""
-            <div style='background-color: #E0E0E0; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
+            <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
                 <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
             </div>
             """, unsafe_allow_html=True)
             
-            # 라벨은 위에서 커스텀으로 만들었으므로 label_visibility="collapsed" 사용
             query = st.selectbox(
                 "탐사 키워드 선택", 
                 keywords_available, 
-                index=4, # 기본값 AI 선택
+                index=4, 
                 label_visibility="collapsed"
             )
         with col_in2:
-            st.write("") # 줄맞춤용 공백
+            st.write("") 
             st.write("") 
             st.write("") 
             run_btn = st.button("🚀 탐사선 발사", use_container_width=True)
 
-    # 3. 분석 결과 시각화
     if run_btn:
         st.divider()
         status_text = st.empty()
         progress_bar = st.progress(0)
         
         with st.spinner(f"'{query}' 영역의 학술 데이터를 분석 중..."):
-            time.sleep(1.0) # 연출용 딜레이
+            time.sleep(1.0) 
             
-            # 데이터 추출
             dftrend = df_research[['Year', query]].rename(columns={query: 'Count'})
             
             progress_bar.progress(100)
             status_text.success(f"✅ 탐사 성공! {query} (2015-2025) 데이터 신호 확보.")
 
-        # [Chart] Plotly Bar Chart
         st.subheader(f"📊 {query} 연도별 연구 데이터 출판 추이")
         
         fig = px.bar(
@@ -1031,9 +951,9 @@ def page_scholar_analysis():
             x='Year', 
             y='Count', 
             text='Count',
-            template=CHART_THEME, # 기존 테마 유지
+            template=CHART_THEME, 
             color='Count', 
-            color_continuous_scale=["#00E5FF", "#E040FB"] # 네온 블루 -> 퍼플 그라데이션
+            color_continuous_scale=["#00E5FF", "#E040FB"]
         )
         
         fig.update_traces(
@@ -1052,7 +972,6 @@ def page_scholar_analysis():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        # [Metrics] 주요 통계 지표
         st.subheader("📈 탐사 데이터 분석 리포트")
         
         m1, m2, m3, m4 = st.columns(4)
@@ -1071,7 +990,6 @@ def page_scholar_analysis():
             max_year = dftrend.loc[dftrend['Count'].idxmax(), 'Year']
             st.metric("Peak 연도", f"{max_year}년")
 
-        # [Table] 상세 데이터 테이블
         st.markdown("<br>", unsafe_allow_html=True)
         with st.expander("📋 연도별 상세 데이터 로그 확인 (Data Log)"):
             st.dataframe(
@@ -1079,13 +997,11 @@ def page_scholar_analysis():
                 use_container_width=True,
                 column_config={"Year": st.column_config.NumberColumn(format="%d")}
             )
-# =========================================================
-# 6. 궤도 안착: 결론 및 제언 (Conclusion)
-# =========================================================
+
+# 궤도 안착 (Conclusion)
 def page_conclusion():
     st.title("🚩 궤도 안착: 결론 및 제언")
     
-    # [Intro] 최종 리포트 카드
     st.markdown("""
     <div style='background: linear-gradient(135deg, rgba(41, 182, 246, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%); padding: 30px; border-radius: 15px; border-left: 5px solid #29B6F6; box-shadow: 0 4px 20px rgba(41, 182, 246, 0.2);'>
         <h4 style='margin:0; color:#29B6F6 !important; display:flex; align-items:center;'>
@@ -1100,7 +1016,6 @@ def page_conclusion():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # [Main] 2단 컬럼: 핵심 발견 및 인사이트
     col1, col2 = st.columns(2, gap="medium")
     
     with col1:
@@ -1139,7 +1054,6 @@ def page_conclusion():
 
     st.divider()
 
-    # [Roadmap] 향후 계획 (Next Coordinates)
     st.subheader("📡 Next Coordinates: 차기 탐사 계획")
     st.markdown("""
     <div style='display: flex; flex-direction: column; gap: 10px; margin-top: 10px;'>
@@ -1160,7 +1074,6 @@ def page_conclusion():
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # [Footer] 명언 및 연락처 (변경된 이메일 적용)
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center;'>
@@ -1175,7 +1088,6 @@ def page_conclusion():
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # 연락처 박스
     st.markdown("""
     <div style='text-align: center; background-color: #212121; padding: 15px; border-radius: 30px; width: fit-content; margin: 0 auto; border: 1px solid #424242;'>
         <span style='margin-right: 15px; color: #B0BEC5;'>🛰️ Mission Director: <b>Jiho Jung</b></span>
@@ -1183,10 +1095,7 @@ def page_conclusion():
     </div>
     """, unsafe_allow_html=True)
 
-
-# =========================================================
 # 메인 실행 블록
-# =========================================================
 def main():
     with st.sidebar:
         st.markdown("""
@@ -1213,7 +1122,6 @@ def main():
         
         st.markdown("<p style='color: #1E88E5 !important; font-size: 14px;'>🪐 Designed by Jung Jiho</p>", unsafe_allow_html=True)
 
-    # 페이지 라우팅
     if selected == "0. 프롤로그": page_title_screen()
     elif selected == "1. 항해 시작 (Intro)": page_intro()
     elif selected == "2. 신호 탐지 (Trend)": page_keyword_analysis()
@@ -1224,39 +1132,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

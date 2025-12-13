@@ -921,59 +921,64 @@ def page_scholar_analysis():
 
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
-with st.container():
-        col_in1, col_in2 = st.columns([3, 1])
-        with col_in1:
-            # ====================================================================
-            # [수정 완료] 글씨 검은색(#000000), 배경 흰색(#FFFFFF) 강제 적용
-            # ====================================================================
-            st.markdown("""
-            <style>
-            /* 1. 선택 박스 닫혀있을 때 (보이는 글자 & 배경) */
-            div[data-baseweb="select"] > div {
-                background-color: #FFFFFF !important; /* 배경 흰색 */
-                border: 2px solid #29B6F6 !important; /* 테두리 파란색 */
-            }
-            
-            /* 2. 실제 글자 색상 (가장 중요: 검은색 강제) */
-            div[data-baseweb="select"] span {
-                color: #000000 !important;  /* 글자색: 검정 */
-                -webkit-text-fill-color: #000000 !important;
-                font-weight: bold !important;
-            }
-
-            /* 3. 화살표 아이콘 색상 (검은색) */
-            div[data-baseweb="select"] svg {
-                fill: #000000 !important;
-            }
-
-            /* 4. 클릭해서 나오는 리스트 창 (팝업) 스타일 */
-            ul[data-baseweb="menu"] {
-                background-color: #FFFFFF !important; /* 리스트 배경 흰색 */
-            }
-            ul[data-baseweb="menu"] li span {
-                color: #000000 !important; /* 리스트 글자 검은색 */
-            }
-            ul[data-baseweb="menu"] li:hover {
-                background-color: #E0E0E0 !important; /* 마우스 올리면 연회색 */
-            }
-            </style>
-            """, unsafe_allow_html=True)
-            # ====================================================================
-
-            # 라벨 부분 (파란 배경)
-            st.markdown("""
-            <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
-                <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            query = st.selectbox(
-                "탐사 키워드 선택", 
-                keywords_available, 
-                index=4, 
-                label_visibility="collapsed"
-            )
+    with st.container():
+            col_in1, col_in2 = st.columns([3, 1])
+            with col_in1:
+                # ====================================================================
+                # [수정 완료] 글씨 흰색(#FFFFFF), 배경 짙은 회색(#424242) 적용
+                # ====================================================================
+                st.markdown("""
+                <style>
+                /* 1. 선택 박스 본체 (배경: 짙은 회색) */
+                div[data-baseweb="select"] > div {
+                    background-color: #424242 !important; /* 짙은 회색 배경 */
+                    border: 2px solid #29B6F6 !important; /* 테두리 파란색 */
+                    color: #FFFFFF !important;            /* 글자 흰색 */
+                }
+                
+                /* 2. 박스 내부 텍스트 강제 흰색 */
+                div[data-baseweb="select"] span {
+                    color: #FFFFFF !important;
+                    -webkit-text-fill-color: #FFFFFF !important;
+                    font-weight: bold !important;
+                }
+    
+                /* 3. 화살표 아이콘 흰색 */
+                div[data-baseweb="select"] svg {
+                    fill: #FFFFFF !important;
+                }
+    
+                /* 4. 드롭다운 메뉴 리스트 (팝업창) */
+                ul[data-baseweb="menu"] {
+                    background-color: #424242 !important; /* 리스트 배경도 짙은 회색 */
+                }
+                
+                /* 5. 리스트 아이템 글자색 */
+                ul[data-baseweb="menu"] li span {
+                    color: #FFFFFF !important; /* 리스트 글자 흰색 */
+                }
+                
+                /* 6. 마우스 올렸을 때(Hover) 배경색 */
+                ul[data-baseweb="menu"] li:hover {
+                    background-color: #616161 !important; /* 마우스 올리면 약간 밝은 회색 */
+                }
+                </style>
+                """, unsafe_allow_html=True)
+                # ====================================================================
+    
+                # 라벨 (파란 배경)
+                st.markdown("""
+                <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
+                    <span style='color: #000000; font-weight: bold; font-size: 16px;'>📡 탐사할 신호(Keyword) 선택 (2015-2025)</span>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                query = st.selectbox(
+                    "탐사 키워드 선택", 
+                    keywords_available, 
+                    index=4, 
+                    label_visibility="collapsed"
+                )
         # ... (이후 코드는 그대로) ...
         with col_in2:
             st.write("") 
@@ -1182,6 +1187,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

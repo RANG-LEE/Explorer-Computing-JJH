@@ -618,7 +618,7 @@ def main():
             menu_icon="cast",
             default_index=0,
             styles={
-                "container": {"padding": "0!important", "background-color": "#E1DDDB"},
+                "container": {"padding": "0!important", "background-color": "#708090"},
                 "icon": {"color": "#29B6F6", "font-size": "18px"},
                 "nav-link": {"font-size": "14px", "text-align": "left", "margin":"0px", "color": "#FFFFFF"},
                 "nav-link-selected": {"background-color": "#424242", "color": "#29B6F6", "border-left": "4px solid #29B6F6"},
@@ -639,4 +639,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

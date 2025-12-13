@@ -42,9 +42,11 @@ else:
 plt.rcParams['axes.unicode_minus'] = False
 
 # 커스텀 CSS 적용
+# [디자인] 커스텀 CSS (수정됨: 입력창 글씨 짙은 파란색 적용)
 def apply_custom_theme():
     st.markdown("""
     <style>
+        /* 1. 전체 앱 배경 및 폰트 설정 (기존 유지) */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
@@ -67,7 +69,7 @@ def apply_custom_theme():
             color: #E0E0E0 !important;
         }
 
-        /* 컨테이너 스타일 */
+        /* 2. 컨테이너 스타일 (기존 유지) */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -78,7 +80,7 @@ def apply_custom_theme():
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* 버튼 스타일 */
+        /* 3. 버튼 스타일 (기존 유지) */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -95,7 +97,7 @@ def apply_custom_theme():
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
-        /* 탭 스타일 */
+        /* 4. 탭 스타일 (기존 유지) */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -113,32 +115,39 @@ def apply_custom_theme():
             border-radius: 10px;
         }
 
-        /* 입력 필드 (Selectbox) 스타일 */
+        /* 5. [중요 수정] 입력 필드 (Selectbox) 스타일 */
+        
+        /* 입력창 박스 배경: 밝은 회색 (#F0F0F0) */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="base-input"] {
             background-color: #F0F0F0 !important;
-            border: 1px solid #4FC3F7 !important;
+            border: 2px solid #29B6F6 !important; /* 테두리도 파란색 강조 */
         }
         
+        /* [수정됨] 입력창 내부 텍스트: 짙은 파란색 (#0D47A1) */
         div[data-baseweb="select"] span,
         div[data-baseweb="base-input"] input {
-            color: #000000 !important; 
-            -webkit-text-fill-color: #000000 !important;
-            font-weight: bold !important;
+            color: #0D47A1 !important; 
+            -webkit-text-fill-color: #0D47A1 !important;
+            font-weight: 800 !important; /* 폰트 더 굵게 */
         }
 
+        /* [수정됨] 드롭다운 아이콘(화살표): 짙은 파란색 */
         div[data-baseweb="select"] svg {
-            fill: #000000 !important;
+            fill: #0D47A1 !important;
         }
 
+        /* 드롭다운 메뉴 리스트 (팝업) 배경: 흰색 */
         ul[data-baseweb="menu"] {
             background-color: #FFFFFF !important;
         }
         
+        /* 드롭다운 메뉴 리스트 내부 글씨: 검은색 (가독성 유지) */
         ul[data-baseweb="menu"] li span {
             color: #000000 !important;
         }
         
+        /* 멀티셀렉트 태그 (선택된 항목) 스타일 */
         span[data-baseweb="tag"] {
             background-color: #0288D1 !important;
         }
@@ -146,6 +155,7 @@ def apply_custom_theme():
             color: white !important;
         }
 
+        /* 애니메이션 */
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -1132,3 +1142,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

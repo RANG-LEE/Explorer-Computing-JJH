@@ -917,11 +917,37 @@ def page_scholar_analysis():
 
     df_research = load_scholar_data()
     
+# ... (이전 코드는 그대로) ...
+
     keywords_available = [col for col in df_research.columns if col != 'Year']
 
     with st.container():
         col_in1, col_in2 = st.columns([3, 1])
         with col_in1:
+            # ====================================================================
+            # [수정 포인트] 여기에 CSS 스타일을 강제로 주입합니다.
+            # ====================================================================
+            st.markdown("""
+            <style>
+            /* 1. 현재 선택된 값(박스 안에 보이는 글자) 색상 변경 */
+            div[data-baseweb="select"] > div {
+                color: #E0E0E0 !important;  /* 밝은 회색 */
+                background-color: #262730; /* 박스 배경색 (필요시 조정) */
+            }
+            
+            /* 2. 드롭다운 메뉴를 클릭했을 때 나오는 리스트 아이템 색상 변경 */
+            ul[data-baseweb="menu"] li span {
+                color: #E0E0E0 !important; /* 리스트 글자색 */
+            }
+            
+            /* 3. 리스트에 마우스를 올렸을 때(Hover) 글자색 */
+            ul[data-baseweb="menu"] li:hover span {
+                color: #FFFFFF !important; /* 마우스 올리면 흰색으로 강조 */
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            # ====================================================================
+
             # 키워드 선택 박스 라벨 배경색 변경 (파란색 배경 #29B6F6 적용)
             st.markdown("""
             <div style='background-color: #29B6F6; padding: 8px 15px; border-radius: 8px 8px 0 0; display: inline-block; margin-bottom: 5px;'>
@@ -935,6 +961,8 @@ def page_scholar_analysis():
                 index=4, 
                 label_visibility="collapsed"
             )
+
+        # ... (이후 코드는 그대로) ...
         with col_in2:
             st.write("") 
             st.write("") 

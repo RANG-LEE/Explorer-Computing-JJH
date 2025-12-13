@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 import pydeck as pdk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
@@ -11,16 +10,8 @@ from matplotlib import rc, font_manager
 import platform
 import time
 import random
-import re
 from collections import Counter
-
-# 사이드바 메뉴 라이브러리
 from streamlit_option_menu import option_menu
-
-# 크롤링 관련 라이브러리 (필요시 사용)
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 
 # ==========================================
 # [설정] 페이지 및 테마 설정
@@ -31,9 +22,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# [디자인] 폰트 설정 (OS별 호환성 확보)
+# [디자인] 폰트 설정
 system_name = platform.system()
-font_path = None # 기본 초기화
+font_path = None
 
 if system_name == 'Windows':
     _font_path = "C:/Windows/Fonts/malgun.ttf"
@@ -46,47 +37,39 @@ if system_name == 'Windows':
         pass
 elif system_name == 'Darwin': 
     rc('font', family='AppleGothic')
-    font_path = '/System/Library/Fonts/AppleGothic.ttf' # Mac 기본 경로 예시
+    font_path = '/System/Library/Fonts/AppleGothic.ttf'
 else:
-    # Linux (Streamlit Cloud 등)에서는 한글 폰트가 없을 수 있으므로 기본 설정 유지
     plt.rcParams['font.family'] = 'sans-serif'
 
 plt.rcParams['axes.unicode_minus'] = False
 
-# [디자인] 커스텀 CSS (High Visibility Dark Theme)
+# [디자인] 커스텀 CSS
 def apply_custom_theme():
     st.markdown("""
     <style>
-        /* 1. 전체 배경: 가시성이 좋은 밝은 다크 그레이 (Titanium Gray) */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
         }
-        
-        /* 2. 텍스트 스타일: 선명한 흰색 및 네온 포인트 */
         h1, h2, h3 {
             color: #FFFFFF !important;
             font-family: 'AppleGothic', 'Malgun Gothic', sans-serif;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         h4, h5, h6 {
-            color: #4FC3F7 !important; /* 밝은 하늘색 포인트 */
+            color: #4FC3F7 !important;
             text-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
         }
-        /* 본문 텍스트 가독성 강화 */
         p, .stMarkdown, label, li, span, div {
             color: #FFFFFF !important; 
             line-height: 1.8;
             font-size: 16px;
         }
-        /* 작은 설명 텍스트는 약간 연하게 */
         .stCaption {
             color: #E0E0E0 !important;
         }
-
-        /* 3. 컨테이너 박스: 가독성을 위한 반투명 화이트 배경 */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
-            background: rgba(255, 255, 255, 0.1); /* 배경을 좀 더 밝게 */
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -94,8 +77,6 @@ def apply_custom_theme():
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
-        
-        /* 4. 버튼 스타일: 눈에 잘 띄는 그라데이션 */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -111,15 +92,13 @@ def apply_custom_theme():
             transform: scale(1.03);
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
-
-        /* 5. 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
             padding: 8px;
         }
         .stTabs [data-baseweb="tab"] {
-            color: #B3E5FC; /* 탭 글씨 밝게 */
+            color: #B3E5FC;
             font-weight: 700;
             font-size: 16px;
         }
@@ -129,8 +108,6 @@ def apply_custom_theme():
             border: 1px solid #29B6F6;
             border-radius: 10px;
         }
-
-        /* 6. 타이틀 애니메이션 */
         @keyframes slideUp {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -143,32 +120,16 @@ def apply_custom_theme():
 
 apply_custom_theme()
 
-# [디자인] 차트 테마 색상 (High Contrast Palette)
+# [디자인] 차트 테마 색상
 SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#FFFFFF']
 CHART_THEME = "plotly_dark"
 
 # =========================================================
-# 0. 공통 데이터 관리 함수 (Data Loader)
+# 공통 데이터 관리 함수
 # =========================================================
-
-@st.cache_resource
-def get_driver():
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    try:
-        import chromedriver_autoinstaller
-        chromedriver_autoinstaller.install()
-        driver = webdriver.Chrome(options=options)
-        return driver
-    except:
-        return None
 
 @st.cache_data
 def load_data(file_path):
-    # 파일이 없으면 더미 데이터 생성
     if not os.path.exists(file_path):
         dates = pd.date_range(start="2024-01-01", periods=52, freq="W")
         data = {
@@ -224,7 +185,6 @@ def get_company_data():
 # 0. 프롤로그: 제목 및 오프닝 페이지
 # =========================================================
 def page_title_screen():
-    # 배경에 은은한 오로라 효과
     st.markdown("""
     <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
                 background: radial-gradient(circle at 50% 10%, rgba(79, 195, 247, 0.15) 0%, transparent 40%);'></div>
@@ -252,19 +212,16 @@ def page_title_screen():
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
         st.markdown("<div style='text-align:center; color:#B0BEC5 !important;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
 
-
-# =========================================================
-# 1. 항해 시작: 탐색자 프로필 (Intro)
-# =========================================================
 # =========================================================
 # 1. 항해 시작: 탐색자 프로필 (Intro)
 # =========================================================
 def page_intro():
     st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
     
+    # 레이아웃 컬럼 설정
     col1, col2, col3 = st.columns([1.3, 2, 1.3], gap="medium")
     
-    # --- [좌측] 심플한 이모티콘 프로필 ---
+    # --- [좌측] 이모티콘 프로필 ---
     with col1:
         st.markdown(
             """
@@ -451,7 +408,7 @@ def page_intro():
             </ul>
         </div>
         """, unsafe_allow_html=True)
-        
+
 # =========================================================
 # 2. 신호 탐지: 식품 트렌드 분석 (Trend)
 # =========================================================
@@ -489,7 +446,6 @@ def page_keyword_analysis():
         template=CHART_THEME,
         color_discrete_sequence=SPACE_PALETTE
     )
-    # 차트 배경 투명화 및 폰트 흰색
     fig.update_layout(hovermode="x unified", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
                       font=dict(color="white"))
     st.plotly_chart(fig, use_container_width=True)
@@ -542,11 +498,11 @@ def page_map_visualization():
             data=df_map,
             get_position='[lon, lat]',
             get_radius=2000,
-            get_fill_color='[224, 64, 251, 150]', # Neon Purple
+            get_fill_color='[224, 64, 251, 150]', 
             pickable=True,
             stroked=True,
             filled=True,
-            get_line_color=[0, 229, 255], # Neon Cyan Border
+            get_line_color=[0, 229, 255], 
             get_line_width=150
         )
         view_state = pdk.ViewState(latitude=36.5, longitude=127.5, zoom=6, pitch=30)
@@ -606,7 +562,7 @@ def page_scholar_analysis():
         
         with st.spinner(f"'{query}' 영역으로 탐사선을 보내는 중..."):
             time.sleep(1.5)
-            # 가상 데이터
+            # 가상 데이터 생성
             base_years = [2021, 2022, 2023, 2024, 2025]
             simulated_count = 60
             all_years = random.choices(base_years, k=simulated_count)
@@ -628,7 +584,7 @@ def page_scholar_analysis():
 
         st.subheader("🌌 핵심 신호 클라우드")
         
-        # WordCloud 생성 (font_path가 None이면 기본 폰트 사용)
+        # WordCloud 생성 옵션 설정
         wc_args = {
             "width": 800, 
             "height": 400,
@@ -636,11 +592,14 @@ def page_scholar_analysis():
             "colormap": "cool",
             "max_words": 50
         }
+        
+        # 폰트 경로가 유효한 경우에만 옵션에 추가 (오류 방지)
         if font_path and os.path.exists(font_path):
             wc_args["font_path"] = font_path
             
         wc = WordCloud(**wc_args).generate(dummy_text)
         
+        # Matplotlib Figure 생성
         fig_wc, ax = plt.subplots(figsize=(10, 5))
         ax.imshow(wc, interpolation='bilinear')
         ax.axis("off")
@@ -686,7 +645,6 @@ def page_conclusion():
 # =========================================================
 def main():
     with st.sidebar:
-        # 👇 [수정] 제목 뒤에 배경색 박스를 추가하는 코드입니다.
         st.markdown("""
         <div style='background-color: #383838; padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3);'>
             <h2 style='color: #FFFFFF !important; margin: 0; font-size: 22px; text-shadow: none;'>
@@ -694,8 +652,6 @@ def main():
             </h2>
         </div>
         """, unsafe_allow_html=True)
-        
-        # ... (아래 option_menu 코드는 그대로 두세요) ...
         
         selected = option_menu(
             menu_title=None,
@@ -711,7 +667,6 @@ def main():
             }
         )
         
-        # [수정] !important 추가로 색상 강제 적용
         st.markdown("<p style='color: #1E88E5 !important; font-size: 14px;'>🪐 Designed by Jung Jiho</p>", unsafe_allow_html=True)
 
     # 페이지 라우팅
@@ -725,11 +680,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-

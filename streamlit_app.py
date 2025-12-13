@@ -43,11 +43,12 @@ else:
 
 plt.rcParams['axes.unicode_minus'] = False
 
-# [디자인] 커스텀 CSS (수정됨: 입력창 가시성 해결)
+
+# [디자인] 커스텀 CSS 
 def apply_custom_theme():
     st.markdown("""
     <style>
-        /* 1. 전체 앱 배경 및 폰트 설정 */
+        /* 1. 전체 앱 배경 및 폰트 설정 (기존 유지) */
         .stApp {
             background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
             color: #FFFFFF;
@@ -70,7 +71,7 @@ def apply_custom_theme():
             color: #E0E0E0 !important;
         }
 
-        /* 2. 컨테이너 스타일 (투명도 및 블러 효과) */
+        /* 2. 컨테이너 스타일 (기존 유지) */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -81,7 +82,7 @@ def apply_custom_theme():
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* 3. 버튼 스타일 */
+        /* 3. 버튼 스타일 (기존 유지) */
         .stButton>button {
             background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
             color: white !important;
@@ -98,7 +99,7 @@ def apply_custom_theme():
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
-        /* 4. 탭 스타일 */
+        /* 4. 탭 스타일 (기존 유지) */
         .stTabs [data-baseweb="tab-list"] {
             background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -116,34 +117,44 @@ def apply_custom_theme():
             border-radius: 10px;
         }
 
-        /* 5. [수정됨] 입력 필드 (Selectbox, Multiselect) 가시성 해결 */
-        /* 입력창 배경을 어두운 회색으로, 테두리를 파란색으로 변경 */
+        /* 5. [중요 수정] 입력 필드 (Selectbox, Multiselect) 스타일 */
+        
+        /* 입력창 박스 배경: 밝은 회색 (#F0F0F0) */
         div[data-baseweb="select"] > div, 
         div[data-baseweb="base-input"] {
-            background-color: #424242 !important;
+            background-color: #F0F0F0 !important;
             border: 1px solid #4FC3F7 !important;
-            color: white !important;
         }
         
-        /* 입력창 내부 텍스트 색상 (흰색) */
+        /* 입력창 내부 텍스트: 짙은 회색 (#333333) - 요청사항 반영 */
         div[data-baseweb="select"] span,
         div[data-baseweb="base-input"] input {
-            color: white !important;
-            -webkit-text-fill-color: white !important; /* 크롬/사파리 호환 */
+            color: #333333 !important; 
+            -webkit-text-fill-color: #333333 !important;
+            font-weight: bold !important;
         }
 
-        /* 드롭다운 메뉴 (옵션 리스트) 배경 및 글씨 */
-        ul[data-baseweb="menu"] {
-            background-color: #333333 !important;
+        /* 드롭다운 메뉴 아이콘(화살표) 색상: 짙은 회색 */
+        div[data-baseweb="select"] svg {
+            fill: #333333 !important;
         }
+
+        /* 드롭다운 메뉴 리스트 (팝업) 배경: 흰색 */
+        ul[data-baseweb="menu"] {
+            background-color: #FFFFFF !important;
+        }
+        
+        /* 드롭다운 메뉴 리스트 내부 글씨: 짙은 회색 */
         ul[data-baseweb="menu"] li span {
-            color: white !important;
+            color: #333333 !important;
         }
         
         /* 멀티셀렉트 태그 (선택된 항목) 스타일 */
         span[data-baseweb="tag"] {
             background-color: #0288D1 !important;
-            color: white !important;
+        }
+        span[data-baseweb="tag"] span {
+            color: white !important; /* 태그 안의 글씨는 흰색 유지 */
         }
 
         /* 애니메이션 */
@@ -1213,6 +1224,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 

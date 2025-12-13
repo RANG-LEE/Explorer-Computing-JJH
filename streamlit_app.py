@@ -23,7 +23,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
 # ==========================================
-# [설정] 페이지 및 테마 설정 (Deep Space Theme)
+# [설정] 페이지 및 테마 설정
 # ==========================================
 st.set_page_config(
     page_title="진로 탐색 포트폴리오",
@@ -47,99 +47,99 @@ else:
     pass
 plt.rcParams['axes.unicode_minus'] = False
 
-# [디자인] 커스텀 CSS (Real Deep Space & Star Animation)
-def apply_deep_space_theme():
+# [디자인] 커스텀 CSS (High Visibility Dark Theme)
+def apply_custom_theme():
     st.markdown("""
     <style>
-        /* 1. 전체 배경: 깊은 우주 그라데이션 + 별 애니메이션 준비 */
+        /* 1. 전체 배경: 가시성이 좋은 밝은 다크 그레이 (Titanium Gray) */
         .stApp {
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            color: #E0E0FF;
+            background: linear-gradient(135deg, #434343 0%, #2b2b2b 100%);
+            color: #FFFFFF;
         }
         
-        /* 2. 텍스트 스타일: 네온 글로우 효과 */
+        /* 2. 텍스트 스타일: 선명한 흰색 및 네온 포인트 */
         h1, h2, h3 {
             color: #FFFFFF !important;
             font-family: 'AppleGothic', 'Malgun Gothic', sans-serif;
-            text-shadow: 0 0 10px #00D2FF, 0 0 20px #7B2CBF;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         h4, h5, h6 {
-            color: #00D2FF !important;
-            text-shadow: 0 0 5px #00D2FF;
+            color: #4FC3F7 !important; /* 밝은 하늘색 포인트 */
+            text-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
         }
-        p, .stMarkdown, label, li {
-            color: #B0C4DE; 
-            line-height: 1.7;
+        /* 본문 텍스트 가독성 강화 */
+        p, .stMarkdown, label, li, span, div {
+            color: #FFFFFF !important; 
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        /* 작은 설명 텍스트는 약간 연하게 */
+        .stCaption {
+            color: #E0E0E0 !important;
         }
 
-        /* 3. 컨테이너 박스: 글래스모피즘 (반투명 유리 효과) */
+        /* 3. 컨테이너 박스: 가독성을 위한 반투명 화이트 배경 */
         div[data-testid="stMetric"], div[data-testid="stExpander"], .stTabs [data-baseweb="tab-panel"] {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.1); /* 배경을 좀 더 밝게 */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            color: #E0E0FF;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
-        /* 4. 버튼 스타일: 홀로그램 버튼 */
+        /* 4. 버튼 스타일: 눈에 잘 띄는 그라데이션 */
         .stButton>button {
-            background: linear-gradient(90deg, #00D2FF 0%, #3A7BD5 100%);
-            color: white;
+            background: linear-gradient(90deg, #29B6F6 0%, #0288D1 100%);
+            color: white !important;
             border-radius: 30px;
             border: none;
             font-weight: bold;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+            font-size: 16px;
+            padding: 10px 25px;
+            box-shadow: 0 4px 15px rgba(41, 182, 246, 0.4);
             transition: all 0.3s ease;
         }
         .stButton>button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
         /* 5. 탭 스타일 */
         .stTabs [data-baseweb="tab-list"] {
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
-            padding: 5px;
+            padding: 8px;
         }
         .stTabs [data-baseweb="tab"] {
-            color: #7B2CBF;
-            font-weight: 600;
+            color: #B3E5FC; /* 탭 글씨 밝게 */
+            font-weight: 700;
+            font-size: 16px;
         }
         .stTabs [aria-selected="true"] {
-            background-color: rgba(123, 44, 191, 0.2) !important;
-            color: #00D2FF !important;
-            border: 1px solid #00D2FF;
+            background-color: rgba(41, 182, 246, 0.2) !important;
+            color: #FFFFFF !important;
+            border: 1px solid #29B6F6;
             border-radius: 10px;
         }
 
-        /* 6. 타이틀 페이지 전용 애니메이션 (Fade In) */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
+        /* 6. 타이틀 애니메이션 */
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        .title-animate {
-            animation: fadeIn 3s ease-in-out forwards;
-        }
-        .subtitle-animate {
-            animation: fadeIn 3s ease-in-out 1s forwards; /* 1초 뒤 시작 */
-            opacity: 0;
-        }
-        .name-animate {
-            animation: fadeIn 3s ease-in-out 2s forwards; /* 2초 뒤 시작 */
-            opacity: 0;
+        .animate-text {
+            animation: slideUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
     </style>
     """, unsafe_allow_html=True)
 
-apply_deep_space_theme()
+apply_custom_theme()
 
-# [디자인] 차트 테마 색상 (Deep Space Neon Palette)
-# Cyan, Purple, Magenta, Bright Blue, White
-SPACE_PALETTE = ['#00E5FF', '#D500F9', '#FF4081', '#2979FF', '#FFFFFF']
+# [디자인] 차트 테마 색상 (High Contrast Palette)
+# Cyan, Pink, Violet, Lime, White
+SPACE_PALETTE = ['#00E5FF', '#FF4081', '#E040FB', '#C6FF00', '#FFFFFF']
 CHART_THEME = "plotly_dark"
 
 # =========================================================
@@ -215,28 +215,25 @@ def get_company_data():
     return df_map, company_details
 
 # =========================================================
-# 0. 프롤로그: 제목 및 오프닝 페이지 (NEW!)
+# 0. 프롤로그: 제목 및 오프닝 페이지
 # =========================================================
 def page_title_screen():
-    # 배경에 별 애니메이션을 위한 HTML/CSS 주입 (이 페이지에만 강력하게 적용)
+    # 배경에 은은한 오로라 효과
     st.markdown("""
-    <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: -1;'>
-        <div style='position: absolute; width: 1px; height: 1px; background: white; box-shadow: 10vw 10vh white, 20vw 20vh white, 30vw 5vh white, 50vw 80vh white, 80vw 10vh white; animation: twinkle 5s infinite;'></div>
-    </div>
+    <div style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
+                background: radial-gradient(circle at 50% 10%, rgba(79, 195, 247, 0.15) 0%, transparent 40%);'></div>
     """, unsafe_allow_html=True)
 
-    # 화면 중앙 정렬을 위한 여백
     st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
     
-    # 제목 섹션 (애니메이션 적용)
     st.markdown("""
     <div style='text-align: center;'>
-        <h1 class='title-animate' style='font-size: 80px; margin-bottom: 20px;'>🌌 진로 탐색 포트폴리오</h1>
-        <h3 class='subtitle-animate' style='font-size: 28px; color: #00D2FF; font-weight: 300;'>
+        <h1 class='animate-text' style='font-size: 80px; margin-bottom: 20px; color: #FFFFFF;'>🌌 진로 탐색 포트폴리오</h1>
+        <h3 class='animate-text' style='font-size: 28px; color: #4FC3F7; font-weight: 300; animation-delay: 0.3s;'>
             2025-2 컴퓨팅 탐색 실생활에서 활용하기 기말과제
         </h3>
         <br>
-        <h2 class='name-animate' style='font-size: 36px; color: #FFFFFF;'>
+        <h2 class='animate-text' style='font-size: 36px; color: #FFFFFF; animation-delay: 0.6s;'>
             Explorer. 정지호
         </h2>
     </div>
@@ -244,30 +241,29 @@ def page_title_screen():
 
     st.markdown("<br><br><br>", unsafe_allow_html=True)
     
-    # 중앙 버튼
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         st.info("👈 왼쪽 메뉴바에서 [항해 시작]을 눌러 여정을 시작하세요.")
-        st.caption("Designed for Deep Space Exploration")
+        st.markdown("<div style='text-align:center; color:#B0BEC5;'>Designed for Deep Space Exploration</div>", unsafe_allow_html=True)
 
 # =========================================================
-# 1. 항해 시작: 탐색자 프로필 (Intro) - 디자인 강화
+# 1. 항해 시작: 탐색자 프로필 (Intro)
 # =========================================================
 def page_intro():
     st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
     
-    # 3단 레이아웃 (반응형)
     col1, col2, col3 = st.columns([1.2, 2, 1.3])
     
     with col1:
-        # [수정] 프로필 이미지: 우주복 입은 남학생 느낌 (고화질 이미지 사용)
+        # [수정] 캐릭터 이미지 확대 (220px -> 280px) 및 꽉 차게 표시
         st.markdown(
             """
             <div style='display: flex; justify-content: center; align-items: center; margin: auto; position: relative;'>
                 <img src="https://images.unsplash.com/photo-1614728853913-1e22ba6e8a1e?q=80&w=2070&auto=format&fit=crop" 
-                     style='width: 220px; height: 220px; border-radius: 50%; object-fit: cover; 
-                            border: 4px solid #00D2FF; box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);'>
-                <div style='position: absolute; bottom: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; border: 1px solid #00D2FF;'>
+                     style='width: 280px; height: 280px; border-radius: 50%; object-fit: cover; object-position: center top;
+                            border: 5px solid #29B6F6; box-shadow: 0 0 35px rgba(41, 182, 246, 0.5);'>
+                <div style='position: absolute; bottom: 15px; background: rgba(0,0,0,0.85); color: #29B6F6; 
+                            padding: 8px 20px; border-radius: 25px; font-size: 16px; font-weight:bold; border: 1px solid #29B6F6;'>
                     👨‍🚀 Commander
                 </div>
             </div>
@@ -275,13 +271,13 @@ def page_intro():
         )
 
     with col2:
-        st.markdown("<h2 style='margin-bottom: 5px;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
-        st.markdown("<h4 style='margin-top: 0;'>🛰️ 식품 & 경제 융합 궤도 항해사</h4>", unsafe_allow_html=True)
+        st.markdown("<h2 style='margin-bottom: 5px; color: #FFFFFF;'>탐색자: 정지호 (Jiho Jung)</h2>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin-top: 0; color: #4FC3F7;'>🛰️ 식품 & 경제 융합 궤도 항해사</h4>", unsafe_allow_html=True)
         
         st.write("")
         st.markdown("""
-        <div style='background: rgba(0, 210, 255, 0.1); padding: 15px; border-left: 5px solid #00D2FF; border-radius: 5px;'>
-            <p style='margin: 0; color: #E0E0FF; font-size: 16px;'>
+        <div style='background: rgba(41, 182, 246, 0.1); padding: 20px; border-left: 5px solid #29B6F6; border-radius: 8px;'>
+            <p style='margin: 0; color: #FFFFFF; font-size: 17px; line-height: 1.6;'>
             <b>"식품 공학(Product)의 추진력에 경제학(Market)의 네비게이션을 더하다."</b><br>
             미지의 시장 궤도에 진입할 준비가 된 융합 인재, 정지호입니다.
             </p>
@@ -289,7 +285,7 @@ def page_intro():
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <p style='margin-top: 15px;'>
+        <p style='margin-top: 15px; font-size: 16px; color: #FFFFFF;'>
         반갑습니다. 저는 식품 산업이라는 거대한 우주에서 데이터를 나침반 삼아 새로운 기회를 탐색하고 있습니다.
         단순 전공 지식을 넘어, <b>시장 전체를 조망하는 거시적 안목</b>을 갖추기 위해 끊임없이 항로를 개척 중입니다.
         </p>
@@ -297,19 +293,17 @@ def page_intro():
 
     with col3:
         st.markdown("##### ⚡ Core Booster Systems")
-        # 네온 뱃지 스타일
         st.markdown("""
-        <div style='display: flex; flex-wrap: wrap; gap: 8px;'>
-            <span style='background: rgba(41, 121, 255, 0.2); color:#2979FF; padding: 6px 12px; border-radius: 15px; border: 1px solid #2979FF; font-weight: bold;'>🧬 식품생명공학</span>
-            <span style='background: rgba(213, 0, 249, 0.2); color:#D500F9; padding: 6px 12px; border-radius: 15px; border: 1px solid #D500F9; font-weight: bold;'>💰 금융경제</span>
-            <span style='background: rgba(0, 229, 255, 0.2); color:#00E5FF; padding: 6px 12px; border-radius: 15px; border: 1px solid #00E5FF; font-weight: bold;'>📊 데이터 분석</span>
-            <span style='background: rgba(0, 200, 83, 0.2); color:#00E676; padding: 6px 12px; border-radius: 15px; border: 1px solid #00E676; font-weight: bold;'>🛰️ R&D 탐색</span>
+        <div style='display: flex; flex-wrap: wrap; gap: 10px;'>
+            <span style='background: rgba(41, 182, 246, 0.15); color:#29B6F6; padding: 8px 15px; border-radius: 20px; border: 1px solid #29B6F6; font-weight: bold;'>🧬 식품생명공학</span>
+            <span style='background: rgba(224, 64, 251, 0.15); color:#E040FB; padding: 8px 15px; border-radius: 20px; border: 1px solid #E040FB; font-weight: bold;'>💰 금융경제</span>
+            <span style='background: rgba(0, 229, 255, 0.15); color:#00E5FF; padding: 8px 15px; border-radius: 20px; border: 1px solid #00E5FF; font-weight: bold;'>📊 데이터 분석</span>
+            <span style='background: rgba(198, 255, 0, 0.15); color:#C6FF00; padding: 8px 15px; border-radius: 20px; border: 1px solid #C6FF00; font-weight: bold;'>🛰️ R&D 탐색</span>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         st.caption("📍 Current Orbit: **Programming, Economics, Food Tech**")
 
-    # 탭 구성 (글래스모피즘 적용됨)
     st.markdown("<br>", unsafe_allow_html=True)
     tab1, tab2, tab3 = st.tabs(["📚 항해 기록 (학습)", "🌌 탐사 동기 (관심사)", "🎯 임무 목표 (프로젝트)"])
 
@@ -318,9 +312,9 @@ def page_intro():
         col_a1, col_a2 = st.columns(2)
         with col_a1:
             st.markdown("""
-            <div style='border: 1px solid #2979FF; padding: 15px; border-radius: 10px;'>
-                <h5 style='color: #2979FF !important;'>1. 주 추진체: 식품생명공학</h5>
-                <ul style='color: #B0C4DE;'>
+            <div style='border: 1px solid #29B6F6; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2);'>
+                <h5 style='color: #29B6F6 !important; font-size: 18px;'>1. 주 추진체: 식품생명공학</h5>
+                <ul style='color: #FFFFFF; margin-top: 10px;'>
                     <li>제품(Product)의 구성 원리 이해</li>
                     <li>식품화학, 미생물학 기초 설계 능력</li>
                 </ul>
@@ -328,9 +322,9 @@ def page_intro():
             """, unsafe_allow_html=True)
         with col_a2:
             st.markdown("""
-            <div style='border: 1px solid #D500F9; padding: 15px; border-radius: 10px;'>
-                <h5 style='color: #D500F9 !important;'>2. 보조 추진체: 금융경제</h5>
-                <ul style='color: #B0C4DE;'>
+            <div style='border: 1px solid #E040FB; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2);'>
+                <h5 style='color: #E040FB !important; font-size: 18px;'>2. 보조 추진체: 금융경제</h5>
+                <ul style='color: #FFFFFF; margin-top: 10px;'>
                     <li>시장(Market)의 중력과 흐름 파악</li>
                     <li>거시/미시 경제 데이터 해석 능력</li>
                 </ul>
@@ -411,8 +405,9 @@ def page_keyword_analysis():
         template=CHART_THEME,
         color_discrete_sequence=SPACE_PALETTE
     )
-    # 차트 배경 투명화
-    fig.update_layout(hovermode="x unified", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+    # 차트 배경 투명화 및 폰트 흰색
+    fig.update_layout(hovermode="x unified", plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+                      font=dict(color="white"))
     st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("📊 최근 트렌드 신호 요약")
@@ -430,7 +425,7 @@ def page_keyword_analysis():
         if len(selected_keywords) >= 2:
             corr = df[selected_keywords].corr()
             fig_corr = px.imshow(corr, text_auto=".2f", color_continuous_scale="Purples", aspect="auto", template=CHART_THEME)
-            fig_corr.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+            fig_corr.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=dict(color="white"))
             st.plotly_chart(fig_corr, use_container_width=True)
     with col_h2:
         st.markdown("#### 💡 탐사 인사이트")
@@ -451,20 +446,19 @@ def page_map_visualization():
         st.subheader("🏆 기업 행성 영향력")
         fig = px.bar(
             df_map, x="총점", y="기업명", orientation='h', text="총점",
-            color="총점", color_continuous_scale=["#00D2FF", "#2979FF"], template=CHART_THEME
+            color="총점", color_continuous_scale=["#29B6F6", "#0288D1"], template=CHART_THEME
         )
-        fig.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+        fig.update_layout(yaxis={'categoryorder':'total ascending'}, plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=dict(color="white"))
         st.plotly_chart(fig, use_container_width=True)
 
     with col_map:
         st.subheader("📍 거점 좌표 확인")
-        # PyDeck Layer (Neon Style)
         layer = pdk.Layer(
             "ScatterplotLayer",
             data=df_map,
             get_position='[lon, lat]',
             get_radius=2000,
-            get_fill_color='[213, 0, 249, 150]', # Neon Purple
+            get_fill_color='[224, 64, 251, 150]', # Neon Purple
             pickable=True,
             stroked=True,
             filled=True,
@@ -478,7 +472,6 @@ def page_map_visualization():
             layers=[layer],
             initial_view_state=view_state,
             tooltip=tooltip
-            # map_style removed for stability
         ))
 
 # =========================================================
@@ -544,9 +537,9 @@ def page_scholar_analysis():
         fig = px.bar(
             df_trend, x='Year', y='Count', text='Count',
             template=CHART_THEME,
-            color='Count', color_continuous_scale=["#00E5FF", "#D500F9"]
+            color='Count', color_continuous_scale=["#00E5FF", "#E040FB"]
         )
-        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
+        fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=dict(color="white"))
         st.plotly_chart(fig, use_container_width=True)
 
         st.subheader("🌌 핵심 신호 클라우드")
@@ -570,9 +563,9 @@ def page_conclusion():
     st.title("🚩 궤도 안착: 결론 및 제언")
     
     st.markdown("""
-    <div style='background: rgba(0, 0, 0, 0.3); padding: 25px; border-radius: 15px; border-left: 5px solid #00D2FF; box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);'>
-        <h4 style='margin:0; color:#00D2FF !important;'>💡 융합 탐사 최종 리포트</h4>
-        <p style='margin-top:15px; font-size: 16px; color: #E0E0FF;'>
+    <div style='background: rgba(0, 0, 0, 0.2); padding: 25px; border-radius: 15px; border-left: 5px solid #29B6F6; box-shadow: 0 0 20px rgba(41, 182, 246, 0.3);'>
+        <h4 style='margin:0; color:#29B6F6 !important;'>💡 융합 탐사 최종 리포트</h4>
+        <p style='margin-top:15px; font-size: 16px; color: #FFFFFF;'>
         본 프로젝트를 통해 <b>식품 공학적 도메인</b>과 <b>데이터 분석 기술</b>을 결합하여,<br>
         막연했던 진로의 우주에서 <b>시장성 있는 기회의 궤도</b>를 발견했습니다.
         </p>
@@ -595,7 +588,7 @@ def page_conclusion():
     st.markdown("---")
     st.info('**"데이터는 식품 산업이라는 우주를 여행하는 히치하이커의 안내서입니다."**')
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center; color: #546E7A;'>🛰️ Mission Director: <b>Jiho Jung</b> | 📡 Signal: jiho.foodtech@email.com</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; color: #B0BEC5;'>🛰️ Mission Director: <b>Jiho Jung</b> | 📡 Signal: jiho.foodtech@email.com</div>", unsafe_allow_html=True)
 
 # =========================================================
 # 메인 실행 블록
@@ -610,10 +603,10 @@ def main():
             menu_icon="cast",
             default_index=0,
             styles={
-                "container": {"padding": "0!important", "background-color": "#0B0D17"},
-                "icon": {"color": "#00D2FF", "font-size": "18px"},
-                "nav-link": {"font-size": "14px", "text-align": "left", "margin":"0px", "color": "#B0C4DE"},
-                "nav-link-selected": {"background-color": "#1A237E", "color": "#FFFFFF", "border-left": "3px solid #00D2FF"},
+                "container": {"padding": "0!important", "background-color": "#212121"},
+                "icon": {"color": "#29B6F6", "font-size": "18px"},
+                "nav-link": {"font-size": "14px", "text-align": "left", "margin":"0px", "color": "#FFFFFF"},
+                "nav-link-selected": {"background-color": "#424242", "color": "#29B6F6", "border-left": "4px solid #29B6F6"},
             }
         )
         st.caption("🪐 Powered by Streamlit")

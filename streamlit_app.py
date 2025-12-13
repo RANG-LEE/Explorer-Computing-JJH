@@ -137,14 +137,20 @@ def apply_custom_theme():
             fill: #0D47A1 !important;
         }
 
-        /* 드롭다운 메뉴 리스트 (팝업) 배경: 흰색 */
+        /* [수정] 드롭다운 메뉴 리스트 (팝업) 배경: 어두운 색 */
         ul[data-baseweb="menu"] {
-            background-color: #FFFFFF !important;
+            background-color: #333333 !important; /* 원하는 어두운 색상 코드(예: #2b2b2b, #333333) */
+            border: 1px solid #4FC3F7 !important; /* 테두리 추가 (선택사항) */
         }
         
-        /* 드롭다운 메뉴 리스트 내부 글씨: 검은색 (가독성 유지) */
+        /* [수정] 드롭다운 메뉴 리스트 내부 글씨: 흰색 */
         ul[data-baseweb="menu"] li span {
-            color: #000000 !important;
+            color: #FFFFFF !important;
+        }
+        
+        /* [추가] 마우스 올렸을 때(Hover) 강조 색상 */
+        ul[data-baseweb="menu"] li:hover {
+            background-color: #555555 !important;
         }
         
         /* 멀티셀렉트 태그 (선택된 항목) 스타일 */
@@ -1185,6 +1191,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
